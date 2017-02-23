@@ -3,6 +3,11 @@ import java.awt.event.*;
 import java.io.*;
 import javax.swing.*;
 
+/**
+ * 一个查看图片的应用程序
+ * @version 1.0 2017-02-23
+ * @author Shawn
+ */
 public class ImageViewer{
   public static void main(String[] args){
     EventQueue.invokeLater(new Runnable(){
@@ -14,7 +19,9 @@ public class ImageViewer{
     });
   }
 }
-
+/**
+ * 一个frame包含一个label来显示图片
+ */
 class ImageViewerFrame extends JFrame{
   public ImageViewerFrame(){
     setTitle("ImageViewer");
