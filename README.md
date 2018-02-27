@@ -12,7 +12,6 @@
 爬虫爬百度图片
 
     JsoupFromBaiduPic.java
-
         依赖第三方包  jsoup-1.11.2.jar
         json-lib-2.4-jdk15.jar      解压json数据时使用，依赖于以下5个包
             commons-beanutils-1.8.0-BETA.jar
