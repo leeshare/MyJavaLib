@@ -60,5 +60,6 @@ public class AcmRanking {
         listOld = createList(inputOld);
         listNew = createList(inputNew);
 
+        Integer.valueOf("100");
     }
 }
