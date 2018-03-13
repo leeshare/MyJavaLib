@@ -5,7 +5,7 @@ import java.util.List;
 
 /**
  * Created by Administrator on 3/8/2018.
- *
+ *  设计一个超大数计算  超过 Int32  max   2^31
  * int
  */
 public class BigIntOperate {

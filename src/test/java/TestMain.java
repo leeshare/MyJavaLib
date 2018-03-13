@@ -17,5 +17,41 @@ public class TestMain {
         Thread thread = new Thread();
         thread.run();
 
+        //final 关键字修饰一个变量，是引用的变量不能变，而引用的对象还是可以改变的。
+        final StringBuilder sb = new StringBuilder("hello");
+        //sb = new StringBuilder("cc");     //编译报错 Cannot assign a value to a final variable 'sb'
+        sb.append(" world");
+        System.out.println(sb);
+        final StringBuffer buffer = new StringBuffer("hello");
+        buffer.append(" world");
+        System.out.println(buffer);
+
+        // ==  vs equals
+        // == 可 比较两个基本类型的值是否相等  和  比较两个对象所对应的地址的值是否相等
+        //一个对象涉及两块内存：变量和对象本身两个内存，这里==是比较对象本身的内存
+        //一个对象，如果没有重写从Object中继承的equals方法，那么就是用Object中的equals方法，与==效果一样。
+
+        TestMain tm = new TestMain();
+        TestMain tm2 = new TestMain();
+        TestMain tm3 = new TestMain();
+    }
+
+    //
+    int instanceVar = 0;
+    static int staticVar = 0;
+    public TestMain(){
+        instanceVar++;
+        staticVar++;
+        System.out.println("instanceVar=" + instanceVar + " staticVar=" + staticVar);
+    }
+
+    public static void doClassSth(){
+        //doInstanceSth();      不能直接访问实例方法
+        TestMain tm = new TestMain();
+        tm.doInstanceSth();
+
+    }
+    public void doInstanceSth(){
+        doClassSth();
     }
 }
