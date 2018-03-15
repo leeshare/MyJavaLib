@@ -14,16 +14,20 @@ public class PerceptronClassifierDual {
     private double b = 0;       //偏置
     private double eta = 1;     // 步长/学习率  η
     ArrayList<Point> instanceList;
+    private double[] alpha;     // α 列表
+    private double[][] gram;
 
     public PerceptronClassifierDual(ArrayList<Point> instanceList, double eta){
         this.instanceList = instanceList;
         w = new double[instanceList.get(0).x.length];
         this.eta = eta;
+        alpha = new double[instanceList.size()];
     }
-    public PerceptronClassifierDual(ArrayList<Point> arrayList){
-        this.instanceList = arrayList;
-        w = new double[arrayList.get(0).x.length];
+    public PerceptronClassifierDual(ArrayList<Point> instanceList){
+        this.instanceList = instanceList;
+        w = new double[instanceList.get(0).x.length];
         this.eta = 1;
+        alpha = new double[instanceList.size()];
     }
 
     /**
@@ -47,6 +51,20 @@ public class PerceptronClassifierDual {
         System.out.println(b);
 
         return true;
+    }
+
+    private void CalcGramMatrix(){
+        if(instanceList.size() <= 0){
+            return;
+        }
+        //x 只能是两个元素，否则没法算了吧？
+        int num = alpha.length;
+        gram = new double[num][num];
+        for(int i =0; i < num; i++){
+            for(int j = 0; j < num; j++){
+                gram[i][j] = instanceList.get(i).x[0] * instanceList.get(j).x[1] + instanceList.get(j).x[1] * instanceList.get(i).x[0];
+            }
+        }
     }
 
     /**
