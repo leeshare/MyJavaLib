@@ -13,14 +13,14 @@ public class PerceptronClassifier {
     private double[] w;         //权值向量组
     private double b = 0;       //偏置
     private double eta = 1;     // 步长/学习率  η
-    ArrayList<Point> instanceList;
+    ArrayList<PerceptronPoint> instanceList;
 
-    public PerceptronClassifier(ArrayList<Point> instanceList, double eta){
+    public PerceptronClassifier(ArrayList<PerceptronPoint> instanceList, double eta){
         this.instanceList = instanceList;
         w = new double[instanceList.get(0).x.length];
         this.eta = eta;
     }
-    public PerceptronClassifier(ArrayList<Point> arrayList){
+    public PerceptronClassifier(ArrayList<PerceptronPoint> arrayList){
         this.instanceList = arrayList;
         w = new double[arrayList.get(0).x.length];
         this.eta = 1;
@@ -54,7 +54,7 @@ public class PerceptronClassifier {
      * @param point 一个训练样本
      * @return
      */
-    private double LearnAnswer(Point point){
+    private double LearnAnswer(PerceptronPoint point){
         System.out.println(Arrays.toString(w));
         System.out.println(b);
         //y * (w1 * x1 + w2 * x2 + b)
@@ -80,7 +80,7 @@ public class PerceptronClassifier {
      * 进行w和b的更新
      * @param point 需要根据样本来随机梯度下降 来进行w和b更新
      */
-    private void UpdateWAndB(Point point){
+    private void UpdateWAndB(PerceptronPoint point){
         for(int i = 0; i < w.length; i++){
             w[i] += eta * point.y * point.x[i];
         }
@@ -89,10 +89,10 @@ public class PerceptronClassifier {
 
     private static void instance1(){
         //最终结果是  y = sign(1* x1 + 1* x2 - 3)
-        Point p1 = new Point(new double[]{3, 3}, 1);
-        Point p2 = new Point(new double[]{4, 3}, 1);
-        Point p3 = new Point(new double[]{1, 1}, -1);
-        ArrayList<Point> list = new ArrayList<Point>();
+        PerceptronPoint p1 = new PerceptronPoint(new double[]{3, 3}, 1);
+        PerceptronPoint p2 = new PerceptronPoint(new double[]{4, 3}, 1);
+        PerceptronPoint p3 = new PerceptronPoint(new double[]{1, 1}, -1);
+        ArrayList<PerceptronPoint> list = new ArrayList<PerceptronPoint>();
         list.add(p1);
         list.add(p2);
         list.add(p3);
@@ -101,12 +101,12 @@ public class PerceptronClassifier {
     }
     private static void instance2(){
         //最终结果是  y = sign(1* x1 + 1* x2 - 3)
-        Point p1 = new Point(new double[]{0, 0, 0, 1}, -1);
-        Point p2 = new Point(new double[]{1, 0, 0, 0}, 1);
-        Point p3 = new Point(new double[]{2, 1, 0, 0}, 1);
-        Point p4 = new Point(new double[]{2, 1, 0, 1}, -1);
+        PerceptronPoint p1 = new PerceptronPoint(new double[]{0, 0, 0, 1}, -1);
+        PerceptronPoint p2 = new PerceptronPoint(new double[]{1, 0, 0, 0}, 1);
+        PerceptronPoint p3 = new PerceptronPoint(new double[]{2, 1, 0, 0}, 1);
+        PerceptronPoint p4 = new PerceptronPoint(new double[]{2, 1, 0, 1}, -1);
 
-        ArrayList<Point> list = new ArrayList<Point>();
+        ArrayList<PerceptronPoint> list = new ArrayList<PerceptronPoint>();
         list.add(p1);
         list.add(p2);
         list.add(p3);
@@ -122,21 +122,4 @@ public class PerceptronClassifier {
 
 }
 
-/**
- * 分类用。包含两部分：x表示输入R维空间向量，y表示分类值，只有-1和+1两类。
- */
-class Point {
-    //x表示 输入R维空间向量
-    double[] x = new double[2];
-    //y表示 分类值，只有-1和+1两类
-    double y = 0;
-
-    Point(double[] x, double y){
-        this.x = x;
-        this.y = y;
-    }
-    public Point(){
-
-    }
-}
 
