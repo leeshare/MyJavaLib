@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.lixl.demo.user.dao.UserDao">
+
+       <!-- 插入人工试卷VO实体对象 -->
+    <insert id="insertUser" parameterType="User" keyProperty="id" >
+        <![CDATA[
+            INSERT INTO 
+                    t_user
+                    (
+                    id,
+                    name,
+                    address                  
+                    )
+            VALUES  (
+                    #{id},
+                    #{name},
+                    #{address}
+                 
+                    ) 
+        ]]>
+    </insert>
+
+
+</mapper>
