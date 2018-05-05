@@ -439,7 +439,7 @@
                 <version>3.0-r1655215</version>
             </plugin>-->
 
-            <!--<plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.1</version>
@@ -447,7 +447,7 @@
                     <source>1.8</source>
                     <source>1.8</source>
                 </configuration>
-            </plugin>-->
+            </plugin>
         </plugins>
     </build>
 

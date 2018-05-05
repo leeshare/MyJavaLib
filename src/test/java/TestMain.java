@@ -6,19 +6,19 @@ public class TestMain {
         // [ << 1 乘以 2 ][ << 2 乘以 4 ]
         // 2 * 8 的值
         int a = 2 << 3;
-        System.out.println(a);
+        System.out.println(a);      //2 * 2^3 = 16
 
         int b = 3 << 1;
-        System.out.println(b);
+        System.out.println(b);      //3 * 2^1 = 6
 
-        int c = 2 >> 1;
-        System.out.println(c);
+        int c = 20 >> 2;
+        System.out.println(c);      //20 / 2^2 = 5
 
         Thread thread = new Thread();
         thread.run();
 
         //final 关键字修饰一个变量，是引用的变量不能变，而引用的对象还是可以改变的。
-        final StringBuilder sb = new StringBuilder("hello");
+        final StringBuilder sb = new StringBuilder("hello");            //我的理解：引用地址的起始地址是不变的了，但地址对应的值是可以变的
         //sb = new StringBuilder("cc");     //编译报错 Cannot assign a value to a final variable 'sb'
         sb.append(" world");
         System.out.println(sb);
