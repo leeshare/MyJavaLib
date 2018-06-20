@@ -44,5 +44,6 @@ public class Producer implements Runnable {
 
     public void stop(){
         isRunning = false;
+        System.out.println("isRunning=false");
     }
 }
