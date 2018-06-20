@@ -1,2 +1,6 @@
 
 No.02 遇到多个构造器参数时要考虑用构建器     NutritionFacts
+
+
+No.16 复合优先于继承
+    比如一个类 ColorPoint 内部包含两个子类 Point 和 Color，就比 ColorPoint extends Point 要好很多。
