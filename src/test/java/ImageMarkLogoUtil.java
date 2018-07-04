@@ -39,10 +39,11 @@ public class ImageMarkLogoUtil {
     public static void main(String[] args) {
         String srcImgPath = "d:/888880002302900_web.jpg";
         String targerTextPath = "d:/qie_text.jpg";
-        ImageMarkLogoUtil
+/*        ImageMarkLogoUtil
                 .markImageByTexts(testValue(),
                         BillDetailImagePosition.getPosition("888880002302900"), srcImgPath,
                         targerTextPath);
+        */
     }
     public static Map testValue() {
         Map<String, String> value = new HashMap<String, String>();
@@ -83,10 +84,10 @@ public class ImageMarkLogoUtil {
     /**
      * 给图片添加水印文字、可设置水印文字的旋转角度
      *
-     * @param logoText
+     * @param value
+     * @param position
      * @param srcImgPath
      * @param targerPath
-     * @param degree
      */
     public static void markImageByTexts(Map<String, String> value,
                                         Map<String, String[]> position, String srcImgPath, String targerPath) {
