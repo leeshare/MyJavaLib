@@ -16,6 +16,7 @@ public class TestTree {
         tree.show();
 
         /*
+        中序遍历
 
                 50
             20      540

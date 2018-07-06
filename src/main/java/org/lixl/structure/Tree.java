@@ -70,6 +70,10 @@ public class Tree {
         return null;
     }
 
+    /**
+     * 采用中序遍历法
+     * @param node
+     */
     public void show(Node node){
         if(node != null){
             this.show(node.leftChildNode);
