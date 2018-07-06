@@ -1,8 +1,25 @@
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.context.support.StaticApplicationContext;
+import test.TestBean;
+
 /**
  * Created by Administrator on 3/8/2018.
  */
 public class TestMain {
     public static void main(String[] args){
+        //testNum();
+        testAop();
+    }
+
+    static void testAop(){
+        //引用 Bean 配置的AOP 文件 （如果文件位于 resources目录，则可直接写名称）
+        ApplicationContext bf = new ClassPathXmlApplicationContext("aspectTest.xml");
+        TestBean bean = (TestBean)bf.getBean("test");
+        bean.test();
+    }
+
+    static void testNum(){
         // [ << 1 乘以 2 ][ << 2 乘以 4 ]
         // 2 * 8 的值
         int a = 2 << 3;
