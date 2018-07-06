@@ -72,4 +72,49 @@
 	
 	<import resource="applicationContext-provider.xml" />
 	<import resource="applicationContext-consumer.xml" />
+
+	<!-- 注册Dao -->
+	<bean id="accountDao" class="org.lixl.spring.aop.AccountDaoImpl">
+		<property name="dataSource" ref="dataSource"/>
+	</bean>
+	<bean id="stockDao" class="org.lixl.spring.aop.StockDaoImpl">
+		<property name="dataSource" ref="dataSource"/>
+	</bean>
+	<!--注册Service-->
+	<bean id="stockService" class="org.lixl.spring.aop.StockProcessServiceImpl">
+		<property name="accountDao" ref="accountDao"/>
+		<property name="stockDao" ref="stockDao"/>
+	</bean>
+
+	<!--事务-->
+	<bean id="myTxManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource"/>
+	</bean>
+	<!--生成事务-->
+	<bean id="stockServiceProxy" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+		<property name="transactionManager" ref="myTxManager"/>
+		<property name="target" ref="stockService"/>
+		<property name="transactionAttributes">
+			<props>
+				<prop key="open*">ISOLATION_DEFAULT,PROPAGATION_REQUIRED</prop>
+				<prop key="buyStock">ISOLATION_DEFAULT,PROPAGATION_REQUIRED,-StockException</prop>
+			</props>
+		</property>
+	</bean>
+	<!--开启注解驱动-->
+	<tx:annotation-driven transaction-manager="myTxManager"/>
+
+	<!-- 注册事务通知 -->
+	<tx:advice id="txAdvice" transaction-manager="myTxManager">
+		<tx:attributes>
+			<!-- 指定在连接点方法上应用的事务属性 -->
+			<tx:method name="open*" isolation="DEFAULT" propagation="REQUIRED"/>
+			<tx:method name="buyStock" isolation="DEFAULT" propagation="REQUIRED" rollback-for="StockException"/>
+		</tx:attributes>
+	</tx:advice>
+	<aop:config>
+		<aop:pointcut id="stockPointCut" expression="execution(* *..service.*.*(..))"/>
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="stockPointCut"/>
+	</aop:config>
+
 </beans>
