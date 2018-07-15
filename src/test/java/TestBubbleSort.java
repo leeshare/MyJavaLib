@@ -5,6 +5,12 @@ import java.util.Arrays;
  * Created by lxl on 18/7/1.
  */
 public class TestBubbleSort {
+    static void swap(int[] numbers, int i, int j){
+        int t = numbers[i];
+        numbers[i] = numbers[j];
+        numbers[j] = t;
+        System.out.println("swap " + Arrays.toString(numbers));
+    }
 
     public static void sort(int[] number){
         int temp = 0;
@@ -14,9 +20,10 @@ public class TestBubbleSort {
             for(int j = i; j < number.length - 1; j++){
                 num++;
                 if(number[j+1] < number[i]){
-                    temp = number[j+1];
-                    number[j+1] = number[i];
-                    number[i] = temp;
+                    //temp = number[j+1];
+                    //number[j+1] = number[i];
+                    //number[i] = temp;
+                    swap(number, i, j+1);
                     upnumber++;
                 }
             }
