@@ -16,8 +16,11 @@ public class TestHttpRequest {
     // http://q.stock.sohu.com/hisHq?code=cn_000002&start=20181119&end=20181120
 
     public static void main(String[] args){
+        //http://quote.eastmoney.com/stocklist.html
+        String url = "http://q.stock.sohu.com/hisHq";
+        String params = "code=cn_000002&start=20181119&end=20181120";
         //发送 GET 请求
-        String s = TestHttpRequest.sendGet("http://q.stock.sohu.com/hisHq", "code=cn_000002&start=20181119&end=20181120");
+        String s = TestHttpRequest.sendGet(url, params);
         System.out.println(s);
         //send Post Request
         //String sr = TestHttpRequest.sendPost("http://q.stock.sohu.com/bisHq", "code=cn_000002&start=20181118&end=20181119");
