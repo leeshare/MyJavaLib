@@ -1,4 +1,4 @@
-package org.lixl.pattern;
+package org.lixl.multithreading;
 
 import java.text.MessageFormat;
 import java.util.Random;

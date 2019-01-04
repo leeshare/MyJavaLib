@@ -1,4 +1,4 @@
-package org.lixl.pattern;
+package org.lixl.multithreading;
 
 /**
  * Created by lxl on 18/6/20.

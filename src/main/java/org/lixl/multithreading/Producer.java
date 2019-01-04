@@ -1,6 +1,4 @@
-package org.lixl.pattern;
-
-import com.sun.xml.internal.bind.v2.runtime.output.Pcdata;
+package org.lixl.multithreading;
 
 import java.util.Random;
 import java.util.concurrent.BlockingQueue;

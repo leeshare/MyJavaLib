@@ -1,5 +1,3 @@
-import org.lixl.pattern.PCData;
-
 import java.util.Random;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;

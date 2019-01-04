@@ -3,7 +3,7 @@ package org.lixl.basic;
 import javax.jms.*;
 import javax.naming.InitialContext;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
+//import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -13,7 +13,7 @@ import java.io.PrintWriter;
 /**
  * Created by Administrator on 6/18/2018.
  */
-@WebServlet("/Publish")
+//@WebServlet("/Publish")
 public class JMSSend extends HttpServlet {
     public static final long serialVersionID = 1L;
 

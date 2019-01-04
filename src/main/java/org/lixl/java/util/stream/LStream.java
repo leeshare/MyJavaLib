@@ -77,6 +77,7 @@ public interface LStream<T> extends LBaseStream<T, LStream<T>> {
 
     Optional<T> findAny();
 
+    /*
     public static<T> Stream.Builder<T> builder(){
         return new java.util.stream.Streams.StreamBuilderImpl<>();
     }
@@ -135,46 +136,17 @@ public interface LStream<T> extends LBaseStream<T, LStream<T>> {
 
     public interface Builder<T> extends Consumer<T> {
 
-        /**
-         * Adds an element to the stream being built.
-         *
-         * @throws IllegalStateException if the builder has already transitioned to
-         * the built state
-         */
         @Override
         void accept(T t);
 
-        /**
-         * Adds an element to the stream being built.
-         *
-         * @implSpec
-         * The default implementation behaves as if:
-         * <pre>{@code
-         *     accept(t)
-         *     return this;
-         * }</pre>
-         *
-         * @param t the element to add
-         * @return {@code this} builder
-         * @throws IllegalStateException if the builder has already transitioned to
-         * the built state
-         */
         default Builder<T> add(T t) {
             accept(t);
             return this;
         }
 
-        /**
-         * Builds the stream, transitioning this builder to the built state.
-         * An {@code IllegalStateException} is thrown if there are further attempts
-         * to operate on the builder after it has entered the built state.
-         *
-         * @return the built stream
-         * @throws IllegalStateException if the builder has already transitioned to
-         * the built state
-         */
         Stream<T> build();
 
     }
+    */
 
 }

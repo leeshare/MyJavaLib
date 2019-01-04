@@ -1,6 +1,6 @@
-import org.lixl.pattern.Consumer;
-import org.lixl.pattern.PCData;
-import org.lixl.pattern.Producer;
+import org.lixl.multithreading.Consumer;
+import org.lixl.multithreading.PCData;
+import org.lixl.multithreading.Producer;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
