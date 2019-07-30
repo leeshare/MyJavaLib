@@ -24,12 +24,13 @@ public class TestEncrypt {
         String type = "AES";
 
         try {
-            //String encrypt = doEncrypt(content, type);
             String encrypt = encrypt4AES(content);
-            System.out.print(content + " 密钥= " + encrypt);
-            //String source = doDecrypt(encrypt, type);
             String source = decrypt4AES(encrypt);
-            System.out.println(" 还原为= " + source);
+            System.out.println(content + " 密钥= " + encrypt + " 还原为= " + source);
+
+            encrypt = doEncrypt(content, type);
+            source = doDecrypt(encrypt, type);
+            System.out.println(content + " 密钥= " + encrypt + " 还原为= " + source);
         } catch (Exception e){
             e.printStackTrace();
         }
@@ -113,16 +114,21 @@ public class TestEncrypt {
      * @throws NoSuchAlgorithmException
      */
     public static String doEncrypt(String content, String type) throws NoSuchAlgorithmException, NoSuchPaddingException, UnsupportedEncodingException, InvalidKeyException,
-            IllegalBlockSizeException, BadPaddingException
+            IllegalBlockSizeException, BadPaddingException,
+            InvalidAlgorithmParameterException
     {
-        KeyGenerator kgen = KeyGenerator.getInstance(type);
-        kgen.init(128, new SecureRandom(iv));
-        SecretKey secretKey = kgen.generateKey();
-        byte[] enCodeFormat = secretKey.getEncoded();
-        SecretKeySpec key = new SecretKeySpec(enCodeFormat, type);
+        //KeyGenerator kgen = KeyGenerator.getInstance(type);
+        //kgen.init(128, new SecureRandom(iv));
+        //SecretKey secretKey = kgen.generateKey();
+        //byte[] enCodeFormat = secretKey.getEncoded();
+        //SecretKeySpec key = new SecretKeySpec(enCodeFormat, type);
+        SecretKeySpec key = new SecretKeySpec(iv, type);
         Cipher cipher = Cipher.getInstance(type + "/CBC/PKCS5Padding");
-        byte[] byteContent = content.getBytes("utf-8");
-        cipher.init(Cipher.ENCRYPT_MODE, key);
+        //byte[] byteContent = content.getBytes("utf-8");
+        //cipher.init(Cipher.ENCRYPT_MODE, key);
+        IvParameterSpec zeroIv = new IvParameterSpec(iv);
+        cipher.init(Cipher.ENCRYPT_MODE, key, zeroIv);
+        byte[] byteContent = content.getBytes();
         byte[] result = cipher.doFinal(byteContent);
         String hexStr = parseByte2HexStr(result);
 
@@ -148,20 +154,12 @@ public class TestEncrypt {
     {
         SecretKeySpec key = new SecretKeySpec(iv, type);
         Cipher cipher = Cipher.getInstance(type + "/CBC/PKCS5Padding");
-        IvParameterSpec param = new IvParameterSpec(iv);
-        cipher.init(Cipher.DECRYPT_MODE, key, param);
+        IvParameterSpec zeroIv = new IvParameterSpec(iv);
+        cipher.init(Cipher.DECRYPT_MODE, key, zeroIv);
         //byte[] byteContent = encryptContent.getBytes("utf-8");
         byte[] byteContent = parseHexStr2Byte(encryptContent);
         byte[] result = cipher.doFinal(byteContent);
-        return result.toString();
-
-        /*
-        Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-        IvParameterSpec iv = new IvParameterSpec(INIT_VECTOR);
-        cipher.init(Cipher.DECRYPT_MODE, skeySpec, iv);
-        byte[] encrypted1 = hexToBytes(sSrc);
-        byte[] original = cipher.doFinal(encrypted1);
-        return new String(hexToBytes(byteToHexString(original)));
-        */
+        //return result.toString();
+        return new String(result);
     }
 }
