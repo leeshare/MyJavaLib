@@ -4,6 +4,12 @@
 public class TestSth {
     public static void main(String[] args){
         assignment();
+
+        TestSth t = new TestSth();
+        int i = 0;
+        t.fermin(i);
+        i = i++;
+        System.out.println(i);
     }
 
     private static void assignment(){
@@ -13,5 +19,16 @@ public class TestSth {
         left = 5; //left指向值为5的地址
 
         System.out.println(String.format("left=%d, i=%d", left, i));
+
+        String str = "hello";
+        str += 'a';
+        int len = str.length();
+        //str = 100;
+        str += 100;
+        System.out.println(str);
+    }
+
+    void fermin(int i){
+        i++;
     }
 }
