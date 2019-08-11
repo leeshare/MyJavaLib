@@ -10,6 +10,18 @@ public class TestSth {
         t.fermin(i);
         i = i++;
         System.out.println(i);
+
+        byte a1, a2;
+        byte b1=4, c1=5;
+        final byte b2=4, c2=5;
+        a1 = (byte)(b1 + c1);
+        a2 = b2 + c2;
+        System.out.println("a1=" + a1 + " a2=" + a2);
+        System.out.println((int)' ');
+
+        short s1 = 1;
+        s1 += 1;
+        System.out.println("s1=" + s1);
     }
 
     private static void assignment(){
