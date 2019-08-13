@@ -22,6 +22,9 @@ public class TestSth {
         short s1 = 1;
         s1 += 1;
         System.out.println("s1=" + s1);
+
+        i = 0;
+        System.out.println((i++ + ++i));
     }
 
     private static void assignment(){
