@@ -25,6 +25,12 @@ public class TestSth {
 
         i = 0;
         System.out.println((i++ + ++i));
+
+        try {
+            test(new int[] {0, 1, 2, 3, 4, 5});
+        } catch (Exception e) {
+            System.out.print("E");
+        }
     }
 
     private static void assignment(){
@@ -46,4 +52,21 @@ public class TestSth {
     void fermin(int i){
         i++;
     }
+
+
+    private static void test(int[] arr) {
+        for (int i = 0; i < arr.length; i++) {
+            try {
+                if (arr[i] % 2 == 0) {
+                    throw new NullPointerException();
+                } else {
+                    System.out.print(i);
+                }
+            }
+            finally {
+                System.out.print("e");
+            }
+        }
+    }
+
 }
