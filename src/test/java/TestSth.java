@@ -1,3 +1,6 @@
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+
 /**
  * Created by lxl on 18/7/1.
  */
@@ -31,6 +34,31 @@ public class TestSth {
         } catch (Exception e) {
             System.out.print("E");
         }
+
+        new TestSth().mystery(1234);
+
+        float f = 5.1f;
+        int ii = (byte)f;
+
+        System.out.println();
+        Thread thread = new Thread();
+        Class c = thread.getClass();
+        Field field;
+        Method method;
+        try {
+            method = c.getDeclaredMethod("exit");
+            field = c.getDeclaredField("exit");
+        }catch (NoSuchFieldException e){
+            System.out.println(e);
+        }catch(NoSuchMethodException ee){
+            System.out.println(ee);
+        }
+
+        System.out.println( -12 / -5);
+        System.out.println( -12 % -5);
+
+        new TestSth().go();
+
     }
 
     private static void assignment(){
@@ -67,6 +95,24 @@ public class TestSth {
                 System.out.print("e");
             }
         }
+    }
+
+    public void mystery (int x){
+        System.out.print(x%10);
+        if(x/10 != 0){
+            mystery(x / 10);
+        }
+        System.out.print(x%10);
+    }
+
+    public void go(){
+        Runnable r=new Runnable(){
+            public void run(){
+                System.out.print("foo");
+            }
+        };
+        Thread t=new Thread(r);
+        t.start();
     }
 
 }
