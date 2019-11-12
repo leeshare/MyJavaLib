@@ -9,6 +9,8 @@ import java.lang.reflect.Proxy;
 
 /**
  * Created by Administrator on 11/11/2019.
+ * 2 动态代理
+ *  缺点：目标对象必须实现一个或多个接口
  */
 public class SingerProxyDynamic {
     private Logger log = LoggerFactory.getLogger(SingerProxyDynamic.class);
