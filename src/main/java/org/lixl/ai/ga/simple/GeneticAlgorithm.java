@@ -72,7 +72,7 @@ public class GeneticAlgorithm {
 
     /**
      * 评估整个种群
-     *  计算种群中每个个体的适应度
+     *  计算种群中每个个体的适应度之和
      *
      * @param population
      */
@@ -110,8 +110,9 @@ public class GeneticAlgorithm {
         Individual[] individuals = population.getIndividuals();
 
         double populationFitness = population.getPopulationFitness();
+        //轮盘赌博
         double rouletteWheelPosition = Math.random() * populationFitness;
-
+        //轮盘转速
         double spinWheel = 0;
         for(Individual individual : individuals) {
             spinWheel += individual.getFitness();

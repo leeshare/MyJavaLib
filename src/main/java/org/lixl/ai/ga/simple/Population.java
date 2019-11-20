@@ -10,7 +10,7 @@ import java.util.Random;
  */
 public class Population {
     private Individual population[];
-    private double populationFitness = -1;
+    private double populationFitness = -1;  //种群适应度 0-总群个体数，为种群每个个体适应度之和
 
     /**
      * 初始化 空白种群

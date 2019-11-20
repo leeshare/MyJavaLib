@@ -6,7 +6,7 @@ package org.lixl.ai.ga.simple;
  */
 public class Individual {
     private int[] chromosome;       //染色体
-    private double fitness = -1;    //适应度 值越大，表明越强壮，也就越适应
+    private double fitness = -1;    //适应度，0～1 值越大，表明越强壮，也就越适应
 
     /**
      *

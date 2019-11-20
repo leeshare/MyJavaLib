@@ -1,5 +1,7 @@
 package org.lixl.ai.ga.simple;
 
+import java.util.Random;
+
 public class AllOnesGA {
 
     public static void main(String[] args) {
@@ -11,6 +13,9 @@ public class AllOnesGA {
         //评估种群
         ga.evalPopulation(population);
 
+        for (Individual individual: population.getIndividuals()) {
+            //System.out.println(individual.toString());
+        }
         //设置当前代的追踪
         int generation = 1;
 
@@ -24,7 +29,7 @@ public class AllOnesGA {
         while(ga.isTerminationConditionMet(population) == false) {
             //打印种群中的最适合个体
             System.out.println("第" + generation + "代最佳解决方案：" + population.getFittest(0).toString());
-            System.out.println("    种群使用度=" + population.getPopulationFitness());
+            System.out.println("    种群适应度=" + population.getPopulationFitness());
             //应用交叉
             population = ga.crossoverPopulation(population);
             //应用变异
@@ -37,7 +42,10 @@ public class AllOnesGA {
 
         System.out.println("找到解决方案在第 " + generation + " 代");
         System.out.println("最佳解决方案：" + population.getFittest(0).toString());
-        System.out.println("    种群使用度=" + population.getPopulationFitness());
+        System.out.println("    种群适应度=" + population.getPopulationFitness());
+        for (Individual individual: population.getIndividuals()) {
+            //System.out.println(individual.toString());
+        }
 
     }
 }
