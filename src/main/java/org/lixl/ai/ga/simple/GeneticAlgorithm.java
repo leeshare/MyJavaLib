@@ -85,5 +85,110 @@ public class GeneticAlgorithm {
         population.setPopulationFitness(populationFitness);
     }
 
+    /**
+     * 检查种群是否符合结束条件，就可以终止进化了
+     * @param population
+     * @return
+     */
+    public boolean isTerminationConditionMet(Population population) {
+        for(Individual individual : population.getIndividuals()) {
+            if(individual.getFitness() == 1) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 为交叉选择父母
+     * @param population
+     * @return
+     */
+    public Individual selectParent(Population population) {
+        //获取个体
+        Individual[] individuals = population.getIndividuals();
+
+        double populationFitness = population.getPopulationFitness();
+        double rouletteWheelPosition = Math.random() * populationFitness;
+
+        double spinWheel = 0;
+        for(Individual individual : individuals) {
+            spinWheel += individual.getFitness();
+            if(spinWheel >= rouletteWheelPosition) {
+                return individual;
+            }
+        }
+        return individuals[population.size() - 1];
+    }
+
+    /**
+     * 对种群应用交叉
+     * @param population
+     * @return
+     */
+    public Population crossoverPopulation(Population population) {
+        //建立新的种群
+        Population newPopulation = new Population(population.size());
+
+        //按适应度来循环当前种群
+        for(int populationIndex = 0; populationIndex < population.size(); populationIndex++) {
+            Individual parent1 = population.getFittest(populationIndex);
+            //对种群个体是否要应用交叉？
+            if(this.crossoverRate > Math.random() && populationIndex >= this.elitismCount) {
+                //初始化后代
+                Individual offspring = new Individual(parent1.getChromosomeLength());
+                //找到第二个父母
+                Individual parent2 = selectParent(population);
+
+                //循环基因组
+                for(int geneIndex = 0; geneIndex < parent1.getChromosomeLength(); geneIndex++) {
+                    //使用parent1一半的基因 和 parent2一半的基因
+                    if(0.5 > Math.random()) {
+                        offspring.setGene(geneIndex, parent1.getGene(geneIndex));
+                    } else {
+                        offspring.setGene(geneIndex, parent2.getGene(geneIndex));
+                    }
+                }
+
+                //添加后代到新种群中
+                newPopulation.setIndividual(populationIndex, offspring);
+            } else {
+                //添加没有使用交叉的个体到新种群中
+                newPopulation.setIndividual(populationIndex, parent1);
+            }
+        }
+
+        return newPopulation;
+    }
+
+    /**
+     * 对种群应用变异
+     * @param population
+     * @return
+     */
+    public Population mutatePopulation(Population population) {
+
+        Population newPopulation = new Population(this.populationSize);
+
+        for(int populationIndex = 0; populationIndex < population.size(); populationIndex++) {
+            Individual individual = population.getFittest(populationIndex);
+
+            for(int geneIndex = 0; geneIndex < individual.getChromosomeLength(); geneIndex++) {
+                if(populationIndex > this.elitismCount) {
+                    if(this.mutationRate > Math.random()) {
+                        int newGene = 1;
+                        if(individual.getGene(geneIndex) == 1) {
+                            newGene = 0;
+                        }
+                        individual.setGene(geneIndex, newGene);
+                    }
+                }
+            }
+
+            newPopulation.setIndividual(populationIndex, individual);
+        }
+
+        return newPopulation;
+    }
 
 }
