@@ -51,7 +51,7 @@ public class GeneticAlgorithm {
      * @return
      */
     public double calcFitness(Individual individual) {
-        //跟踪正确代的成员
+        //正确基因数
         int correntGenes = 0;
 
         //循环个体的基因
@@ -71,7 +71,8 @@ public class GeneticAlgorithm {
     }
 
     /**
-     * 进化整个种群
+     * 评估整个种群
+     *  计算种群中每个个体的适应度
      *
      * @param population
      */
