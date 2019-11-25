@@ -1,4 +1,4 @@
-package org.lixl.java.nio.FakeSynchronizeIO;
+package org.lixl.nio.FakeSynchronizeIO;
 
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ExecutorService;

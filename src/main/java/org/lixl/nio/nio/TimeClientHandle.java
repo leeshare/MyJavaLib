@@ -1,4 +1,4 @@
-package org.lixl.java.nio.nio;
+package org.lixl.nio.nio;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;

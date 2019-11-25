@@ -1,10 +1,6 @@
-package org.lixl.java.nio.nio;
+package org.lixl.nio.nio;
 
 import java.io.IOException;
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
-import java.nio.channels.Selector;
-import java.nio.channels.ServerSocketChannel;
 
 /**
  * Created by Administrator on 11/24/2019.

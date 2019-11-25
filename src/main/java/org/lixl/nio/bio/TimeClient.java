@@ -1,4 +1,4 @@
-package org.lixl.java.nio.bio;
+package org.lixl.nio.bio;
 
 import java.io.BufferedReader;
 import java.io.IOException;

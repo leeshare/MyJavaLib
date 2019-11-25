@@ -16,3 +16,9 @@ java io 分为三种
             Writes an array of bytes. This method will block until the bytes are actually written.
 
     NIO (Non-block IO)
+
+    AIO
+        jdk1.7之后的 NIO2.0 就是 AIO
+
+    Netty
+

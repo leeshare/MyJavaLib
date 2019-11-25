@@ -1,4 +1,4 @@
-package org.lixl.java.nio.bio;
+package org.lixl.nio.bio;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
