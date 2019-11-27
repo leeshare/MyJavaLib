@@ -1,0 +1,14 @@
+
+Java RMI (Remote Method Invocation)
+
+实现有两种方式
+（1）直接使用Registry实现rmi
+    Registry(注册表)是放置所有服务器对象的命名空间。
+    每次服务端创建一个对象时，它都会使用bind()或rebind()方法注册该对象。
+    这些是使用称为绑定名称的唯一名称注册的。
+
+    要调用远程对象，客户端需要该对象的引用，如（HelloRegistryFacade）。
+    即通过服务端绑定的名称（HelloRegistry）从注册表中获取对象（lookup()方法）。
+
+（2）使用Naming方法实现rmi
+    Naming其实是对Registry的一个封装
