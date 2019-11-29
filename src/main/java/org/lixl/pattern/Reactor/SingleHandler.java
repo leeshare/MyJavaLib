@@ -12,7 +12,7 @@ import java.nio.channels.SocketChannel;
 public class SingleHandler implements Runnable {
     final SocketChannel channel;
     final SelectionKey sk;
-    ByteBuffer input = ByteBuffer.allocate(11024);
+    ByteBuffer input = ByteBuffer.allocate(1024);
     ByteBuffer output = ByteBuffer.allocate(1024);
     static final int READING = 0, SENDING = 1;
     int state = READING;
