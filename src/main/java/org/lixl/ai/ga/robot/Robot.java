@@ -71,7 +71,7 @@ public class Robot {
     private int[] calcSensorActions(int[] sensorActionsStr) {
         //这里有多少动作？
         int numActions = (int) sensorActionsStr.length / 2;
-        int senserActions[] = new int[numActions];
+        int sensorActions[] = new int[numActions];
 
         for(int sensorValue = 0; sensorValue < numActions; sensorValue++) {
             //Get sensor action

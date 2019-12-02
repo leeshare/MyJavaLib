@@ -90,6 +90,86 @@ public class GeneticAlgorithm {
         //初始化新种群
         Population newPopulation = new Population(this.populationSize);
 
+        //按适应度循环当前种群
+        for(int populationIndex = 0; populationIndex < population.size(); populationIndex++) {
+            Individual individual = population.getFittest(populationIndex);
+            //这一步，不仅得到这个个体，还将种群按适应度做了排序
+
+            //循环个体的基因
+            for (int geneIndex = 0; geneIndex < individual.getChromosomeLength(); geneIndex++) {
+                //跳过突变：如果这是个精英  elite
+                if(populationIndex >= this.elitismCount) {
+                    //这个基因是否需要突变
+                    if(this.mutationRate > Math.random()) {
+                        //get new gene
+                        int newGene = 1;
+                        if(individual.getGene(geneIndex) == 1) {
+                            newGene = 0;
+                        }
+                        //突变基因
+                        individual.setGene(geneIndex, newGene);
+                    }
+                }
+
+            }
+
+            //添加个体到种群
+            newPopulation.setIndividual(populationIndex, individual);
+        }
+
+        //返回突变后的种群
+        return newPopulation;
+    }
+
+    /**
+     * 交叉种群使用单点交叉       using single point crossover
+     *
+     * 单点交叉 不同于 simple中的交叉 （simple中的交叉是用一个随机数和 0.5 比较，然后来选择用 parent1 还是 parent2）
+     *      比如
+     *      Parent1 : AAAAAAAAAA
+     *      Parent2 : BBBBBBBBBB
+     *      sample中 Child : AABBAABABA
+     *      而这里的 Child : AAAABBBBBB
+     * @param population
+     * @return
+     */
+    public Population crossoverPopulation(Population population) {
+        //创建一个新的种群
+        Population newPopulation = new Population(population.size());
+
+        //按适应度循环当前种群
+        for(int populationIndex = 0; populationIndex < population.size(); populationIndex++) {
+            Individual parent1 = population.getFittest(populationIndex);
+
+            //这个个体是否接受交叉
+            if(this.crossoveRate > Math.random() && populationIndex >= this.elitismCount) {
+                //初始化后代
+                Individual offspring = new Individual(parent1.getChromosomeLength());
+
+                //找到第二位父母
+                Individual parent2 = this.selectParent(population);
+
+                //获得随机交换的点 get random swap point
+                int swapPoint = (int) (Math.random() * (parent1.getChromosomeLength() + 1));
+
+                //循环基因组
+                for(int geneIndex = 0; geneIndex < parent1.getChromosomeLength(); geneIndex++) {
+                    //使用一半的 parent1的基因 和一半的 parent2的基因
+                    if(geneIndex < swapPoint) {
+                        offspring.setGene(geneIndex, parent1.getGene(geneIndex));
+                    } else {
+                        offspring.setGene(geneIndex, parent2.getGene(geneIndex));
+                    }
+                }
+
+                //添加这个后代到新种群中
+                newPopulation.setIndividual(populationIndex, offspring);
+            } else {
+                newPopulation.setIndividual(populationIndex, parent1);
+            }
+        }
+
+        return newPopulation;
     }
 
 }
