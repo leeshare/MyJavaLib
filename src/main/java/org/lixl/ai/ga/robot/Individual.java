@@ -55,5 +55,26 @@ public class Individual {
         }
         return output;
     }
+    public String toStringZn() {
+        String output = "";
+        for(int gene = 0; gene < this.chromosome.length; gene+=2) {
+            String c = this.chromosome[gene] + "" + this.chromosome[gene+1];
+            switch (c) {
+                case "00":
+                    output += "停止 ";
+                    break;
+                case "01":
+                    output += "前进 ";
+                    break;
+                case "10":
+                    output += "左转 ";
+                    break;
+                case "11":
+                    output += "右转 ";
+                    break;
+            }
+        }
+        return output;
+    }
 
 }

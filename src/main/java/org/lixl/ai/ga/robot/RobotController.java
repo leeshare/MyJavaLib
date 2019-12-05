@@ -60,5 +60,7 @@ public class RobotController {
         System.out.println("在第" + maxGenerations + "代后停止");
         Individual fittest = population.getFittest(0);
         System.out.println("最佳解决（" + fittest.getFitness() + "）: " + fittest.toString());
+        System.out.println(fittest.toStringZn());
+
     }
 }
