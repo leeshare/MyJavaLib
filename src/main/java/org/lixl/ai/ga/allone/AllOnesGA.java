@@ -1,6 +1,4 @@
-package org.lixl.ai.ga.simple;
-
-import java.util.Random;
+package org.lixl.ai.ga.allone;
 
 public class AllOnesGA {
 

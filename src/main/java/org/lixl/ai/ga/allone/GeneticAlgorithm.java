@@ -1,4 +1,4 @@
-package org.lixl.ai.ga.simple;
+package org.lixl.ai.ga.allone;
 
 /**
  * Created by Administrator on 11/15/2019.

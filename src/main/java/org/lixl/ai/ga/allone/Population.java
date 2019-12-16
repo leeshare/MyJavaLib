@@ -1,4 +1,4 @@
-package org.lixl.ai.ga.simple;
+package org.lixl.ai.ga.allone;
 
 import java.util.Arrays;
 import java.util.Comparator;
