@@ -1,4 +1,4 @@
-package org.lixl.ai.ga.allone;
+package org.lixl.ai.ga.allones;
 
 /**
  * 自然遗传中的 个体
