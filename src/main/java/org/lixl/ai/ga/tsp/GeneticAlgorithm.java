@@ -119,26 +119,32 @@ public class GeneticAlgorithm {
         for(int populationIndex = 0; populationIndex < population.size(); populationIndex++) {
             Individual parent1 = population.getFittest(populationIndex);
 
-            //在设定的 交叉率范围内   且 精英之后的个体
+            //在设定的 交叉率范围内   且 非精英个体（因为精英肯定是最前面几个）
             if(this.crossoverRate > Math.random() && populationIndex >= this.elitismCount) {
                 Individual parent2 = this.selectParent(population);
 
+                //初始化 后代
                 int offspringChromosome[] = new int[parent1.getChromosomeLength()];
                 Arrays.fill(offspringChromosome, -1);
                 Individual offspring = new Individual(offspringChromosome);
 
+                //在整个染色体长度 随机取2个点
                 int substrPos1 = (int) (Math.random() * parent1.getChromosomeLength());
                 int substrPos2 = (int) (Math.random() * parent1.getChromosomeLength());
 
+                //使 小点的 为起始点，大点的 为截止点
                 final int startSubstr = Math.min(substrPos1, substrPos2);
                 final int endSubstr = Math.max(substrPos1, substrPos2);
 
+                //在 开始到截止的范围内 用 第一个父母的基因填充
                 for(int i = startSubstr; i < endSubstr; i++) {
                     offspring.setGene(i, parent1.getGene(i));
                 }
 
                 for(int i = 0; i < parent2.getChromosomeLength(); i++) {
                     int parent2Gene = i + endSubstr;
+                    //比如 两个点是  10 ～ 20
+                    //当index循环到 80时， 80+20 >= 100，则 parent2Gene = 100 - 100 = 0，就到了第0个位置
                     if(parent2Gene >= parent2.getChromosomeLength()) {
                         parent2Gene -= parent2.getChromosomeLength();
                     }
@@ -173,16 +179,21 @@ public class GeneticAlgorithm {
      * @return
      */
     public Population mutatePopulation(Population population) {
+        //初始化一个新的种群
         Population newPopulation = new Population(this.populationSize);
 
+        //按适应度 循环当前种群
         for(int populationIndex = 0; populationIndex < population.size(); populationIndex++) {
             Individual individual = population.getFittest(populationIndex);
 
+            //非精英个体才执行突变
             if(populationIndex >= this.elitismCount) {
                 for(int geneIndex = 0; geneIndex < individual.getChromosomeLength(); geneIndex++) {
+                    //大于突变率的才执行突变
                     if(this.mutationRate > Math.random()) {
                         int newGenePos = (int) (Math.random() * individual.getChromosomeLength());
 
+                        //每次突变 只交换一对基因
                         int gene1 = individual.getGene(newGenePos);
                         int gene2 = individual.getGene(geneIndex);
 
