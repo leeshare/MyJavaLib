@@ -67,17 +67,20 @@ public class GeneticAlgorithm {
      * @return
      */
     public Individual selectParent(Population population) {
-        //Create tournament  创建竞标赛
+        //Create tournament  创建一个空的种群，用于竞标赛
         Population tournament = new Population(this.tournamentSize);
 
-        //添加随机个体到竞标赛中
+        //添加随机个体到竞标赛种群中
+        //把传入的种群（即 原种群） 洗牌
         population.shuffle();
         for(int i = 0; i < this.tournamentSize; i++) {
+            //由于原种群已洗牌，所以按顺序取，其实也是随机的
             Individual tournamentIndividual = population.getIndividual(i);
+            //将原种群随便取的个体 填入 锦标赛种群中
             tournament.setIndividual(i, tournamentIndividual);
         }
 
-        //返回最好的
+        //返回竞标赛种群中 最强壮的
         return tournament.getFittest(0);
     }
 
