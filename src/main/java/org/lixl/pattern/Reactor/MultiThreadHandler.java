@@ -5,28 +5,34 @@ import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Created by Administrator on 11/29/2019.
  */
-public class SingleHandler implements Runnable {
+public class MultiThreadHandler implements Runnable {
     final SocketChannel channel;
-    final SelectionKey sk;
+    final SelectionKey selectionKey;
     ByteBuffer input = ByteBuffer.allocate(1024);
     ByteBuffer output = ByteBuffer.allocate(1024);
     static final int READING = 0, SENDING = 1;
     int state = READING;
 
-    SingleHandler(Selector selector, SocketChannel c) throws IOException {
+    ExecutorService pool = Executors.newFixedThreadPool(2);
+    static final int PROCESSING = 3;
+
+    MultiThreadHandler(Selector selector, SocketChannel c) throws IOException {
         channel = c;
         c.configureBlocking(false);
-        // Optionally try first read now
-        sk = channel.register(selector, 0);
+        //Optionally try first read now
+        selectionKey = channel.register(selector, 0);
+
         //将Handler作为callback对象
-        sk.attach(this);
+        selectionKey.attach(this);
 
         //第二步，注册Read就绪事件
-        sk.interestOps(SelectionKey.OP_READ);
+        selectionKey.interestOps(SelectionKey.OP_READ);
         selector.wakeup();
     }
 
@@ -48,20 +54,17 @@ public class SingleHandler implements Runnable {
             } else if(state == SENDING) {
                 send();
             }
-        } catch (IOException ex) {
-            ex.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
-    void read() throws IOException {
+    synchronized void read() throws IOException {
         channel.read(input);
         if(inputIsComplete()) {
-            process();
-            state = SENDING;
-            //Normally also do first write now
-
-            //第三部，接收write就绪事件
-            sk.interestOps(SelectionKey.OP_WRITE);
+            state = PROCESSING;
+            //使用线程pool异步执行
+            pool.execute(new Processer());
         }
     }
 
@@ -70,7 +73,23 @@ public class SingleHandler implements Runnable {
 
         //write完就结束了，关闭select key
         if(outputIsComplete()) {
-            sk.channel();
+            selectionKey.cancel();
+        }
+    }
+
+    synchronized void processAndHandOff() {
+        process();
+        state = SENDING;
+        // or rebind attachment
+        //process完，开始等待write就绪
+        selectionKey.interestOps(SelectionKey.OP_WRITE);
+    }
+
+    class Processer implements Runnable {
+
+        @Override
+        public void run() {
+            processAndHandOff();
         }
     }
 }

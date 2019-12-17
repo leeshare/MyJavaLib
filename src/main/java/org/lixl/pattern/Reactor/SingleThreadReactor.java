@@ -13,11 +13,11 @@ import java.util.Set;
  * "Scalable IO in java" 实现了一个单线程Reactor
  * Created by Administrator on 11/29/2019.
  */
-public class SingleReactor implements Runnable {
+public class SingleThreadReactor implements Runnable {
     final Selector selector;
     final ServerSocketChannel serverSocket;
 
-    SingleReactor(int port) throws IOException {
+    SingleThreadReactor(int port) throws IOException {
         //Reactor初始化
         selector = Selector.open();
         serverSocket = ServerSocketChannel.open();
@@ -65,7 +65,7 @@ public class SingleReactor implements Runnable {
             try {
                 SocketChannel channel = serverSocket.accept();
                 if(channel != null) {
-                    new SingleHandler(selector, channel);
+                    new SingleThreadHandler(selector, channel);
                 }
             } catch (IOException e) {
                 e.printStackTrace();

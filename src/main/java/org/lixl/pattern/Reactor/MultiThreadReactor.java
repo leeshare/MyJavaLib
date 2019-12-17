@@ -14,13 +14,13 @@ import java.util.Set;
  * 为了可以充分利用系统资源，运行于多个CPU的机器, MthreadReactor 将Reactor拆分为两部分。
  * Created by Administrator on 11/29/2019.
  */
-public class MthreadReactor implements Runnable {
+public class MultiThreadReactor implements Runnable {
     //subReactors集合，一个selector代表一个subReactor
     Selector[] selectors = new Selector[2];
     int next = 0;
     final ServerSocketChannel serverSocket;
 
-    MthreadReactor(int port) throws IOException {
+    MultiThreadReactor(int port) throws IOException {
         //Reactor初始化
         selectors[0] = Selector.open();
         selectors[1] = Selector.open();
