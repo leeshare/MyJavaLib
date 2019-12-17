@@ -1,5 +1,12 @@
 
 
+在处理web请求时，通常有两种体系结构，分别是thread-based architecture(基于线程) 和 event-driven architecture(事件驱动)。
+		基于线程的体系结构是用多线程来处理客户端请求，所以有诸多问题：线程需占用内存资源，线程间切换也需开销，线程数过多会降低web服务器的性能，且当线程处理I/O操作，在等待输入的这段时间线程处于空闲的状态，同时会造成cpu资源的浪费。 【多个client -> 一个Server -> 多个handler线程 】
+		事件驱动体系结构是目前比较广泛使用的。这种方式会定义一系列事件处理器来响应事件的发生，且将服务端接收连接与对事件的处理分离。其中事件是一种状态的改变。比如tcp中socket的 new incoming connection、ready for read、read for write。
+		而 reactor设计模式是 event-driven architecture 的一种实现方式。
+		目前许多流行的开源框架都用到了reactor模式，如 netty、node.js等，包括java的nio。
+
+
 MyReactor 和 MyHandler 是一个单线程Reactor
     单线程模式缺点：当某个handler阻塞时，会导致其他所有的client的handler都得不到执行，并且更严重的是,handler的阻塞也会导致整个服务不能接收新的client请求（因为acceptor也被阻塞了）
     因此，单线程模型仅适用于handler中业务处理组件能快速完成的场景

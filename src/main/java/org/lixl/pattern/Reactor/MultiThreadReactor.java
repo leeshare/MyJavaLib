@@ -70,7 +70,8 @@ public class MultiThreadReactor implements Runnable {
             SocketChannel connection = serverSocket.accept();
             if(connection != null) {
                 //选个 subReactor去负责接收到的connection
-                new SingleHandler(selectors[next], connection);
+                //new SingleThreadHandler(selectors[next], connection);
+                new MultiThreadHandler(selectors[next], connection);
             }
             if(++next == selectors.length) {
                 next = 0;
