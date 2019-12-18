@@ -1,8 +1,10 @@
+package org.lixl.pattern;
+
 /**
  * 构建器模式
  * Created by lxl on 18/7/12.
  */
-public class TestBuilderPatten {
+public class BuilderPattern {
     private final String color;
     private final int tyre;
     private final int glass;
@@ -25,11 +27,12 @@ public class TestBuilderPatten {
             this.light = value;
             return this;
         }
-        public TestBuilderPatten build(){
-            return new TestBuilderPatten(this);
+        //将当前这些属性 所在的对象 Builder 传入并生成一个新的 父对象
+        public BuilderPattern build(){
+            return new BuilderPattern(this);
         }
     }
-    private TestBuilderPatten(Builder builder){
+    private BuilderPattern(Builder builder){
         this.color = builder.color;
         this.tyre = builder.tyre;
         this.glass = builder.glass;
@@ -37,6 +40,6 @@ public class TestBuilderPatten {
     }
 
     public static void main(String[] args){
-        TestBuilderPatten b = new Builder(4, 8).color("red").light(4).build();
+        BuilderPattern b = new Builder(4, 8).color("red").light(4).build();
     }
 }
