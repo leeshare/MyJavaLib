@@ -4,8 +4,6 @@ package org.lixl.ai.ga.timetable.attr;
  * Created by Administrator on 12/18/2019.
  */
 public class Module {
-
-
     private final int moduleId;
     private final String moduleCode;
     private final String module;
@@ -19,15 +17,15 @@ public class Module {
     }
 
     public int getModuleId() {
-        return moduleId;
+        return this.moduleId;
     }
 
     public String getModuleCode() {
-        return moduleCode;
+        return this.moduleCode;
     }
 
-    public String getModule() {
-        return module;
+    public String getModuleName() {
+        return this.module;
     }
 
     /**

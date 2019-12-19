@@ -17,7 +17,7 @@ public class Class {
         this.groupId = groupId;
     }
 
-    public Class(Builder builder) {
+    /*public Class(Builder builder) {
         this.classId = builder.classId;
         this.groupId = builder.groupId;
         this.moduleId = builder.moduleId;
@@ -55,7 +55,7 @@ public class Class {
         public Class builder() {
             return new Class(this);
         }
-    }
+    }*/
 
     public void addProfessor(int professorId) {
         this.professorId = professorId;
@@ -86,13 +86,13 @@ public class Class {
         return this.roomId;
     }
 
-    public String toString(){
+    /*public String toString(){
         return " " + this.classId + " " + this.groupId + " " + this.moduleId + " " + this.professorId + " " + this.timeslotId + " " + this.roomId;
     }
 
     public static void main(String[] args) {
         Class aaa = new Builder(11, 22, 33).addProfessor(44).addTimeslot(55).addRoom(66).builder();
         System.out.println(aaa.toString());
-    }
+    }*/
 
 }

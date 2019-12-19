@@ -1,6 +1,5 @@
 package org.lixl.ai.ga.timetable;
 
-import java.sql.Array;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Random;
@@ -76,7 +75,8 @@ public class Population {
 
     public void shuffle() {
         Random random = new Random();
-        for(int i = 0; i < population.length - 1; i++) {
+        //for(int i = 0; i < population.length - 1; i++) {
+        for(int i = population.length - 1; i > 0; i--) {
             int index = random.nextInt(i + 1);  //生成 0 ～ i + 1 之间的一个随机数
             Individual temp = population[index];
             population[index] = population[i];
