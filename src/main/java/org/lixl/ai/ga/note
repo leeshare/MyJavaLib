@@ -1,5 +1,10 @@
 
 
+疑问：为什么交叉和突变时，在遍历整个种群时，取个体要使用 population.getFittest(populationIndex)
+        而不是使用 population.getIndividual(populationIndex)
+        示例中都使用 getFittest 而且确实效率高
+
+
 交叉时，选择父母的算法
 
     轮盘赌/比例选择     roulette wheel
