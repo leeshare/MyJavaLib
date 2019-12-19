@@ -95,7 +95,10 @@ public class GeneticAlgorithm {
         Population newPopulation = new Population(population.size());
 
         for(int populationIndex = 0; populationIndex < population.size(); populationIndex++) {
-            Individual parent1 = population.getIndividual(populationIndex);
+            //这里 我写错了，也没有太大的问题，就是更优解会延迟到来
+            //Individual parent1 = population.getIndividual(populationIndex);
+            Individual parent1 = population.getFittest(populationIndex);
+            //但我不明白 为什么 用 getFittest() 比 getIndividual 会更到得到最优解
 
             if(this.crossoverRate > Math.random() && populationIndex > this.elitismCount) {
                 Individual offspring = new Individual(parent1.getChromosomeLength());
