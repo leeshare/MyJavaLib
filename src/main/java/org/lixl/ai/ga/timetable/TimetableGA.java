@@ -5,12 +5,13 @@ import org.lixl.ai.ga.timetable.attr.Class;
  * Created by Administrator on 12/19/2019.
  */
 public class TimetableGA {
-    private static int maxGeneration = 3000;
+    private static int maxGeneration = 10000;
 
     public static void main(String[] args) {
         Timetable timetable = initializeTimetable();
 
-        GeneticAlgorithm ga = new GeneticAlgorithm(100, 0.001, 0.9, 2, 5);
+        // 这个例子中 突变设为 0.001 太慢了
+        GeneticAlgorithm ga = new GeneticAlgorithm(100, 0.01, 0.9, 2, 5);
 
         Population population = ga.initPopulation(timetable);
 
@@ -80,10 +81,11 @@ public class TimetableGA {
 
         timetable.addTimeslot(7, "Wed 9:00 - 11:00");
         timetable.addTimeslot(8, "Wed 11:00 - 13:00");
-        timetable.addTimeslot(9, "Wed 13:00 - 15:00");
-
+        //当只有8个时间段 最快可以在 800代得到1.0适应度的解
+        //timetable.addTimeslot(9, "Wed 13:00 - 15:00");
+/*
         timetable.addTimeslot(10, "Thu 9:00 - 11:00");
-/*        timetable.addTimeslot(11, "Thu 11:00 - 13:00");
+        timetable.addTimeslot(11, "Thu 11:00 - 13:00");
         timetable.addTimeslot(12, "Thu 13:00 - 15:00");
 
         timetable.addTimeslot(13, "Fri 9:00 - 11:00");
