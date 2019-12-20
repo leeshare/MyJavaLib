@@ -1,6 +1,7 @@
 package org.lixl.ai.ga.timetable.attr;
 
 /**
+ * 教授
  * Created by Administrator on 12/18/2019.
  */
 public class Professor {

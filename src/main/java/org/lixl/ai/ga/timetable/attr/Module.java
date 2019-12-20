@@ -1,6 +1,7 @@
 package org.lixl.ai.ga.timetable.attr;
 
 /**
+ * 课程组，包含课程信息 和 教授数组
  * Created by Administrator on 12/18/2019.
  */
 public class Module {

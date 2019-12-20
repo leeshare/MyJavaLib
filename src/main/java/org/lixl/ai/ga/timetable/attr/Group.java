@@ -1,6 +1,7 @@
 package org.lixl.ai.ga.timetable.attr;
 
 /**
+ * 学生组，包含学生规模数，及报名的课程数组
  * Created by Administrator on 12/18/2019.
  */
 public class Group {

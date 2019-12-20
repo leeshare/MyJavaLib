@@ -1,15 +1,16 @@
 package org.lixl.ai.ga.timetable.attr;
 
 /**
+ * 班对象由  五大元素组成
  * Created by Administrator on 12/18/2019.
  */
 public class Class {
     private final int classId;
-    private final int groupId;
-    private final int moduleId;
-    private int professorId;
+    private final int groupId;  //学生组
+    private final int moduleId; //课程
+    private int professorId;    //教授
     private int timeslotId;     //时间段
-    private int roomId;
+    private int roomId;         //教室
 
     public Class(int classId, int groupId, int moduleId) {
         this.classId = classId;
