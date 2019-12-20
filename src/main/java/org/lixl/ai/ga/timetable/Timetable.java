@@ -300,5 +300,46 @@ public class Timetable {
         return clashes;
     }
 
+    public int calcClashesAndPrint() {
+        int clashes = 0;
+
+        for(Class classA : this.classes) {
+            int roomCapacity = this.getRoom(classA.getRoomId()).getRoomCapacity();
+            int groupSize = this.getGroup(classA.getGroupId()).getGroupSize();
+
+            //教室容量 < 学生组大小 就是冲突
+            if(roomCapacity < groupSize) {
+                clashes++;
+                System.out.println("classId=" + classA.getClassId() + this.getRoom(classA.getRoomId()).getRoomNumber() +  "教室太小 教室=" + roomCapacity + " 学生数=" + groupSize);
+            }
+
+            //同教室、同时间段，但不同班 就是冲突
+            for(Class classB : this.classes) {
+                if(classA.getRoomId() == classB.getRoomId()
+                        && classA.getTimeslotId() == classB.getTimeslotId()
+                        && classA.getClassId() != classB.getClassId()
+                        ) {
+                    clashes++;
+                    System.out.println("classId=" + classA.getClassId() + " 与" + classB.getClassId() + " 教室冲突");
+                    break;
+                }
+            }
+
+            //同教授、同时间段，但不同班 就是冲突
+            for(Class classB : this.classes) {
+                if(classA.getProfessorId() == classB.getProfessorId()
+                        && classA.getTimeslotId() == classB.getTimeslotId()
+                        && classA.getClassId() != classB.getClassId()
+                        ) {
+                    clashes++;
+                    System.out.println("classId=" + classA.getClassId() + " 与" + classB.getClassId() + " 老师冲突");
+                    break;
+                }
+            }
+        }
+
+        return clashes;
+    }
+
 
 }

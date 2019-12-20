@@ -1,6 +1,7 @@
 package org.lixl.ai.ga.timetable;
 
 /**
+ * 没啥可说的，同前面的 allones robot tsp
  * Created by Administrator on 12/19/2019.
  */
 public class GeneticAlgorithm {
@@ -37,7 +38,7 @@ public class GeneticAlgorithm {
         Timetable threadTimetable = new Timetable(timetable);
         threadTimetable.createClasses(individual);
 
-        int clashes = threadTimetable.calcClashes();
+        int clashes = threadTimetable.calcClashes();    //冲突数 可能为 0
         double fitness = 1 / (double) (clashes + 1);    //妙啊！ 除数+1就可能不为0了，还能避免结果产生太大的数
 
         individual.setFitness(fitness);

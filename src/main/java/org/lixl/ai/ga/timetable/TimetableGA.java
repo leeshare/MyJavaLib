@@ -1,15 +1,16 @@
 package org.lixl.ai.ga.timetable;
 
+import org.lixl.ai.ga.timetable.attr.Class;
 /**
  * Created by Administrator on 12/19/2019.
  */
 public class TimetableGA {
-    private static int maxGeneration = 1000;
+    private static int maxGeneration = 3000;
 
     public static void main(String[] args) {
         Timetable timetable = initializeTimetable();
 
-        GeneticAlgorithm ga = new GeneticAlgorithm(100, 0.01, 0.9, 2, 5);
+        GeneticAlgorithm ga = new GeneticAlgorithm(100, 0.001, 0.9, 2, 5);
 
         Population population = ga.initPopulation(timetable);
 
@@ -34,22 +35,28 @@ public class TimetableGA {
         System.out.println();
         System.out.println("解决方案已找到，在第" + generation + "代。");
         System.out.println("最终解决方案的适应度是：" + population.getFittest(0).getFitness());
-        System.out.println("Clashes:" + timetable.calcClashes());
+        //System.out.println("Clashes:" + timetable.calcClashes());
+        int clashNum = timetable.calcClashes();
+        System.out.println("Clashes:" + clashNum);
+        if(clashNum > 0) {
+            timetable.calcClashesAndPrint();
+        }
 
-        /*System.out.println();
+
+        System.out.println();
         Class[] classes = timetable.getClasses();
         int classIndex = 1;
         for(Class bestClass : classes) {
             System.out.print("--------");
-            System.out.print("Class " + (classIndex < 10 ? "0" + classIndex : "" + classIndex) + ": ");
-            System.out.print("Module: " + timetable.getModule(bestClass.getModuleId()).getModuleName());
+            System.out.print("Class " + (bestClass.getClassId() < 10 ? "0" + bestClass.getClassId() : "" + bestClass.getClassId()) + ": ");
             System.out.print(" Group: " + timetable.getGroup(bestClass.getGroupId()).getGroupId());
+            System.out.print("Module: " + timetable.getModule(bestClass.getModuleId()).getModuleName());
             System.out.print(" Room: " + timetable.getRoom(bestClass.getRoomId()).getRoomNumber());
             System.out.print(" Professor: " + timetable.getProfessor(bestClass.getProfessorId()).getProfessorName());
             System.out.print(" Time: " + timetable.getTimeslot(bestClass.getTimeslotId()).getTimeslot());
             System.out.println("--------");
             classIndex++;
-        }*/
+        }
 
     }
 
@@ -76,13 +83,13 @@ public class TimetableGA {
         timetable.addTimeslot(9, "Wed 13:00 - 15:00");
 
         timetable.addTimeslot(10, "Thu 9:00 - 11:00");
-        timetable.addTimeslot(11, "Thu 11:00 - 13:00");
+/*        timetable.addTimeslot(11, "Thu 11:00 - 13:00");
         timetable.addTimeslot(12, "Thu 13:00 - 15:00");
 
         timetable.addTimeslot(13, "Fri 9:00 - 11:00");
         timetable.addTimeslot(14, "Fri 11:00 - 13:00");
         timetable.addTimeslot(15, "Fri 13:00 - 15:00");
-
+*/
         //教授
         timetable.addProfessor(1, "史密斯教授");
         timetable.addProfessor(2, "米切尔夫人");
