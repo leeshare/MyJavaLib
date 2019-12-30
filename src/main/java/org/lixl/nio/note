@@ -21,4 +21,10 @@ java io 分为三种
         jdk1.7之后的 NIO2.0 就是 AIO
 
     Netty
+        是基于主从Reactors多线程模型，但做了一定的修改，其中主从Reactor多线程模型有多个Reactor
+            1) MainReactor负责客户端的连接请求，并将请求转交给SubReactor；
+            2) SubReactor负责相应通道的IO读写请求；
+            3) 非IO请求（具体逻辑处理）的任务则会直接写入队列，等待worker threads进行处理。
+        虽然Netty的线程模型基于主从Reactor多线程，借用了MainReactor和SubReactor的结构。但实际上SubReactor和Worker线程在同一个线程池中：
+            
 
