@@ -20,10 +20,10 @@ public class DFSClient {
 
     public void rename(String src, String dst, Options.Rename... options) throws IOException {
         checkOpen();
-        try() {
+        /*try() {
 
         } catch (RemoteException re) {
             throw re.
-        }
+        }*/
     }
 }

@@ -9,11 +9,11 @@ public class RemoteException extends IOException {
     private static final int UNSPECIFIED_ERROR = -1;
     //选中类名，ALT + Enter
     private static final long serialVersionUID = 9203831460473656086L;
-    private final int errorCode;
-    private final String className;
+    //private final int errorCode;
+    //private final String className;
 
     public RemoteException(String className, String msg) {
-        this(className, msg, null);
+        //this(className, msg, null);
     }
-    public RemoteException(String className, String msg, )
+    //public RemoteException(String className, String msg, )
 }
