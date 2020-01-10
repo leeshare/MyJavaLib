@@ -1,0 +1,66 @@
+
+option java_package = "org.lixl.hadoop.ipc.protobuf";
+option java_outer_classname = "RpcHeaderProtos";
+option java_generate_equals_and_hash = true;
+package hadoop.common;
+
+message RpcRequestHeaderProto {
+
+    enum RpcStatusProto {
+        SUCCESS = 0;
+        ERROR = 1;
+        FATAL = 2;
+    }
+
+    enum RpcErrorCodeProto {
+        //非致命的Rpc错误 ---- 连接仍开发,面向未来rpc请求
+        ERROR_APPLICATION = 1;
+        ERROR_NO_SUCH_METHOD = 2;
+        ERROR_NO_SUCH_PROTOCOL = 3;
+        ERROR_RPC_SERVER = 4;
+        ERROR_SERIALIZING_RESPONSE = 5; //错误的序列化响应
+        ERROR_RPC_VERSION_MISMATCH = 6; //Rpc protocol 版本对不上
+
+        //致命的服务端Rpc错误 ---- 连接关闭
+        FATAL_UNKNOWN = 10;                     //未知的致命错误
+        FATAL_UNSUPPORTED_SERIALIZATION = 11;   //IPC层序列化类型无效
+        FATAL_INVALID_RPC_HEADER = 12;          //RpcHeader中的字段无效
+        FATAL_DESERIALIZING_REQUEST = 13;       //无法反序列化rpc请求
+        FATAL_VERSION_MISMATCH = 14;            //Ipc层版本不匹配
+        FATAL_UNAUTHORIZED = 15;                //授权失败
+    }
+
+    required uint32 callId = 1;
+    required RpcStatusProto status = 2;
+    optional uint32 serverIpcVersionNum = 3;
+    optional string exceptionClassName = 4;
+    optional string errorMsg = 5;
+    optional RpcErrorCodeProto errorDetail = 6;
+    optional bytes clientId = 7;
+    optional sint32 retryCount = 8 [default = -1];
+
+}
+
+message RpcSaslProto {
+    enum SaslState {
+        SUCCESS = 0;
+        NEGOTIATE = 1;
+        INITIATE = 2;
+        CHALLENGE = 3;
+        RESPONSE = 4;
+        WRAP = 5;
+    }
+
+    message SaslAuth {
+        required string method = 1;
+        required string mechanism = 2;
+        optional string protocol = 3;
+        optional string serverId = 4;
+        optional bytes challenge = 5;
+    }
+
+    optional uint32 version = 1;
+    required SaslState state = 2;
+    optional bytes token = 3;
+    repeated SaslAuth auths = 4;
+}
