@@ -1,0 +1,11 @@
+
+此包  lixlsource 对应 hadoop源码中的 hadoop 这一层（org.apache.hadoop）
+
+
+classification 对应于 hadoop-annotations 模块中
+
+hdfs 对应于 hadoop-hdfs-client 模块中
+
+net 对应于 hadoop-common 模块中
+util
+
