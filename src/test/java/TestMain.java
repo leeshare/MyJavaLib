@@ -9,7 +9,18 @@ import test.TestBean;
 public class TestMain {
     public static void main(String[] args){
         //testNum();
-        testAop();
+        //testAop();
+
+        String[] t1 = {};
+        String[] t2 = {"java","C++"};
+        String t3 = "java";
+        threePoint("java","C++","Python");
+        threePoint(null);
+        threePoint();
+        threePoint(t1);
+        threePoint(t2);
+        threePoint(t3);
+        //threePoint(t3,t2);//类型错误,数组只能传一个
     }
 
     static void testAop(){
@@ -71,4 +82,24 @@ public class TestMain {
     public void doInstanceSth(){
         doClassSth();
     }
+
+
+
+    public static void threePoint(String... s) {
+        if (s == null) {
+            System.out.println("没有参数");
+            return;
+        }
+        int len = s.length;
+        if (len == 0) {
+            System.out.println("有参数，没有字符");
+        } else {
+            for (String s1 : s
+                    ) {
+                System.out.println(s1 + " ");
+            }
+        }
+        System.out.println("==============================");
+    }
+
 }
