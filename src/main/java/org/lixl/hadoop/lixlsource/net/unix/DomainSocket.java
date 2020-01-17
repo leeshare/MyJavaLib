@@ -504,11 +504,25 @@ public class DomainSocket implements Closeable {
                 if(dst.isDirect()) {
                     nread = DomainSocket.readByteBufferDirect0(DomainSocket.this.fd, dst, dst.position(), dst.remaining());
                 } else if(dst.hasArray()) {
-                    nread = DomainSocket.readArray0(DomainSocket.this.fd, dst)
+                    nread = DomainSocket.readArray0(DomainSocket.this.fd, dst.array(), dst.position(), dst.remaining());
+                } else {
+                    throw new AssertionError("我们不支持使用既不主导也不依靠数组的ByteBuffers");
                 }
+                if(nread > 0) {
+                    dst.position(dst.position() + nread);
+                }
+                exc = false;
+                return nread;
+            } finally {
+                unreference(exc);
             }
         }
 
+    }
+
+    @Override
+    public String toString() {
+        return String.format("DomainSocket(fd=%d, path=%s)", fd, path);
     }
 
 }
