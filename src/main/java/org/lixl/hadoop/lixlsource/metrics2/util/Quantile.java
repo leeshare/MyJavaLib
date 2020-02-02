@@ -4,7 +4,8 @@ import com.google.common.collect.ComparisonChain;
 import org.lixl.hadoop.lixlsource.classification.InterfaceAudience;
 
 /**
- * 具体的一个 quantile 作为被观察对象
+ * 具体的一个 分位数 作为被观察对象
+ * (题外:比如二分位数 就是 把所有要观察的数值高低排序后,找到正中间一个数作为中位数,即二分位数)
  * Created by lxl on 20/1/31.
  */
 @InterfaceAudience.Private
@@ -31,6 +32,9 @@ public class Quantile implements Comparable<Quantile> {
         long qbits = Double.doubleToLongBits(quantile);
         long ebits = Double.doubleToLongBits(error);
 
+        //double 由于精度问题,没法字节比较,要比较
+        // 1 可以通过sun官方的 Double.doubleToLongBits()   ==
+        // 2 可以通过 new BigDecimal()      .compareTo()
         return qbits == Double.doubleToLongBits(that.quantile)
                 && ebits == Double.doubleToLongBits(that.error);
     }
