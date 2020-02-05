@@ -32,8 +32,8 @@ public class UserGroupInformation {
         shouldRenewImmediatelyForTests = immediate;
     }
 
-    static class UgiMetrics {
+/*    static class UgiMetrics {
         final MetricsRegistry
-    }
+    }*/
 
 }

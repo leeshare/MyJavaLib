@@ -3,6 +3,7 @@ package org.lixl.hadoop.lixlsource.metrics2.lib;
 import com.google.common.collect.Maps;
 import org.lixl.hadoop.lixlsource.classification.InterfaceAudience;
 import org.lixl.hadoop.lixlsource.classification.InterfaceStability;
+import org.lixl.hadoop.lixlsource.metrics2.MetricsException;
 import org.lixl.hadoop.lixlsource.metrics2.MetricsInfo;
 import org.lixl.hadoop.lixlsource.metrics2.MetricsTag;
 
@@ -158,9 +159,90 @@ public class MetricsRegistry {
         return ret;
     }
 
+    /**
+     * 创建一个可变的标准 估算一个值的流的分位数
+     * @param name
+     * @param desc
+     * @param sampleName
+     * @param valueName
+     * @param interval
+     * @return
+     */
     public synchronized MutableQuantiles newQuantiles(String name, String desc,
                                                       String sampleName, String valueName, int interval) {
+        checkMetricName(name);
+        if(interval <= 0) {
+            throw new MetricsException("间隔应该为正数. 传入的值是: " + interval);
+        }
+        MutableQuantiles ret = new MutableQuantiles(name, desc, sampleName, valueName, interval);
+        metricsMap.put(name, ret);
+        return ret;
+    }
 
+    public synchronized MutableStat newStat(String name, String desc,
+                                            String sampleName, String valueName, boolean extended) {
+        checkMetricName(name);
+        MutableStat ret = new MutableStat(name, desc, sampleName, valueName, extended);
+        metricsMap.put(name, ret);
+        return ret;
+    }
+
+    public MutableStat newStat(String name, String desc, String sampleName, String valueName) {
+        return newStat(name, desc, sampleName, valueName, false);
+    }
+
+    public MutableRate newRate(String name) {
+        return newRate(name, name, false);
+    }
+
+    public MutableRate newRate(String name, String description) {
+        return newRate(name, description, false);
+    }
+
+    public MutableRate newRate(String name, String desc, boolean extended) {
+        return newRate(name, desc, extended, true);
+    }
+
+    @InterfaceAudience.Private
+    public synchronized MutableRate newRate(String name, String desc, boolean extended, boolean returnExisting) {
+        if(returnExisting) {
+            MutableMetric rate = metricsMap.get(name);
+            if(rate != null) {
+                if(rate instanceof MutableRate) {
+                    return (MutableRate) rate;
+                }
+                throw new MetricsException("非metrics类型 " + rate.getClass() + " for " + name);
+            }
+        }
+        checkMetricName(name);
+        MutableRate ret = new MutableRate(name, desc, extended);
+        metricsMap.put(name, ret);
+        return ret;
+    }
+
+    /*public synchronized MutableRatesWithAggregation newRatesWithAggregation(String name) {
+        checkMetricName(name);
+        MutableRatesWithAggregation
+    }*/
+
+
+
+
+    private void checkMetricName(String name) {
+        boolean foundWhitespace = false;
+        for(int i = 0; i < name.length(); i++) {
+            char c = name.charAt(i);
+            if(Character.isWhitespace(c)) {
+                foundWhitespace = true;
+                break;
+            }
+        }
+        if(foundWhitespace) {
+            throw new MetricsException("指标名 '" + name + "' 包含非法的空白字符");
+        }
+        if(metricsMap.containsKey(name)) {
+            throw new MetricsException("指标名 " + name + "已存在！");
+        }
     }
 
 }

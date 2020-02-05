@@ -9,10 +9,11 @@ import org.lixl.hadoop.lixlsource.io.Writable;
  */
 @InterfaceAudience.Public
 @InterfaceStability.Evolving
-public class TokenIdentifier implements Writable {
+public class TokenIdentifier //implements Writable
+{
 
     private String trackingId = null;
 
-    public abstract Text
+//    public abstract Text
 
 }

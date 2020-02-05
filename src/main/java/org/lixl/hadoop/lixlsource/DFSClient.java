@@ -10,7 +10,8 @@ import java.security.AccessControlException;
 /**
  * Created by Administrator on 1/9/2020.
  */
-public class DFSClient implements Cloneable, RemotePee {
+public class DFSClient implements Cloneable//, RemotePee
+{
 
     //private final Tracer
     volatile boolean clientRunning = true;
@@ -23,13 +24,13 @@ public class DFSClient implements Cloneable, RemotePee {
 
     public void rename(String src, String dst, Options.Rename... options) throws IOException {
         checkOpen();
-        try(TraceScope ignored = newStrDstTraceScope("rename", src, dst)) {
+/*        try(TraceScope ignored = newStrDstTraceScope("rename", src, dst)) {
             //return namenode.
         } catch (RemoteException re) {
             throw re.unwrapRemoteException(AccessControlException.class
                     //NSQuota
             );
-        }
+        }*/
     }
 
 

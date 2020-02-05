@@ -15,7 +15,8 @@ import java.util.Set;
  */
 @InterfaceAudience.Public
 @InterfaceStability.Stable
-public class Configuration implements Iterable<Map.Entry<String, String>>, Writable {
+public class Configuration //implements Iterable<Map.Entry<String, String>>, Writable
+        {
     private static final Logger LOG = LoggerFactory.getLogger(Configuration.class);
     private static final Logger LOG_DEPRECATION = LoggerFactory.getLogger("org.lixl.hadoop.lixlsource.conf.Configuration.deprecation");
     private static final Set<String> TAGS = new HashSet<>();
@@ -30,7 +31,7 @@ public class Configuration implements Iterable<Map.Entry<String, String>>, Writa
         private final String name;
         private final boolean restrictParser;
 
-        public Resource(Object resource) {
+/*        public Resource(Object resource) {
             this(resource, resource.toString());
         }
         public Resource(Object resource, boolean useRestrictedParser) {
@@ -38,7 +39,7 @@ public class Configuration implements Iterable<Map.Entry<String, String>>, Writa
         }
         public Resource(Object resource, String name) {
             this(resource, name, getRestrictParserDefault(resource));
-        }
+        }*/
         public Resource(Object resource, String name, boolean restrictParser) {
             this.resource = resource;
             this.name = name;
@@ -59,9 +60,9 @@ public class Configuration implements Iterable<Map.Entry<String, String>>, Writa
             return name;
         }
 
-        private static boolean getRestrictParserDefault(Object resource) {
+/*        private static boolean getRestrictParserDefault(Object resource) {
             if(resource instanceof String || !UserGroupInformation.)
-        }
+        }*/
 
     }
 }

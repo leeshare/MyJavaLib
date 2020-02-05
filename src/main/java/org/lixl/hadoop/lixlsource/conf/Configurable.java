@@ -10,5 +10,5 @@ import org.lixl.hadoop.lixlsource.classification.InterfaceStability;
 @InterfaceStability.Stable
 public interface Configurable {
 
-    void setConf(Configuration)
+//    void setConf(Configuration)
 }

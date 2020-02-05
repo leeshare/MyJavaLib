@@ -11,5 +11,5 @@ import java.net.InetSocketAddress;
 @InterfaceAudience.Private
 public interface RemotePeerFactory {
 
-    Peer newConnectedPeer(InetSocketAddress addr, Token)
+//    Peer newConnectedPeer(InetSocketAddress addr, Token)
 }

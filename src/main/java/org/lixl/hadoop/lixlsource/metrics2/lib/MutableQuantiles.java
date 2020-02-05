@@ -77,7 +77,64 @@ public class MutableQuantiles extends MutableMetric {
 
     @Override
     public synchronized void snapshot(MetricsRecordBuilder builder, boolean all) {
+        if(all || changed()) {
+            builder.addGauge(numInfo, previousCount);
+            for(int i = 0; i < quantiles.length; i++) {
+                long newValue = 0;
+                if(previousSnapshot != null) {
+                    newValue = previousSnapshot.get(quantiles[i]);
+                }
+                builder.addGauge(quantileInfos[i], newValue);
+            }
+            if(changed()) {
+                clearChanged();
+            }
+        }
+    }
 
+    public synchronized void add(long value) {
+        estimator.insert(value);
+    }
+
+    public int getInterval() {
+        return interval;
+    }
+
+    public void stop() {
+        if(scheduledTask != null) {
+            scheduledTask.cancel(false);
+        }
+        scheduledTask = null;
+    }
+
+    @VisibleForTesting
+    public synchronized QuantileEstimator getEstimator() {
+        return estimator;
+    }
+
+    public synchronized void setEstimator(QuantileEstimator quantileEstimator) {
+        this.estimator = quantileEstimator;
+    }
+
+    /**
+     * Runnable 使用周期的循环
+     */
+    private static class RolloverSample implements Runnable {
+        MutableQuantiles parent;
+
+        public RolloverSample(MutableQuantiles parent) {
+            this.parent = parent;
+        }
+
+        @Override
+        public void run() {
+            synchronized (parent) {
+                parent.previousCount = parent.estimator.getCount();
+                parent.previousSnapshot = parent.estimator.snapshot();
+                parent.estimator.clear();
+            }
+            parent.setChanged();
+        }
     }
 
 }
