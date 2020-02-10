@@ -5,11 +5,16 @@ import org.lixl.hadoop.lixlsource.classification.InterfaceAudience;
 import org.lixl.hadoop.lixlsource.classification.InterfaceStability;
 import org.lixl.hadoop.lixlsource.metrics2.MetricsException;
 import org.lixl.hadoop.lixlsource.metrics2.MetricsInfo;
+import org.lixl.hadoop.lixlsource.metrics2.MetricsRecordBuilder;
 import org.lixl.hadoop.lixlsource.metrics2.MetricsTag;
+import org.lixl.hadoop.lixlsource.metrics2.impl.MsInfo;
 
+import java.util.Collection;
 import java.util.Map;
+import java.util.StringJoiner;
 
 /**
+ * 一个可选的指标注册类用于创建和维护一个可变指标集合，使写指标源变得简单。
  * Created by lxl on 20/1/21.
  */
 @InterfaceAudience.Public
@@ -220,12 +225,71 @@ public class MetricsRegistry {
         return ret;
     }
 
-    /*public synchronized MutableRatesWithAggregation newRatesWithAggregation(String name) {
+    public synchronized MutableRatesWithAggregation newRatesWithAggregation(String name) {
         checkMetricName(name);
-        MutableRatesWithAggregation
-    }*/
+        MutableRatesWithAggregation rates = new MutableRatesWithAggregation();
+        metricsMap.put(name, rates);
+        return rates;
+    }
 
+    public synchronized MutableRollingAverages newMutableRollingAverages(String name, String valueName) {
+        checkMetricName(name);
+        MutableRollingAverages rollingAverages = new MutableRollingAverages(valueName);
+        metricsMap.put(name, rollingAverages);
+        return rollingAverages;
+    }
 
+    synchronized void add(String name, MutableMetric metric) {
+        checkMetricName(name);
+        metricsMap.put(name, metric);
+    }
+
+    public synchronized void add(String name, long value) {
+        MutableMetric m = metricsMap.get(name);
+
+        if(m != null) {
+            if(m instanceof MutableStat) {
+                ((MutableStat) m).add(value);
+            }else {
+                throw new MetricsException("Unsupported add(value) for metric " + name);
+            }
+        }else {
+            metricsMap.put(name, newRate(name));    //默认是一个比率标准
+            add(name, value);
+        }
+    }
+
+    public MetricsRegistry setContext(String name) {
+        return tag(MsInfo.Context, name, true);
+    }
+
+    public MetricsRegistry tag(String name, String description, String value) {
+        return tag(name, description, value, false);
+    }
+
+    public MetricsRegistry tag(String name, String description, String value, boolean override) {
+        return tag(Interns.info(name, description), value, override);
+    }
+
+    public synchronized MetricsRegistry tag(MetricsInfo info, String value, boolean override) {
+        if(!override) {
+            checkTagName(info.name());
+        }
+        tagsMap.put(info.name(), Interns.tag(info, value));
+        return this;
+    }
+
+    public MetricsRegistry tag(MetricsInfo info, String value) {
+        return tag(info, value, false);
+    }
+
+    Collection<MetricsTag> tags() {
+        return tagsMap.values();
+    }
+
+    Collection<MutableMetric> metrics() {
+        return metricsMap.values();
+    }
 
 
     private void checkMetricName(String name) {
@@ -243,6 +307,31 @@ public class MetricsRegistry {
         if(metricsMap.containsKey(name)) {
             throw new MetricsException("指标名 " + name + "已存在！");
         }
+    }
+
+    public void checkTagName(String name) {
+        if(tagsMap.containsKey(name)) {
+            throw new MetricsException("标签" + name + "已存在！");
+        }
+    }
+
+    public synchronized void snapshot(MetricsRecordBuilder builder, boolean all) {
+        for(MetricsTag tag : tags()) {
+            builder.add(tag);
+        }
+        for(MutableMetric metric : metrics()) {
+            metric.snapshot(builder, all);
+        }
+    }
+
+    @Override
+    public String toString() {
+        return new StringJoiner(", ", this.getClass().getSimpleName() + "{", "}")
+                .add("info=" + metricsInfo.toString())
+                .add("tags=" + tags())
+                .add("metrics=" + metrics())
+                .toString();
+
     }
 
 }
