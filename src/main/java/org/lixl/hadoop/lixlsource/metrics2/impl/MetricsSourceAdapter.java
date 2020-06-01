@@ -7,14 +7,13 @@ import org.lixl.hadoop.lixlsource.metrics2.MetricsTag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.management.Attribute;
-import javax.management.DynamicMBean;
-import javax.management.MBeanInfo;
-import javax.management.ObjectName;
+import javax.management.*;
 import java.util.HashMap;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static org.lixl.hadoop.lixlsource.metrics2.util.Contracts.checkArg;
+
+import static org.lixl.hadoop.lixlsource.metrics2.impl.MetricsConfig.*;
 
 /**
  * 一个适配器类 用于指标源和关联过滤器和jmx实现
@@ -61,7 +60,7 @@ class MetricsSourceAdapter implements DynamicMBean {
 
     MetricsSourceAdapter(String prefix, String name, String description,
                          MetricsSource source, Iterable<MetricsTag> injectedTags,
-                         long prerid, MetricsConfig conf) {
+                         long period, MetricsConfig conf) {
         this(prefix, name, description, source, injectedTags,
                 conf.getFilter(RECORD_FILTER_KEY),
                 conf.getFilter(METRIC_FILTER_KEY),
@@ -69,4 +68,33 @@ class MetricsSourceAdapter implements DynamicMBean {
                 conf.getBoolean(START_MBEANS_KEY, true));
     }
 
+    @Override
+    public Object getAttribute(String attribute) throws AttributeNotFoundException, MBeanException, ReflectionException {
+        return null;
+    }
+
+    @Override
+    public void setAttribute(Attribute attribute) throws AttributeNotFoundException, InvalidAttributeValueException, MBeanException, ReflectionException {
+
+    }
+
+    @Override
+    public AttributeList getAttributes(String[] attributes) {
+        return null;
+    }
+
+    @Override
+    public AttributeList setAttributes(AttributeList attributes) {
+        return null;
+    }
+
+    @Override
+    public Object invoke(String actionName, Object[] params, String[] signature) throws MBeanException, ReflectionException {
+        return null;
+    }
+
+    @Override
+    public MBeanInfo getMBeanInfo() {
+        return null;
+    }
 }

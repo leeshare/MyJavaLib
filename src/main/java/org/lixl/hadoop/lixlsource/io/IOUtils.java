@@ -19,6 +19,9 @@ import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.lixl.hadoop.lixlsource.fs.CommonConfigurationKeysPublic.IO_FILE_BUFFER_SIZE_DEFAULT;
+import static org.apache.hadoop.fs.CommonConfigurationKeysPublic.IO_FILE_BUFFER_SIZE_KEY;
+
 @InterfaceAudience.Public
 @InterfaceStability.Evolving
 public class IOUtils {

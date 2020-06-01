@@ -39,5 +39,13 @@ public class CommonConfigurationKeysPublic {
             HADOOP_SECURITY_SENSITIVE_CONFIG_KEYS
     );
 
+    /**
+    * @see
+    * <a href="{@docRoot}/../hadoop-project-dist/hadoop-common/core-default.xml">
+    * core-default.xml</a>
+    */
+    public static final String  IO_FILE_BUFFER_SIZE_KEY = "io.file.buffer.size";
+    /** Default value for IO_FILE_BUFFER_SIZE_KEY */
+    public static final int     IO_FILE_BUFFER_SIZE_DEFAULT = 4096;
 
 }
