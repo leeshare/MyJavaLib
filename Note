@@ -8,3 +8,6 @@
 2019-05-21
     git clone 下项目后，如果始终报 Failed to execute goal org.apache.maven.plugins:maven-compiler-plugin:3.1
     可以尝试，在Idea中，选右侧Maven>Reimport>compile
+
+如果刚clone下来的项目，由于proto无法编译通过，则可
+    在ieda右侧 Maven Projects > Plugins > protobuf > protobuf:compile 编译成功即可。
