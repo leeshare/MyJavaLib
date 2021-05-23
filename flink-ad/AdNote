@@ -1,9 +1,13 @@
 
 广告信息流项目
 背景
-    针对当前百万级用户流向的平台，如何让平台的流量变现最大化。
+    针对当前百万级用户流的平台中投放的广告，如何实现的流量变现最大化。
     开发一个DSP广告系统，实现平台的高可用，高并发，为广告主能精确投放广告，
     针对特定用户投放，并让广告主和运营人员能实时查看投放效果。
+
+    DSP（Demand-Side Platform，即需求方平台，以精准营销为核心理念）
+    先对接媒体（如微博、微信、头条、快手等资源），再通过实时竞价（RTB）的方式，
+    让广告自主选择投放的媒体及投放的客户群体，进行广告投放~
 需求
     广告主要看实时统计广告效果数据，并支持多维度分析
     把服务端广告竞价阶段的信息补充到客户端上报的日志里，需要实时日志拼接
@@ -20,21 +24,34 @@
         3、数据重复问题
         4、多维数据分析
     解决
-        1、实时引擎选型    Flink + Kafka
+        1、实时引擎选型    Flink + Kafka + kv
         2、拼接失败重试方案      retry
         3、实时拼接，采用离线来修复
         4、存储引擎选型，读取kv的压力，读kv慢，flink处理能力下降，数据处理不过来
         5、数据重复问题，日志加event_id
         6、多维分析引擎选型  Druid
+    技术工具
+        ZooKeeper   做服务管理协调
+            用于存kafka的broker等信息
+        Kafka
+        Flink
+        Redis
+        HBase
+        Druid
+        HDFS
+        Hive
     具体实现类
         一、定义Schama
             数据交换格式 Protobuf
             ad_server_log.proto
             ad_client_log.proto
             ad_log.proto
+            > mvn compile 使用编译命令 即可生成对应的类文件
         二、Mock脚本开发
+            部署好zookeeper，kafka集群
+            创建几个topic主题
             MockData    生成mock数据，模拟kafka生产者，写入kafka
-            KafkaProducerUtils  执行
+            KafkaProducerUtils  执行调用写入kafka
         三、Flink读取数据及操作数据
             StreamJoinJob ————以后重构，应该拆分成3个独立的job来执行
                 从kafka 读取 server_log 数据，写入分级缓存
