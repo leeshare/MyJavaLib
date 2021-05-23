@@ -1,0 +1,44 @@
+syntax = "proto3";
+package grpc;   //这里对应java的 命名空间
+option java_package = "com.lixl.stream.entity"; //生成java文件所在的目录
+option java_outer_classname = "AdServerLogProto";     //生成Java类名
+option java_multiple_files = true;  //编译后会生成多个Message类
+
+message AdServerLog{
+
+    //这里定义 预留出来空间，供以后增加 字段
+    // 比如 string request_id = 1;  类型 字段名 = 分配标识号;  这些数字标识符是用来在二进制格式中识别各个字段。一旦开始使用就不能再修改！
+    // 在[1,15]之内的标识符占一个字节；[16,2047]的占两个字节。所以要为频繁使用的元素设在[1,15]内， 将来要频繁出现的元素，预留在[1,15]之内
+
+    //基础字段（1-10）
+    //后面的值是唯一id，（这里的request_id，后面用于去重）
+    string request_id = 1;
+    //请求日志到达服务器的时间
+    uint64 timestamp = 2;
+
+    // client info （11-15）
+    string device_id = 11;
+    string os = 12;
+    string network = 13;
+
+    // dmp info 用户特征  （51-99）
+    string user_id = 51;
+    string gender = 52;
+    int32 age = 53;
+    string country = 54;
+    string province = 55;
+    string city = 56;
+
+    // ad info 竞价胜出的广告信息  （100-199）
+    string source_type = 100;   //来自哪里
+    string bid_type = 101;
+    int64 bid_price = 102;      //出价
+
+    int64 pos_id = 150;     //广告位置
+    int64 account_id = 151;     //广告主
+    int64 unit_id = 152;    //广告单元
+    int64 creative_id = 153;    //广告创意
+    // event        （200-）
+    string event_type = 200;    //
+
+}

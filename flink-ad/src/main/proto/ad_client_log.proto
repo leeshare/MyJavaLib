@@ -1,0 +1,28 @@
+syntax = "proto3";
+package grpc;   //这里对应java的 命名空间
+option java_package = "com.lixl.stream.entity"; //生成java文件所在的目录
+option java_outer_classname = "AdClientLogProto";     //生成Java类名
+option java_multiple_files = true;  //编译后会生成多个Message类
+
+message AdClientLog{
+    string request_id = 1;
+    uint64 timestamp = 2;
+
+    string device_id = 11;
+    string os = 12;
+    string network = 13;
+
+    // dmp info
+    string user_id = 51;
+
+    // ad info
+    string source_type = 100;
+    string bid_type = 101;
+
+    int64 pos_id = 150;
+    int64 account_id = 151;
+    int64 unit_id = 152;
+    int64 creative_id = 153;
+    // event
+    string event_type = 211;
+}

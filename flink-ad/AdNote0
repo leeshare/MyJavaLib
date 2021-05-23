@@ -1,0 +1,50 @@
+
+这是一个 广告信息流项目
+业务需求：对于有百万级用户的平台中投放的广告如何实现流量变现利益最大化
+        我们需要设计一套DSP投放系统，（Demand-Side Platform，即需求方平台，以精准营销为核心理念）
+        先对接媒体（如微博、微信、头条、快手等资源），再通过实时竞价（RTB）的方式，
+        让广告自主选择投放的媒体及投放的客户群体，进行广告投放~
+技术难点：
+        实时引擎选型————kv + Flink + kafka
+        拼接失败重试方案————retry
+        实时拼接，采用离线来修复
+        存储引擎选型，读取kv的压力，读kv慢，flink处理能力下降，数据处理不过来
+        数据重复问题，日志加event_id
+        多为分析引擎选型
+所使用的技术：
+    ZooKeeper   做服务管理协调
+        用于存kafka的broker等信息
+    Kafka
+    Flink
+    Redis
+    HBase
+    Druid
+    HDFS
+    Hive
+
+步骤：
+    一、定义Schema
+        数据交互格式选型 Protobuf
+        main 下创建 proto 文件夹
+        添加3个 .proto 文件
+        > mvn compile 使用编译命令 即可生成对应的类文件
+    二、使用Mock脚本模拟数据生成
+        部署好zookeeper，kafka集群
+        创建几个topic主题
+
+        涉及的类：
+            MockDataUtils 来模拟生产者生产数据（server log，client log）
+            KafkaProducerUtils  模拟Kafka生产者，把模拟出的数据发到kafka上
+
+    三、Flink任务开发
+
+
+
+        涉及的类：
+            StreamJoinJob       //实际做 连接server_log和client_log操作类
+            AdServerLogRichFlatMap  //实现 server_log 写入kv 分级缓存中。
+            AdClientLogRichFlatMap
+            StreamJoinRetryJob
+
+
+

@@ -14,6 +14,7 @@ public class TestStatic {
     }
 }
 
+/*
 class TestStaticChild extends TestStatic {
     public int i;
     public double d;
@@ -36,3 +37,4 @@ class TestStaticChild extends TestStatic {
 
     }
 }
+*/

@@ -1,0 +1,53 @@
+
+广告信息流项目
+背景
+    针对当前百万级用户流向的平台，如何让平台的流量变现最大化。
+    开发一个DSP广告系统，实现平台的高可用，高并发，为广告主能精确投放广告，
+    针对特定用户投放，并让广告主和运营人员能实时查看投放效果。
+需求
+    广告主要看实时统计广告效果数据，并支持多维度分析
+    把服务端广告竞价阶段的信息补充到客户端上报的日志里，需要实时日志拼接
+    最基本的保证数据的准确性，需要有离线流程定时做数据修复
+
+
+实现
+    平台架构难度
+        1、实时拼接
+            拼接率
+            拼接失败重试方案
+            准确性
+        2、读取kv的压力
+        3、数据重复问题
+        4、多维数据分析
+    解决
+        1、实时引擎选型    Flink + Kafka
+        2、拼接失败重试方案      retry
+        3、实时拼接，采用离线来修复
+        4、存储引擎选型，读取kv的压力，读kv慢，flink处理能力下降，数据处理不过来
+        5、数据重复问题，日志加event_id
+        6、多维分析引擎选型  Druid
+    具体实现类
+        一、定义Schama
+            数据交换格式 Protobuf
+            ad_server_log.proto
+            ad_client_log.proto
+            ad_log.proto
+        二、Mock脚本开发
+            MockData    生成mock数据，模拟kafka生产者，写入kafka
+            KafkaProducerUtils  执行
+        三、Flink读取数据及操作数据
+            StreamJoinJob ————以后重构，应该拆分成3个独立的job来执行
+                从kafka 读取 server_log 数据，写入分级缓存
+                从kafka 读取 client_log 数据，从分级缓存读取 server_log 数据，执行拼接
+                    对拼接失败的数据，执行重试
+                统计服务
+        四、Flink Sink数据到HDFS
+            SinkToHiveJob
+                按日期进行归档
+        五、Hive任务
+            创建表
+            离线的中间表的抽取 context_server_log表
+            离线的关联表 join_log
+        六、Druid
+
+

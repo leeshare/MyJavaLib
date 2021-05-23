@@ -1,0 +1,47 @@
+syntax = "proto3";
+package grpc;   //这里对应java的 命名空间
+option java_package = "com.lixl.stream.entity"; //生成java文件所在的目录
+option java_outer_classname = "AdLogProto";     //生成Java类名
+option java_multiple_files = true;  //编译后会生成多个Message类
+
+message ProcessInfo {
+    bool join_server_log = 1;   //是否关联上了
+    int64 process_timestamp = 2;    //处理时间
+    int64 retry_count = 3;  //重试次数
+}
+
+message AdLog {
+    string request_id = 1;
+    uint64 timestamp = 2;
+    ProcessInfo process_info = 3;
+
+    string device_id = 11;
+    string os = 12;
+    string network = 13;
+
+    // dmp info
+    string user_id = 51;
+    string gender = 52;
+    int32 age = 53;
+    string country = 54;
+    string province = 55;
+    string city = 56;
+
+    // ad info 竞价胜出的广告信息  （100-199）
+    string source_type = 100;   //来自哪里
+    string bid_type = 101;
+    int64 bid_price = 102;      //出价
+
+    int64 pos_id = 150;     //广告位置
+    int64 account_id = 151;     //广告主
+    int64 unit_id = 152;    //广告单元
+    int64 creative_id = 153;    //广告创意
+    // event
+    string event_type = 200;
+    int64 send = 201;       //广告下发了
+    int64 impression = 202; //广告曝光了
+    int64 click = 203;      //广告点击了
+    int64 download = 204;   //广告点击了
+    int64 installed = 205;  //广告安装了
+    int64 pay = 206;        //广告支付了
+}
