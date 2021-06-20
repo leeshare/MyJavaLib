@@ -1,11 +1,5 @@
 package org.lixl.java8;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
-import java.util.function.Consumer;
-
 /**
  * Created by Administrator on 4/4/2018.
  */

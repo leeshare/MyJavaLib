@@ -12,16 +12,20 @@ import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;
 import org.apache.flink.streaming.api.datastream.WindowedStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.api.windowing.assigners.GlobalWindows;
+import org.apache.flink.streaming.api.windowing.evictors.Evictor;
 import org.apache.flink.streaming.api.windowing.triggers.Trigger;
 import org.apache.flink.streaming.api.windowing.triggers.TriggerResult;
 import org.apache.flink.streaming.api.windowing.windows.GlobalWindow;
+import org.apache.flink.streaming.runtime.operators.windowing.TimestampedValue;
 import org.apache.flink.util.Collector;
 
+import java.util.Iterator;
+
 /**
- * 自定义 触发器 Trigger
- *      实现 CountTrigger的功能
+ * 每隔2个单词，计算最近3个单词
+ *      类似于滑动窗口 SliddingWindow，需要上一个窗口的数据
  */
-public class CountWindowWordCount {
+public class CountWindowWordCountByEvictor {
     public static void main(String[] args) throws Exception {
         StreamExecutionEnvironment env =
                 StreamExecutionEnvironment.getExecutionEnvironment();
@@ -40,7 +44,10 @@ public class CountWindowWordCount {
                 });
         WindowedStream<Tuple2<String, Integer>, Tuple, GlobalWindow> keyedWindow = stream.keyBy(0)
                 .window(GlobalWindows.create())
-                .trigger(new MyCountTrigger(3));
+                //每隔2个单词，运行一次计算
+                .trigger(new MyCountTrigger(2))
+                //
+                .evictor(new MyCountEvictor(3));
 
 //可以看看里面的源码，跟我们写的很像
 // WindowedStream<Tuple2<String, Integer>, Tuple, GlobalWindow> keyedWindow = stream.keyBy(0)
@@ -86,21 +93,22 @@ window 中的数据
 public TriggerResult onElement(Tuple2<String, Integer> element,
                                long timestamp,
                                GlobalWindow window,
-                               TriggerContext ctx) throws Exception {
-// 拿到当前 key 对应的 count 状态值
-    ReducingState<Long> count =
-            ctx.getPartitionedState(stateDescriptor);
-// count 累加 1
-    count.add(1L);
-// 如果当前 key 的 count 值等于 maxCount
-    if (count.get() == maxCount) {
-        count.clear();
-// 触发 window 计算，删除数据
-        return TriggerResult.FIRE_AND_PURGE;
-    }
-// 否则，对 window 不做任何的处理
-    return TriggerResult.CONTINUE;
-}
+                                       TriggerContext ctx) throws Exception {
+        // 拿到当前 key 对应的 count 状态值
+            ReducingState<Long> count =
+                    ctx.getPartitionedState(stateDescriptor);
+        // count 累加 1
+            count.add(1L);
+        // 如果当前 key 的 count 值等于 maxCount
+            if (count.get() == maxCount) {
+                count.clear();
+                //return TriggerResult.FIRE_AND_PURGE;
+                //因为现在只是要触发计算，不要删除，因为下个窗口还需要上个窗口的数据
+                return TriggerResult.FIRE;
+            }
+        // 否则，对 window 不做任何的处理
+            return TriggerResult.CONTINUE;
+        }
         @Override
         public TriggerResult onProcessingTime(long time,
                                               GlobalWindow window,
@@ -119,6 +127,66 @@ public TriggerResult onElement(Tuple2<String, Integer> element,
         public void clear(GlobalWindow window, TriggerContext ctx) throws Exception {
 // 清除状态值
             ctx.getPartitionedState(stateDescriptor).clear();
+        }
+    }
+
+    /**
+     * 自定义 Evictor ————驱除数据
+     *      计算之前，删除特定数据
+     */
+    private static class MyCountEvictor implements Evictor<Tuple2<String, Integer>, GlobalWindow> {
+        private long windowCount;
+
+        public MyCountEvictor(long windowCount) {
+            this.windowCount = windowCount;
+        }
+
+        /**
+         * 在window之前删除特定数据
+         *
+         * @param element   当前窗口所有的数据
+         * @param size
+         * @param window
+         * @param evictorContext
+         */
+        @Override
+        public void evictBefore(Iterable<TimestampedValue<Tuple2<String, Integer>>> element,
+                                int size,
+                                GlobalWindow window,
+                                EvictorContext evictorContext) {
+            if(size <= windowCount)
+                return;
+            else {
+                int evictorCount = 0;
+                Iterator<TimestampedValue<Tuple2<String, Integer>>> iterator = element.iterator();
+                while (iterator.hasNext()){
+                    iterator.next();
+                    evictorCount++;
+                    //如果删除的数据量小于 当前的window大小 减去 规定的window的大小，就需要删除当前的元素
+                    if(size - windowCount < evictorCount ){
+                        break;
+                    }else {
+                        iterator.remove();
+                    }
+                }
+
+            }
+
+        }
+
+        /**
+         * 在window之后删除特定数据
+         * @param element
+         * @param size
+         * @param window
+         * @param evictorContext
+         */
+        @Override
+        public void evictAfter(Iterable<TimestampedValue<Tuple2<String, Integer>>> element,
+                               int size,
+                               GlobalWindow window,
+                               EvictorContext evictorContext) {
+
         }
     }
 }

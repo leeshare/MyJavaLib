@@ -4,8 +4,6 @@ import org.lixl.ai.ga.timetable.attr.*;
 import org.lixl.ai.ga.timetable.attr.Class;
 
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 
 /**
  * Timetable时间表 是这个GA的主要评估类

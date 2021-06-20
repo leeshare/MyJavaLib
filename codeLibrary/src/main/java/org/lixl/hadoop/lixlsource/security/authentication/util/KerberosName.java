@@ -1,7 +1,6 @@
 package org.lixl.hadoop.lixlsource.security.authentication.util;
 
 import com.google.common.annotations.VisibleForTesting;
-import org.apache.hadoop.yarn.webapp.hamlet.Hamlet;
 import org.lixl.hadoop.lixlsource.classification.InterfaceAudience;
 import org.lixl.hadoop.lixlsource.classification.InterfaceStability;
 

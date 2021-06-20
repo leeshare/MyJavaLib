@@ -5,23 +5,26 @@ import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.java.tuple.Tuple;
 import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.streaming.api.TimeCharacteristic;
+import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.datastream.DataStreamSource;
 import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.api.functions.AssignerWithPeriodicWatermarks;
-import org.apache.flink.streaming.api.functions.source.SourceFunction;
 import org.apache.flink.streaming.api.functions.windowing.ProcessWindowFunction;
 import org.apache.flink.streaming.api.watermark.Watermark;
 import org.apache.flink.streaming.api.windowing.time.Time;
 import org.apache.flink.streaming.api.windowing.windows.TimeWindow;
 import org.apache.flink.util.Collector;
+import org.apache.flink.util.OutputTag;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 /**
+ * WaterMark 且把 延迟的数据 保存起来
+ *
+ *
  * 每个3秒统计前3秒内相同key的所有事件
  *
  * 那么watermark时间怎么计算呢？
@@ -53,7 +56,7 @@ import java.util.concurrent.TimeUnit;
  *      比如 watermark = 33s, 触发之前的，
  *      那么再来 事件时间 < 33s的 就不会再触发了，就丢弃了
  */
-public class TimeWindowWordCountWithWaterMark2 {
+public class TimeWindowWordCountWithWaterMarkCollectLateData {
     public static void main(String[] args) throws Exception {
         //步骤一、获取执行环境
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
@@ -62,6 +65,10 @@ public class TimeWindowWordCountWithWaterMark2 {
         env.setStreamTimeCharacteristic(TimeCharacteristic.EventTime);
         //设置watermark产生的周期为1s
         env.getConfig().setAutoWatermarkInterval(1000);
+
+        //保存迟到的，会丢弃的数据
+        OutputTag<Tuple2<String, Long>> outputTag = new OutputTag<Tuple2<String, Long>>("late-date"){};
+
         //步骤三、
         DataStreamSource<String> dataStream = env.socketTextStream("bigdata02", 8888);
 
@@ -75,11 +82,24 @@ public class TimeWindowWordCountWithWaterMark2 {
         }).assignTimestampsAndWatermarks(new EventTimeExtractor())
                 .keyBy(0)
                 .timeWindow(Time.seconds(3))
-                .allowedLateness(Time.seconds(2))   //允许在延迟10秒的基础上再延迟2s
+                //.allowedLateness(Time.seconds(2))   //允许在延迟10秒的基础上再延迟2s
                     //所有符合条件的，每次都打印出来
+                .sideOutputLateData(outputTag)
                 .process(new SumProcessWindowFunction());//.print().setParallelism(1);
 
         result.print().setParallelism(1);
+
+
+        //保存侧输出流
+        DataStream<String> lateDataStream = result.getSideOutput(outputTag).map(new MapFunction<Tuple2<String, Long>, String>() {
+            @Override
+            public String map(Tuple2<String, Long> stringLongTuple2) throws Exception {
+                return "迟到的数据：" + stringLongTuple2.toString();
+            }
+        });
+        lateDataStream.print();
+
+
         env.execute("TimeWindowWordCount With WaterMark");
     }
 

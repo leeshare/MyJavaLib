@@ -16,19 +16,23 @@ import org.apache.flink.util.Collector;
 import java.util.concurrent.TimeUnit;
 
 /**
- * 第13秒 发了2个 “hadoop”，第15秒 统计（5-15内）得 2
- * 第16秒 发了1个 “hadoop”，第20秒 统计（10-20内）得 3
- * 第25秒 统计（15-25内）得 1
+ * 第13秒 生成2个 2个 “hadoop”，但只发了1个，
+ *      第15秒 统计（5-15内）得 1
+ * 第16秒 发了1个 “hadoop”
+ * 第19秒 发第13秒生成的一个 “hadoop”
+ *      第20秒 统计（10-20内）得 3
+ * 第25秒 统计（15-25内）得 2
  *
- * 这是没有特殊情况的 计数
+ * 这是有特殊情况的 计数
+ * 即乱序了
+ * （正常情况应该是：2 3 1）
  */
-public class TimeWindowWordCountInOrder {
+public class TimeWindowWordCountNoOrder {
     public static void main(String[] args) throws Exception {
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         env.setParallelism(1);
         DataStreamSource<String> dataStream = env.addSource(new TestSource());
-        //SingleOutputStreamOperator<Tuple2<String, Integer>> result =
-                dataStream.flatMap(new FlatMapFunction<String, Tuple2<String, Integer>>() {
+        SingleOutputStreamOperator<Tuple2<String, Integer>> result = dataStream.flatMap(new FlatMapFunction<String, Tuple2<String, Integer>>() {
             @Override
             public void flatMap(String s, Collector<Tuple2<String, Integer>> collector) throws Exception {
                 String[] fields = s.split(",");
@@ -37,9 +41,8 @@ public class TimeWindowWordCountInOrder {
                 }
 
             }
-        }).keyBy(0).timeWindow(Time.seconds(10), Time.seconds(5)).process(new SumProcessWindowFunction())
-                        .print().setParallelism(1);
-        //result.print().setParallelism(1);
+        }).keyBy(0).timeWindow(Time.seconds(10), Time.seconds(5)).process(new SumProcessWindowFunction());
+        result.print().setParallelism(1);
         env.execute("TimeWindowWordCount In Order");
     }
 
@@ -61,10 +64,13 @@ public class TimeWindowWordCountInOrder {
             TimeUnit.SECONDS.sleep(13);
             ctx.collect("hadoop," + System.currentTimeMillis());
 // 产生了一个事件，但是由于网络原因，事件没有发送
-            ctx.collect("hadoop," + System.currentTimeMillis());
+            String event = "hadoop," + System.currentTimeMillis();
 // 第 16 秒发送一个事件
             TimeUnit.SECONDS.sleep(3);
             ctx.collect("hadoop," + System.currentTimeMillis());
+            TimeUnit.SECONDS.sleep(3);
+            //第19秒才把 第13秒生成的事件发出去
+            ctx.collect(event);
             TimeUnit.SECONDS.sleep(300);
         }
 

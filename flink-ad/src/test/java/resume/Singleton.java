@@ -1,7 +1,5 @@
 package resume;
 
-import net.sourceforge.jeval.function.math.Sin;
-
 public class Singleton {
     private static volatile Singleton singleton;
     private Singleton(){

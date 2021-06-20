@@ -1,4 +1,4 @@
-package com.mazh.nx.zookeeper.app.同步队列;
+package org.lixl.opensource.zookeeper;
 
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.WatchedEvent;

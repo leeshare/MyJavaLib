@@ -1,4 +1,4 @@
-package org.lixl.maths;
+package lixl.maths;
 
 import javax.imageio.ImageIO;
 import java.awt.*;

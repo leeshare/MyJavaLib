@@ -3,10 +3,6 @@ package org.lixl.hadoop.lixlsource.io;
 import org.lixl.hadoop.lixlsource.classification.InterfaceAudience;
 import org.lixl.hadoop.lixlsource.classification.InterfaceStability;
 
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.IOException;
-
 /**
  * WritableComparables可用于各自比较，典型的通过Comparators。任何可用于作为key的类型在Hadoop的Map-Reduce框架下都应实现此接口。
  *

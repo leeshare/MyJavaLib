@@ -3,7 +3,6 @@ package org.lixl.hadoop.lixlsource.metrics2.lib;
 import org.lixl.hadoop.lixlsource.classification.InterfaceAudience;
 import org.lixl.hadoop.lixlsource.classification.InterfaceStability;
 import org.lixl.hadoop.lixlsource.metrics2.MetricsRecordBuilder;
-import org.lixl.hadoop.lixlsource.security.token.Token;
 
 /**
  * 可变指标接口

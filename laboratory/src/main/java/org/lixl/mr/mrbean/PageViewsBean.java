@@ -1,10 +1,10 @@
-package com.mazh.aura.mrbean;
+package org.lixl.mr.mrbean;
+
+import org.apache.hadoop.io.Writable;
 
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
-
-import org.apache.hadoop.io.Writable;
 
 public class PageViewsBean implements Writable {
 

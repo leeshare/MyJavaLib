@@ -1,4 +1,4 @@
-package org.lixl.acm;
+package lixl.acm;
 
 import java.util.ArrayList;
 import java.util.List;

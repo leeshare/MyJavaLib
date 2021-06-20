@@ -12,7 +12,15 @@ import scala.Tuple2;
 import java.util.Arrays;
 import java.util.Iterator;
 
-public class WordCountFromFile {
+/**
+ * 1、获取编程入口                     环境对象 链接对象
+ * 2、通过编程入口获取数据抽象           source 对象
+ * 3、针对数据抽象对象执行各种计算     Action Transformation
+ * 4、提交任务运行                     Submit
+ * 5、输出结果                       Sink
+ * 6、回收资源                       stop close
+ */
+public class WordCountJava7 {
     static String str = "file:///C://BigData/upload_data/str.data";
     public static void main(String[] args) throws Exception {
 
@@ -23,10 +31,19 @@ public class WordCountFromFile {
         //读取数据
         JavaRDD<String> linesRDD = sc.textFile(str, 1);
         //获得单词RDD
+        /**
+         * 1、flatMap 当中的参数就是指定逻辑
+         * 2、逻辑不是一个函数，而是一个匿名函数
+         * 3、linesRDD 是一个数据集合
+         * 4、把 linesRDD 中的每个元数据，拿出来作为参数，给 call方法执行一次
+         * 5、每次调用得到的结果，就拼接成为一个新的集合
+         */
         JavaRDD<String> wordsRDD = linesRDD.flatMap(new FlatMapFunction<String, String>() {
             @Override
             public Iterator<String> call(String s) throws Exception {
-                String[] fields = s.split("|");
+                //注意： . 、 $、 | 和 * 等转义字符，必须得加 \\。
+                //注意：多个分隔符，可以用 | 作为连字符。
+                String[] fields = s.split("\\|");
                 return Arrays.asList(fields).iterator();
             }
         });
@@ -62,7 +79,7 @@ public class WordCountFromFile {
             }
         });
 
-        wordAndOneSort = wordAndOneSort.sortByKey();
+        wordAndOneSort = wordAndOneSort.sortByKey(false);
 
         wordAndCount = wordAndOneSort.mapToPair(new PairFunction<Tuple2<Integer, String>, String, Integer>() {
             @Override

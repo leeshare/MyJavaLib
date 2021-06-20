@@ -1,6 +1,5 @@
 package org.lixl.aop;
 
-import org.lixl.aop.HelloWorld;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 

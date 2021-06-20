@@ -40,6 +40,8 @@ public class Publisher {
 
         /**
          * 第一步：获取会话
+         *
+         * 这里注册了一个 全局监听，都会调用 process
          */
         zookeeper = new ZooKeeper(CONNECT_INFO, TIME_OUT, new Watcher() {
             @Override

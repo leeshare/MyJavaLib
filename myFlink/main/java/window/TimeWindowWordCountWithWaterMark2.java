@@ -17,30 +17,58 @@ import org.apache.flink.streaming.api.windowing.windows.TimeWindow;
 import org.apache.flink.util.Collector;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
- * 第13秒 生成2个 2个 “hadoop”，但只发了1个，
- *      第15秒 统计（5-15内）得 2  ————没问题
- * 第16秒 发了1个 “hadoop”
- * 第19秒 发第13秒生成的一个 “hadoop”（事件时间是第13）
- *      第20秒 统计（10-20内）得 3 ————没问题
- * 第25秒 统计（15-25内）得 1 ————没问题
+ * WaterMark 且使用  allowedLateness()
  *
- * 这是有特殊情况的 计数
- * 即乱序了
- * （正常情况应该是：2 3 1）
  *
- * 解决：在 EventTime 的基础上，用 WaterMark 来处理（使用延迟5秒）
+ * 每个3秒统计前3秒内相同key的所有事件
+ *
+ * 那么watermark时间怎么计算呢？
+ *      用当前窗口最大事件时间 - 允许延迟时间
+ *
+ * -- window 计算触发的条件
+ * 000001,1461756862000         --|19:34:22|19:34:22|19:34:12  事件时间是 22
+ * 000001,1461756866000         --|19:34:26|19:34:26|19:34:16
+ * 000001,1461756872000
+ * 000001,1461756873000
+ * 000001,1461756874000         --wartermark时间=24 输到这条时才触发，触发 21s - 24s 的窗口的数据
+ * 000001,1461756876000
+ * 000001,1461756877000         --watermark时间=27  会把小于27窗口的所有事件都触发
+ *
+ * 发现触发时间，和当前时间没关系，和事件时间没关系，只和watermark时间有关！！！
+ *
+ *
+ * flink,1461756879000
+ * flink,1461756871000
+ * flink,1461756883000
+ * 这个例子，尽管第二条乱序，还是正确计算出来了
+ *
+ * flink,1461756870000
+ * flink,1461756883000
+ * flink,1461756870000
+ * flink,1461756871000
+ * flink,1461756872000
+ * 这几组数据：对于迟到太多的数据就丢弃了
+ *      比如 watermark = 33s, 触发之前的，
+ *      那么再来 事件时间 < 33s的 就不会再触发了，就丢弃了
  */
-public class TimeWindowWordCountWithWaterMark {
+public class TimeWindowWordCountWithWaterMark2 {
     public static void main(String[] args) throws Exception {
+        //步骤一、获取执行环境
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         env.setParallelism(1);
         //步骤一：设置时间类型
         env.setStreamTimeCharacteristic(TimeCharacteristic.EventTime);
-        DataStreamSource<String> dataStream = env.addSource(new TestSource());
-        SingleOutputStreamOperator<Tuple2<String, Integer>> result = dataStream.map(new MapFunction<String, Tuple2<String, Long>>() {
+        //设置watermark产生的周期为1s
+        env.getConfig().setAutoWatermarkInterval(1000);
+        //步骤三、
+        DataStreamSource<String> dataStream = env.socketTextStream("bigdata02", 8888);
+
+        SingleOutputStreamOperator<String> result = dataStream.map(new MapFunction<String, Tuple2<String, Long>>() {
             @Override
             public Tuple2<String, Long> map(String s) throws Exception {
                 String[] fields = s.split(",");
@@ -49,49 +77,17 @@ public class TimeWindowWordCountWithWaterMark {
             //步骤二：获取数据里面的 event Time
         }).assignTimestampsAndWatermarks(new EventTimeExtractor())
                 .keyBy(0)
-                .timeWindow(Time.seconds(10), Time.seconds(5))
+                .timeWindow(Time.seconds(3))
+                .allowedLateness(Time.seconds(2))   //允许在延迟10秒的基础上再延迟2s
+                    //所有符合条件的，每次都打印出来
                 .process(new SumProcessWindowFunction());//.print().setParallelism(1);
 
         result.print().setParallelism(1);
-        env.execute("TimeWindowWordCount In Order");
-    }
-
-
-    public static class TestSource implements SourceFunction<String> {
-        FastDateFormat dateFormat = FastDateFormat.getInstance("HH:mm:ss");
-
-        @Override
-        public void run(SourceContext<String> ctx) throws Exception {
-            //控制大约在 10秒的倍数时间点发送事件
-            String currTime = String.valueOf(System.currentTimeMillis());
-            while (Integer.valueOf(currTime.substring(currTime.length() - 4)) > 100) {
-                currTime = String.valueOf(System.currentTimeMillis());
-                continue;
-            }
-            System.out.println("开始发送事件的时间：" +
-                    dateFormat.format(System.currentTimeMillis()));
-// 第 13 秒发送两个事件
-            TimeUnit.SECONDS.sleep(13);
-            ctx.collect("hadoop," + System.currentTimeMillis());
-// 产生了一个事件，但是由于网络原因，事件没有发送
-            String event = "hadoop," + System.currentTimeMillis();
-// 第 16 秒发送一个事件
-            TimeUnit.SECONDS.sleep(3);
-            ctx.collect("hadoop," + System.currentTimeMillis());
-            TimeUnit.SECONDS.sleep(3);
-            //第19秒才把 第13秒生成的事件发出去
-            ctx.collect(event);
-            TimeUnit.SECONDS.sleep(300);
-        }
-
-        @Override
-        public void cancel() {
-
-        }
+        env.execute("TimeWindowWordCount With WaterMark");
     }
 
     public static class SumProcessWindowFunction extends
-            ProcessWindowFunction<Tuple2<String,Long>,Tuple2<String,Integer>, Tuple, TimeWindow> {
+            ProcessWindowFunction<Tuple2<String,Long>, String, Tuple, TimeWindow> {
         FastDateFormat dataFormat = FastDateFormat.getInstance("HH:mm:ss");
         /**
          * 当一个window触发计算的时候会调用这个方法
@@ -103,33 +99,44 @@ public class TimeWindowWordCountWithWaterMark {
         @Override
         public void process(Tuple tuple, Context context,
                             Iterable<Tuple2<String, Long>> elements,
-                            Collector<Tuple2<String, Integer>> out) {
-            //System.out.println("当天系统的时间："+dataFormat.format(System.currentTimeMillis()));
-            //System.out.println("Window的处理时间："+dataFormat.format(context.currentProcessingTime()));
-            //System.out.println("Window的开始时间："+dataFormat.format(context.window().getStart()));
-            //System.out.println("Window的结束时间："+dataFormat.format(context.window().getEnd()));
-            int sum = 0;
+                            Collector<String> out) {
+            System.out.println("处理时间：" + dataFormat.format(context.currentProcessingTime()));
+            System.out.println("Window开始时间："+dataFormat.format(context.window().getStart()));
+
+            List<String> list = new ArrayList<>();
             for (Tuple2<String, Long> ele : elements) {
-                sum += 1;
+                list.add(ele.toString() + "|" + dataFormat.format(ele.f1));
             }
-// 输出单词出现的次数
-            out.collect(Tuple2.of(tuple.getField(0), sum));
+            out.collect(list.toString());
+            System.out.println("window结束时间" + context.window().getEnd());
         }
     }
     private static class EventTimeExtractor implements AssignerWithPeriodicWatermarks<Tuple2<String, Long>> {
         FastDateFormat dateFormat = FastDateFormat.getInstance("HH:mm:ss");
 
+        private long currentMaxEventTime = 0L;
+        private long maxOutOfOrderness = 10000; //最大允许的乱序时间 初始值是 10秒
+
         @Nullable
         @Override
         public Watermark getCurrentWatermark() {
             //window 延迟5秒 触发
-            return new Watermark(System.currentTimeMillis() - 5000);
+            //System.out.println("water mark ...");
+            //用当前窗口最大事件时间 - 允许延迟时间
+            return new Watermark(currentMaxEventTime - maxOutOfOrderness);
         }
 
         //指定时间的字段，注意：单位是毫秒
         @Override
         public long extractTimestamp(Tuple2<String, Long> element, long l) {
-            return element.f1;
+            long currentElementEventTime = element.f1;
+            currentMaxEventTime = Math.max(currentMaxEventTime, currentElementEventTime);
+            System.out.println("event = " + element
+                    + "|" + dateFormat.format(element.f1)       //当前事件时间
+                    + "|" + dateFormat.format(currentMaxEventTime)  //当前窗口最大事件时间
+                    + "|" + dateFormat.format(getCurrentWatermark().getTimestamp()) //watermark时间
+            );
+            return currentElementEventTime;
         }
     }
 }

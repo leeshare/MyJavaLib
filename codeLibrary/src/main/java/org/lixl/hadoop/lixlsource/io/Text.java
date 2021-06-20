@@ -12,7 +12,6 @@ import java.nio.CharBuffer;
 import java.nio.charset.*;
 import java.text.CharacterIterator;
 import java.text.StringCharacterIterator;
-import java.util.ArrayList;
 import java.util.Arrays;
 
 /**

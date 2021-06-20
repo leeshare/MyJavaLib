@@ -1,4 +1,4 @@
-package org.lixl.maths;
+package lixl.maths;
 
 import java.util.ArrayList;
 import java.util.List;

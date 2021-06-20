@@ -1,4 +1,4 @@
-package org.lixl.point;
+package lixl.point;
 
 /**
  * Created by Administrator on 2/28/2018.

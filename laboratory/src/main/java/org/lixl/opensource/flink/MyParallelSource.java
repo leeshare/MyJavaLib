@@ -2,7 +2,12 @@ package org.lixl.opensource.flink;
 
 import org.apache.flink.streaming.api.functions.source.ParallelSourceFunction;
 
-public class MyParalleSource implements ParallelSourceFunction<Long> {
+/**
+ * 自定义支持并行度的数据源
+ *
+ * 多并行度数据源 实现自 ParallelSourceFunction<T>
+ */
+public class MyParallelSource implements ParallelSourceFunction<Long> {
     private long number = 1L;
     private boolean isRunning = true;
     @Override

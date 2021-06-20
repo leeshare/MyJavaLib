@@ -1,4 +1,4 @@
-package com.mazh.nx.zookeeper.app.分布式时序锁;
+package org.lixl.opensource.zookeeper;
 
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.WatchedEvent;

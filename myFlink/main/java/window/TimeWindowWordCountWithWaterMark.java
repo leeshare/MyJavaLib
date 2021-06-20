@@ -20,8 +20,11 @@ import javax.annotation.Nullable;
 import java.util.concurrent.TimeUnit;
 
 /**
+ * WaterMark
+ *
+ *
  * 第13秒 生成2个 2个 “hadoop”，但只发了1个，
- *      第15秒 统计（5-15内）得 1  ————没问题（唯一遗憾13秒发的没有统计进来）
+ *      第15秒 统计（5-15内）得 2  ————没问题
  * 第16秒 发了1个 “hadoop”
  * 第19秒 发第13秒生成的一个 “hadoop”（事件时间是第13）
  *      第20秒 统计（10-20内）得 3 ————没问题
@@ -31,9 +34,9 @@ import java.util.concurrent.TimeUnit;
  * 即乱序了
  * （正常情况应该是：2 3 1）
  *
- * 解决：用 EventTime 来处理
+ * 解决：在 EventTime 的基础上，用 WaterMark 来处理（使用延迟5秒）
  */
-public class TimeWindowWordCountNoOrderFixByEventTime {
+public class TimeWindowWordCountWithWaterMark {
     public static void main(String[] args) throws Exception {
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         env.setParallelism(1);
@@ -122,7 +125,8 @@ public class TimeWindowWordCountNoOrderFixByEventTime {
         @Nullable
         @Override
         public Watermark getCurrentWatermark() {
-            return new Watermark(System.currentTimeMillis());
+            //window 延迟5秒 触发
+            return new Watermark(System.currentTimeMillis() - 5000);
         }
 
         //指定时间的字段，注意：单位是毫秒

@@ -1,4 +1,4 @@
-package com.mazh.nx.zookeeper.app.高可用;
+package org.lixl.opensource.zookeeper;
 
 import org.apache.zookeeper.*;
 import org.apache.zookeeper.Watcher.Event.EventType;

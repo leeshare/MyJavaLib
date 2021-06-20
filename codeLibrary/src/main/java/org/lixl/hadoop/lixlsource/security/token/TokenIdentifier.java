@@ -2,7 +2,6 @@ package org.lixl.hadoop.lixlsource.security.token;
 
 import org.lixl.hadoop.lixlsource.classification.InterfaceAudience;
 import org.lixl.hadoop.lixlsource.classification.InterfaceStability;
-import org.lixl.hadoop.lixlsource.io.Writable;
 
 /**
  * Created by Administrator on 1/17/2020.

@@ -1,4 +1,4 @@
-package com.mazh.nx.zookeeper.app.发布订阅;
+package org.lixl.opensource.zookeeper;
 
 import org.apache.zookeeper.*;
 import org.apache.zookeeper.data.ACL;

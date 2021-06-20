@@ -1,4 +1,4 @@
-package org.lixl;
+package lixl;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 

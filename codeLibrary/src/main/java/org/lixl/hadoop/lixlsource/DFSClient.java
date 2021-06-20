@@ -2,10 +2,8 @@ package org.lixl.hadoop.lixlsource;
 
 import org.apache.htrace.core.TraceScope;
 import org.lixl.hadoop.lixlsource.common.fs.Options;
-import org.lixl.hadoop.lixlsource.common.ipc.RemoteException;
 
 import java.io.IOException;
-import java.security.AccessControlException;
 
 /**
  * Created by Administrator on 1/9/2020.

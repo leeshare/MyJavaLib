@@ -13,6 +13,6 @@ public class TestBean {
         this.testStr = testStr;
     }
     public void test(){
-        System.out.println("test");
+        System.out.println("src/main/java/test");
     }
 }

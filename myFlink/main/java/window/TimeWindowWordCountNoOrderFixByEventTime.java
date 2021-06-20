@@ -1,49 +1,58 @@
 package window;
 
 import org.apache.commons.lang3.time.FastDateFormat;
-import org.apache.flink.api.common.functions.FlatMapFunction;
+import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.java.tuple.Tuple;
 import org.apache.flink.api.java.tuple.Tuple2;
+import org.apache.flink.streaming.api.TimeCharacteristic;
 import org.apache.flink.streaming.api.datastream.DataStreamSource;
+import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
+import org.apache.flink.streaming.api.functions.AssignerWithPeriodicWatermarks;
 import org.apache.flink.streaming.api.functions.source.SourceFunction;
 import org.apache.flink.streaming.api.functions.windowing.ProcessWindowFunction;
+import org.apache.flink.streaming.api.watermark.Watermark;
 import org.apache.flink.streaming.api.windowing.time.Time;
 import org.apache.flink.streaming.api.windowing.windows.TimeWindow;
 import org.apache.flink.util.Collector;
 
+import javax.annotation.Nullable;
 import java.util.concurrent.TimeUnit;
 
 /**
  * 第13秒 生成2个 2个 “hadoop”，但只发了1个，
- *      第15秒 统计（5-15内）得 1
+ *      第15秒 统计（5-15内）得 1  ————没问题（唯一遗憾13秒发的没有统计进来）
  * 第16秒 发了1个 “hadoop”
- * 第19秒 发第13秒生成的一个 “hadoop”
- *      第20秒 统计（10-20内）得 3
- * 第25秒 统计（15-25内）得 2
+ * 第19秒 发第13秒生成的一个 “hadoop”（事件时间是第13）
+ *      第20秒 统计（10-20内）得 3 ————没问题
+ * 第25秒 统计（15-25内）得 1 ————没问题
  *
  * 这是有特殊情况的 计数
  * 即乱序了
  * （正常情况应该是：2 3 1）
+ *
+ * 解决：用 EventTime 来处理
  */
-public class TimeWindowWordCountNoOrder {
+public class TimeWindowWordCountNoOrderFixByEventTime {
     public static void main(String[] args) throws Exception {
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         env.setParallelism(1);
+        //步骤一：设置时间类型
+        env.setStreamTimeCharacteristic(TimeCharacteristic.EventTime);
         DataStreamSource<String> dataStream = env.addSource(new TestSource());
-        //SingleOutputStreamOperator<Tuple2<String, Integer>> result =
-                dataStream.flatMap(new FlatMapFunction<String, Tuple2<String, Integer>>() {
+        SingleOutputStreamOperator<Tuple2<String, Integer>> result = dataStream.map(new MapFunction<String, Tuple2<String, Long>>() {
             @Override
-            public void flatMap(String s, Collector<Tuple2<String, Integer>> collector) throws Exception {
+            public Tuple2<String, Long> map(String s) throws Exception {
                 String[] fields = s.split(",");
-                for (String word : fields) {
-                    collector.collect(new Tuple2<>(word, 1));
-                }
-
+                return new Tuple2<String, Long>(fields[0], Long.valueOf(fields[1]));
             }
-        }).keyBy(0).timeWindow(Time.seconds(10), Time.seconds(5)).process(new SumProcessWindowFunction())
-                        .print().setParallelism(1);
-        //result.print().setParallelism(1);
+            //步骤二：获取数据里面的 event Time
+        }).assignTimestampsAndWatermarks(new EventTimeExtractor())
+                .keyBy(0)
+                .timeWindow(Time.seconds(10), Time.seconds(5))
+                .process(new SumProcessWindowFunction());//.print().setParallelism(1);
+
+        result.print().setParallelism(1);
         env.execute("TimeWindowWordCount In Order");
     }
 
@@ -82,7 +91,7 @@ public class TimeWindowWordCountNoOrder {
     }
 
     public static class SumProcessWindowFunction extends
-            ProcessWindowFunction<Tuple2<String,Integer>,Tuple2<String,Integer>, Tuple, TimeWindow> {
+            ProcessWindowFunction<Tuple2<String,Long>,Tuple2<String,Integer>, Tuple, TimeWindow> {
         FastDateFormat dataFormat = FastDateFormat.getInstance("HH:mm:ss");
         /**
          * 当一个window触发计算的时候会调用这个方法
@@ -93,18 +102,33 @@ public class TimeWindowWordCountNoOrder {
          */
         @Override
         public void process(Tuple tuple, Context context,
-                            Iterable<Tuple2<String, Integer>> elements,
+                            Iterable<Tuple2<String, Long>> elements,
                             Collector<Tuple2<String, Integer>> out) {
             //System.out.println("当天系统的时间："+dataFormat.format(System.currentTimeMillis()));
             //System.out.println("Window的处理时间："+dataFormat.format(context.currentProcessingTime()));
             //System.out.println("Window的开始时间："+dataFormat.format(context.window().getStart()));
             //System.out.println("Window的结束时间："+dataFormat.format(context.window().getEnd()));
             int sum = 0;
-            for (Tuple2<String, Integer> ele : elements) {
+            for (Tuple2<String, Long> ele : elements) {
                 sum += 1;
             }
 // 输出单词出现的次数
             out.collect(Tuple2.of(tuple.getField(0), sum));
+        }
+    }
+    private static class EventTimeExtractor implements AssignerWithPeriodicWatermarks<Tuple2<String, Long>> {
+        FastDateFormat dateFormat = FastDateFormat.getInstance("HH:mm:ss");
+
+        @Nullable
+        @Override
+        public Watermark getCurrentWatermark() {
+            return new Watermark(System.currentTimeMillis());
+        }
+
+        //指定时间的字段，注意：单位是毫秒
+        @Override
+        public long extractTimestamp(Tuple2<String, Long> element, long l) {
+            return element.f1;
         }
     }
 }

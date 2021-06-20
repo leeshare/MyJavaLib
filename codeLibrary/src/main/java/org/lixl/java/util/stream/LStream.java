@@ -1,12 +1,8 @@
 package org.lixl.java.util.stream;
 
-import org.lixl.java.util.LIterator;
-
 import java.util.*;
 import java.util.function.*;
 import java.util.stream.Collector;
-import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 
 /**
  * Created by lxl on 18/12/27.

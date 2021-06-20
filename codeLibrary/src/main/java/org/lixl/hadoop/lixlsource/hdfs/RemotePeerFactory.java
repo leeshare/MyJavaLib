@@ -1,9 +1,6 @@
 package org.lixl.hadoop.lixlsource.hdfs;
 
 import org.lixl.hadoop.lixlsource.classification.InterfaceAudience;
-import org.lixl.hadoop.lixlsource.hdfs.net.Peer;
-
-import java.net.InetSocketAddress;
 
 /**
  * Created by Administrator on 1/15/2020.

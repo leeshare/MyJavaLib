@@ -1,17 +1,18 @@
 package org.lixl.opensource.flink;
 
 import org.apache.flink.api.common.functions.FlatMapFunction;
-import org.apache.flink.api.java.tuple.Tuple2;
+import org.apache.flink.configuration.Configuration;
 import org.apache.flink.streaming.api.datastream.DataStreamSource;
 import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.util.Collector;
 
-public class WordCount {
+public class WordCountWithWeb {
 
     public static void main(String[] args) throws Exception {
         //步骤一：获取执行环境
-        StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
+        StreamExecutionEnvironment env = StreamExecutionEnvironment.createLocalEnvironmentWithWebUI(new Configuration());
+        env.setParallelism(3);
         //步骤二：数据的输入
         DataStreamSource<String> data = env.socketTextStream("192.168.123.152", 9999);
         //步骤三：数据的处理
@@ -46,7 +47,7 @@ public class WordCount {
 
 
         //步骤四：数据的输出
-        result.print();
+        result.print();//.setParallelism(1);
         //步骤五：启动任务
         env.execute("word count...");
     }

@@ -1,15 +1,10 @@
-package com.mazh.aura.mrbean;
+package org.lixl.mr.mrbean;
+
+import org.apache.hadoop.io.Writable;
 
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-
-import org.apache.hadoop.io.Writable;
-import org.apache.hadoop.io.WritableComparable;
 
 /**
  * 对接外部数据的层，表结构定义最好跟外部数据源保持一致
