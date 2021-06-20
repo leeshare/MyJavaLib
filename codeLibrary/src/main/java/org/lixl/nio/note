@@ -1,0 +1,32 @@
+
+java io 分为三种
+    同步阻塞I/O
+        每当一个新客户端请求接入，服务端必须创建一个新的线程处理新接入的客户端链路，一个线程只能处理一个客户端连接。
+
+    伪异步I/O      示例： FakeSynchronizeIO
+        通过线程池或消息队列实现1个或多个线程来处理N个客户端的模型，但其底层通信机制依然使用同步阻塞I/O，所以称为“伪异步”
+        后端通过一个线程池来处理多个客户端的请求接入，形成客户端个数M >> 线程池最大线程数N
+        避免为了每个请求都创建一个独立线程造成的线程资源耗尽问题。但由于底层通信依然采用同步阻塞模型，因此无法从根部解决问题。
+        其病因在于： java.io.InputStream 中 public int read(byte b[]) throws IOException {..}
+            This method blocks until input data is available, end of file is detected, or an exception is throw.
+            也就是当Socket的输入流进行读取操作时，它会一直阻塞下去，直到发生三种事件
+                有数据可读；可用数据已读取完毕；发生空指针或I/O异常
+            意味着当对方发送请求或应答消息比较缓慢，或网络传输较慢时，读取输入流一方的通信线程将被长时间阻塞。在此期间，其他接入消息只能在消息队列中排队。
+        还有病因： java.io.OutputStream 中 public void write(byte b[]) throws IOException {...}
+            Writes an array of bytes. This method will block until the bytes are actually written.
+        当网络传输较慢时，读取输入流的一方通信线程将长时间阻塞。
+
+
+    NIO (Non-block IO)
+
+    AIO
+        jdk1.7之后的 NIO2.0 就是 AIO
+
+    Netty
+        是基于主从Reactors多线程模型，但做了一定的修改，其中主从Reactor多线程模型有多个Reactor
+            1) MainReactor负责客户端的连接请求，并将请求转交给SubReactor；
+            2) SubReactor负责相应通道的IO读写请求；
+            3) 非IO请求（具体逻辑处理）的任务则会直接写入队列，等待worker threads进行处理。
+        虽然Netty的线程模型基于主从Reactor多线程，借用了MainReactor和SubReactor的结构。但实际上SubReactor和Worker线程在同一个线程池中：
+            
+
