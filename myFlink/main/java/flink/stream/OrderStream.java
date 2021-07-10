@@ -10,8 +10,8 @@ import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.api.functions.co.RichCoFlatMapFunction;
 import org.apache.flink.util.Collector;
 
-import static org.lixl.opensource.flink.stream.FileSource.OrderInfo1.string2OrderInfo1;
-import static org.lixl.opensource.flink.stream.FileSource.OrderInfo2.string2OrderInfo2;
+import static flink.stream.FileSource.OrderInfo1.string2OrderInfo1;
+import static flink.stream.FileSource.OrderInfo2.string2OrderInfo2;
 
 public class OrderStream {
     public static void main(String[] args) throws Exception {
