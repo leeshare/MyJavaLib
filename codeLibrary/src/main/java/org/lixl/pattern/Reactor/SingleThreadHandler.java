@@ -33,9 +33,11 @@ public class SingleThreadHandler implements Runnable {
     boolean inputIsComplete() {
         return false;
     }
+
     boolean outputIsComplete() {
         return false;
     }
+
     void process() {
         return;
     }
@@ -43,9 +45,9 @@ public class SingleThreadHandler implements Runnable {
     @Override
     public void run() {
         try {
-            if(state == READING) {
+            if (state == READING) {
                 read();
-            } else if(state == SENDING) {
+            } else if (state == SENDING) {
                 send();
             }
         } catch (IOException ex) {
@@ -55,7 +57,7 @@ public class SingleThreadHandler implements Runnable {
 
     void read() throws IOException {
         channel.read(input);
-        if(inputIsComplete()) {
+        if (inputIsComplete()) {
             process();
             state = SENDING;
             //Normally also do first write now
@@ -69,7 +71,7 @@ public class SingleThreadHandler implements Runnable {
         channel.write(output);
 
         //write完就结束了，关闭select key
-        if(outputIsComplete()) {
+        if (outputIsComplete()) {
             sk.channel();
         }
     }

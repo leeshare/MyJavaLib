@@ -22,7 +22,7 @@ import static org.lixl.hadoop.lixlsource.metrics2.lib.Interns.info;
 /**
  * 监控一个长值的流,维持在线评估特定 quantiles ————可能低错误
  * 这是特别有用的对于高精确度的潜在指标
- *
+ * <p>
  * quantile - 分位数
  * Created by lxl on 20/1/30.
  */
@@ -65,7 +65,7 @@ public class MutableQuantiles extends MutableMetric {
         quantileInfos = new MetricsInfo[quantiles.length];
         String nameTemplate = ucName + "%dthPercentile" + uvName;
         String descTemplate = "%d percentile " + lvName + " with " + interval + " second interval for " + desc;
-        for(int i = 0; i < quantiles.length; i++) {
+        for (int i = 0; i < quantiles.length; i++) {
             int percentile = (int) (100 * quantiles[i].quantile);
             quantileInfos[i] = info(String.format(nameTemplate, percentile), String.format(descTemplate, percentile));
         }
@@ -77,16 +77,16 @@ public class MutableQuantiles extends MutableMetric {
 
     @Override
     public synchronized void snapshot(MetricsRecordBuilder builder, boolean all) {
-        if(all || changed()) {
+        if (all || changed()) {
             builder.addGauge(numInfo, previousCount);
-            for(int i = 0; i < quantiles.length; i++) {
+            for (int i = 0; i < quantiles.length; i++) {
                 long newValue = 0;
-                if(previousSnapshot != null) {
+                if (previousSnapshot != null) {
                     newValue = previousSnapshot.get(quantiles[i]);
                 }
                 builder.addGauge(quantileInfos[i], newValue);
             }
-            if(changed()) {
+            if (changed()) {
                 clearChanged();
             }
         }
@@ -101,7 +101,7 @@ public class MutableQuantiles extends MutableMetric {
     }
 
     public void stop() {
-        if(scheduledTask != null) {
+        if (scheduledTask != null) {
             scheduledTask.cancel(false);
         }
         scheduledTask = null;

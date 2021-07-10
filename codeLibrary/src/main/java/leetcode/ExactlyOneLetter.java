@@ -1,9 +1,7 @@
 package leetcode;
 
 import java.io.StringReader;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 /**
  * 请取出只出现一次的字母（其他最多出现了2次）
@@ -21,22 +19,22 @@ public class ExactlyOneLetter {
         StringBuilder result = new StringBuilder();
         List<String> arr = Arrays.asList(str.split(""));
         for (int i = 0; i < arr.size(); i++) {
-            if(sign[i] == 1){
+            if (sign[i] == 1) {
                 continue;
             }
             for (int j = arr.size() - 1; j > i; j--) {
-                if(sign[j] == 1){
+                if (sign[j] == 1) {
                     continue;
                 }
-                if(arr.get(i).equals(arr.get(j))){
+                if (arr.get(i).equals(arr.get(j))) {
                     sign[i] = 1;
                     sign[j] = 1;
                     break;
                 }
             }
         }
-        for(int i = 0; i < sign.length; i++){
-            if(sign[i] == 0){
+        for (int i = 0; i < sign.length; i++) {
+            if (sign[i] == 0) {
                 result.append(arr.get(i));
             }
         }

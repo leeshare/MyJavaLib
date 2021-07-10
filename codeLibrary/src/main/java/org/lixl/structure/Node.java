@@ -13,7 +13,7 @@ public class Node {
     //右节点
     Node rightChildNode;
 
-    public Node(int key, Object value){
+    public Node(int key, Object value) {
         super();
         this.key = key;
         this.value = value;

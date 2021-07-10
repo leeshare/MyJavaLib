@@ -21,6 +21,7 @@ public class MultiplexerTimeServer implements Runnable {
 
     /**
      * 初始化多路复用器，绑定监听端口
+     *
      * @param port
      */
     public MultiplexerTimeServer(int port) {
@@ -39,13 +40,13 @@ public class MultiplexerTimeServer implements Runnable {
             //注册 channel到 Selector
             servChannel.register(selector, SelectionKey.OP_ACCEPT);
             System.out.println("The time server is start in port : " + port);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             System.exit(1);
         }
     }
 
-    public void stop(){
+    public void stop() {
         this.stop = true;
     }
 
@@ -59,27 +60,27 @@ public class MultiplexerTimeServer implements Runnable {
                 Set<SelectionKey> selectedKeys = selector.selectedKeys();
                 Iterator<SelectionKey> it = selectedKeys.iterator();
                 SelectionKey key = null;
-                while(it.hasNext()) {
+                while (it.hasNext()) {
                     key = it.next();
                     it.remove();
                     try {
                         handleInput(key);
                     } catch (Exception e) {
-                        if(key != null){
+                        if (key != null) {
                             key.cancel();
-                            if(key.channel() != null){
+                            if (key.channel() != null) {
                                 key.channel().close();
                             }
                         }
                     }
                 }
-            }catch (Throwable t) {
+            } catch (Throwable t) {
                 t.printStackTrace();
             }
         }
 
         //多路复用器关闭后，所有注册在上面的Channel和Pipe等资源都会被自动去注册并关闭，所以不需要重复释放资源
-        if(selector != null){
+        if (selector != null) {
             try {
                 selector.close();
             } catch (IOException e) {
@@ -90,9 +91,9 @@ public class MultiplexerTimeServer implements Runnable {
 
 
     private void handleInput(SelectionKey key) throws IOException {
-        if(key.isValid()) {
+        if (key.isValid()) {
             //处理新接入的请求信息
-            if(key.isAcceptable()) {
+            if (key.isAcceptable()) {
                 //Accept the new connection
                 ServerSocketChannel ssc = (ServerSocketChannel) key.channel();
                 SocketChannel sc = ssc.accept();
@@ -101,14 +102,14 @@ public class MultiplexerTimeServer implements Runnable {
                 sc.register(selector, SelectionKey.OP_READ);
             }
 
-            if(key.isReadable()) {
+            if (key.isReadable()) {
                 //Read the data
                 SocketChannel sc = (SocketChannel) key.channel();
                 //创建一个ByteBuffer，开辟一个1MB的缓冲区
                 ByteBuffer readBuffer = ByteBuffer.allocate(1024);
                 //然后调用SocketChannel的read方法读取请求码流
                 int readBytes = sc.read(readBuffer);
-                if(readBytes > 0) {
+                if (readBytes > 0) {
                     //读到了字节，对字节进行编解码
 
                     //将缓冲区当前的limit设置为position，position设置为0，用于后续对缓冲区的读取操作
@@ -121,7 +122,7 @@ public class MultiplexerTimeServer implements Runnable {
                             ? new Date(System.currentTimeMillis()).toString()
                             : "BAD ORDER";
                     doWrite(sc, currentTime);
-                }else if(readBytes < 0) {
+                } else if (readBytes < 0) {
                     //对端链路关闭
                     key.cancel();
                     sc.close();
@@ -136,8 +137,8 @@ public class MultiplexerTimeServer implements Runnable {
     /**
      * 将应答消息异步发送给客户端
      */
-    private void doWrite(SocketChannel channel, String response) throws IOException{
-        if(response != null && response.trim().length() > 0) {
+    private void doWrite(SocketChannel channel, String response) throws IOException {
+        if (response != null && response.trim().length() > 0) {
             //将字符串编码成数组
             byte[] bytes = response.getBytes();
 

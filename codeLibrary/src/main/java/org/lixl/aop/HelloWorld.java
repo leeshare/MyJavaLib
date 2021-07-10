@@ -5,5 +5,6 @@ package org.lixl.aop;
  */
 public interface HelloWorld {
     public void printHelloWorld();
+
     public void doPrint();
 }

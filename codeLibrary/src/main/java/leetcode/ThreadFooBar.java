@@ -16,7 +16,8 @@ public class ThreadFooBar {
     }
 
     private static int n;
-    public ThreadFooBar(int n){
+
+    public ThreadFooBar(int n) {
         this.n = n;
     }
 
@@ -25,7 +26,8 @@ public class ThreadFooBar {
     public static void foo(Runnable printFoo) throws InterruptedException {
 
         for (int i = 0; i < n; i++) {
-            while(threadNo != 1){}
+            while (threadNo != 1) {
+            }
             // printFoo.run() outputs "foo". Do not change or remove this line.
             printFoo.run();
             threadNo = 2;
@@ -35,7 +37,8 @@ public class ThreadFooBar {
     public static void bar(Runnable printBar) throws InterruptedException {
 
         for (int i = 0; i < n; i++) {
-            while(threadNo != 2){}
+            while (threadNo != 2) {
+            }
             // printBar.run() outputs "bar". Do not change or remove this line.
             printBar.run();
             threadNo = 1;
@@ -48,14 +51,14 @@ public class ThreadFooBar {
         private static final AtomicBoolean b = new AtomicBoolean(true);
         private static final Map<String, Thread> map = new ConcurrentHashMap<>();
 
-        public Test2(int n){
+        public Test2(int n) {
             this.n = n;
         }
 
         public static void foo(Runnable printFoo) throws InterruptedException {
             map.put("foo", Thread.currentThread());
-            for(int i = 0; i < n; i++){
-                while(!b.get()){
+            for (int i = 0; i < n; i++) {
+                while (!b.get()) {
                     //b = false时，当前线程阻塞
                     LockSupport.park();
                 }
@@ -64,10 +67,11 @@ public class ThreadFooBar {
                 LockSupport.unpark(map.get("bar"));
             }
         }
+
         public static void bar(Runnable printBar) throws InterruptedException {
             map.put("bar", Thread.currentThread());
-            for(int i = 0; i < n; i++){
-                if(b.get()){
+            for (int i = 0; i < n; i++) {
+                if (b.get()) {
                     //b = true时，当前线程阻塞
                     LockSupport.park();
                 }

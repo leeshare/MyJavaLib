@@ -45,8 +45,8 @@ class MetricsRecordImpl extends AbstractMetricsRecord {
 
     @Override
     public String context() {
-        for(MetricsTag t : tags) {
-            if(t.info() == MsInfo.Context) {
+        for (MetricsTag t : tags) {
+            if (t.info() == MsInfo.Context) {
                 return t.value();
             }
         }

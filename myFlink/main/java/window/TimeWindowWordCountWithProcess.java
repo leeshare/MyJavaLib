@@ -16,7 +16,7 @@ import org.apache.flink.util.Collector;
  * 每隔5秒计算最近10秒单词出现的次数
  */
 public class TimeWindowWordCountWithProcess {
-    public static void main(String[] args) throws Exception{
+    public static void main(String[] args) throws Exception {
         //一、 获取运行环境
         StreamExecutionEnvironment env =
                 StreamExecutionEnvironment.getExecutionEnvironment();
@@ -51,23 +51,25 @@ public class TimeWindowWordCountWithProcess {
      * W：Window的数据类型
      */
     public static class SumProcessWindowFunction extends
-            ProcessWindowFunction<Tuple2<String,Integer>,Tuple2<String,Integer>, Tuple, TimeWindow> {
+            ProcessWindowFunction<Tuple2<String, Integer>, Tuple2<String, Integer>, Tuple, TimeWindow> {
         FastDateFormat dataFormat = FastDateFormat.getInstance("HH:mm:ss");
-/**
- * 当一个window触发计算的时候会调用这个方法
- * @param tuple key
- * @param context operator的上下文
- * @param elements 指定window的所有元素
- * @param out 用户输出
- */
+
+        /**
+         * 当一个window触发计算的时候会调用这个方法
+         *
+         * @param tuple    key
+         * @param context  operator的上下文
+         * @param elements 指定window的所有元素
+         * @param out      用户输出
+         */
         @Override
         public void process(Tuple tuple, Context context,
-                Iterable<Tuple2<String, Integer>> elements,
-                Collector<Tuple2<String, Integer>> out) {
-            System.out.println("当天系统的时间："+dataFormat.format(System.currentTimeMillis()));
-                    System.out.println("Window的处理时间："+dataFormat.format(context.currentProcessingTime()));
-                            System.out.println("Window的开始时间："+dataFormat.format(context.window().getStart()));
-                                    System.out.println("Window的结束时间："+dataFormat.format(context.window().getEnd()));
+                            Iterable<Tuple2<String, Integer>> elements,
+                            Collector<Tuple2<String, Integer>> out) {
+            System.out.println("当天系统的时间：" + dataFormat.format(System.currentTimeMillis()));
+            System.out.println("Window的处理时间：" + dataFormat.format(context.currentProcessingTime()));
+            System.out.println("Window的开始时间：" + dataFormat.format(context.window().getStart()));
+            System.out.println("Window的结束时间：" + dataFormat.format(context.window().getEnd()));
             int sum = 0;
             for (Tuple2<String, Integer> ele : elements) {
                 sum += 1;

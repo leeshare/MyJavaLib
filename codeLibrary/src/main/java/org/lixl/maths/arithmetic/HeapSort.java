@@ -20,7 +20,7 @@ public class HeapSort {
 
 
     //元素交换
-    private static void swap(int[] s, int i, int j){
+    private static void swap(int[] s, int i, int j) {
         //System.out.printf("\nswap, i=%d, s[i]=%d, j=%d, s[j]=%d", i, s[i], j, s[j]);
         System.out.println(String.format("交换 %d 和 %d", s[i], s[j]));
         int t = s[i];
@@ -31,20 +31,20 @@ public class HeapSort {
     }
 
     //将数组前3个元素中,最小一个排第0位
-    private static void bubbleSort(int[] s, Boolean isAllSort){
+    private static void bubbleSort(int[] s, Boolean isAllSort) {
         System.out.println("冒泡前:" + Arrays.toString(s));
-        if(isAllSort){
-            for(int i = 0; i < smallLength; i++){
-                for(int j = i; j < smallLength; j++){
-                    if(s[i] > s[j]){
+        if (isAllSort) {
+            for (int i = 0; i < smallLength; i++) {
+                for (int j = i; j < smallLength; j++) {
+                    if (s[i] > s[j]) {
                         swap(s, i, j);
                     }
                 }
             }
-        }else {
+        } else {
             int t = s[0];
-            for(int i = 0; i < smallLength; i++){
-                if(t > s[i]){
+            for (int i = 0; i < smallLength; i++) {
+                if (t > s[i]) {
                     swap(s, 0, i);
                     t = s[0];
                 }
@@ -56,8 +56,8 @@ public class HeapSort {
     //堆排序,用数组第0个元素和 未排序的进行比较
     public static void heapSort(int[] s, int index) {
         int small = s[0];
-        for(int i = s.length - 1; i >= smallLength; i--){
-            if(s[i] > small){
+        for (int i = s.length - 1; i >= smallLength; i--) {
+            if (s[i] > small) {
                 swap(s, 0, i);
                 bubbleSort(s, false);
                 small = s[0];

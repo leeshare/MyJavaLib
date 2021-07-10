@@ -23,18 +23,18 @@ import java.util.*;
 
 /**
  * 需求：每隔5分钟，统计最近1小时热门商品
- *
+ * <p>
  * 步骤：读取数据》
- *      添加水位》
- *      过滤用户行为》
- *      按商品分组》
- *      统计窗口数据》
- *      根据窗口分组》
- *      商品TopN排序》
- *      打印输出
+ * 添加水位》
+ * 过滤用户行为》
+ * 按商品分组》
+ * 统计窗口数据》
+ * 根据窗口分组》
+ * 商品TopN排序》
+ * 打印输出
  */
 public class HotProduct {
-    
+
     private static class UserBehavior {
         public Long userId;
         public Long productId;
@@ -61,7 +61,7 @@ public class HotProduct {
                     '}';
         }
     }
-    
+
     private static class ProductViewCount //implements Comparable<ProductViewCount>
     {
         public Long productId;
@@ -134,7 +134,6 @@ public class HotProduct {
     }
 
     /**
-     *
      * key：商品Id
      * 输入：ProductViewCount
      * 输出：一个字符串
@@ -163,7 +162,7 @@ public class HotProduct {
             //super.onTimer(timestamp, ctx, out);
             List<ProductViewCount> allProduct = new ArrayList<ProductViewCount>();
             Iterator<ProductViewCount> iterator = productState.get().iterator();
-            while(iterator.hasNext()) {
+            while (iterator.hasNext()) {
                 allProduct.add(iterator.next());
             }
             //allProduct.sort(ProductViewCount::compareTo);
@@ -194,7 +193,6 @@ public class HotProduct {
     }
 
     /**
-     *
      * 输入（是ProductCount的输出，即累加值），
      * 输出（ProductViewCount），
      * key（productId），
@@ -211,7 +209,7 @@ public class HotProduct {
 
     /**
      * 实现累加的效果
-     *
+     * <p>
      * aggregate 整合
      * 输入，辅助累加变量，输出
      */
@@ -225,7 +223,7 @@ public class HotProduct {
 
         @Override
         public Long add(UserBehavior userBehavior, Long acc) {
-            return acc+1;
+            return acc + 1;
         }
 
         @Override

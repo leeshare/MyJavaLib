@@ -30,12 +30,12 @@ public class ConsistentHash {
     private static final int VIRTUAL_NODES = 5;
 
     static {
-        for(int i = 0; i < servers.length; i++){
+        for (int i = 0; i < servers.length; i++) {
             realNodes.add(servers[i]);
         }
         //添加虚拟节点，遍历LinkedList使用foreach循环效率会比较高
-        for(String str : realNodes){
-            for(int i = 0; i < VIRTUAL_NODES; i++){
+        for (String str : realNodes) {
+            for (int i = 0; i < VIRTUAL_NODES; i++) {
                 String virtualNodeName = str + "&&VN" + String.valueOf(i);
                 int hash = getHash(virtualNodeName);
                 System.out.println("虚拟节点【" + virtualNodeName + "】被添加，hash值为" + hash);
@@ -47,12 +47,13 @@ public class ConsistentHash {
 
     /**
      * 使用FNV1_32_HASH算法计算服务器的Hash值
+     *
      * @param str
      * @return
      */
-    private static int getHash(String str){
+    private static int getHash(String str) {
         final int p = 16777619;
-        int hash = (int)2166136261L;
+        int hash = (int) 2166136261L;
         for (int i = 0; i < str.length(); i++)
             hash = (hash ^ str.charAt(i)) * p;
         hash += hash << 13;
@@ -67,7 +68,7 @@ public class ConsistentHash {
         return hash;
     }
 
-    private static String getServer(String node){
+    private static String getServer(String node) {
         //得到带路由的节点的Hash值
         int hash = getHash(node);
         //得到大于该Hash的所有Map
@@ -79,9 +80,9 @@ public class ConsistentHash {
         return virtualNode.substring(0, virtualNode.indexOf("&&"));
     }
 
-    public static void main(String[] args){
+    public static void main(String[] args) {
         String[] nodes = {"127.0.0.1:1111", "221.226.0.1:2222", "10.211.0.1:3333"};
-        for(int i = 0; i < nodes.length; i++){
+        for (int i = 0; i < nodes.length; i++) {
             System.out.println("[" + nodes[i] + "]的hash值为" + getHash(nodes[i]) + ", 被路由到节点[" + getServer(nodes[i]) + "]");
         }
     }

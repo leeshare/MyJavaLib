@@ -39,9 +39,11 @@ public class MultiThreadHandler implements Runnable {
     boolean inputIsComplete() {
         return false;
     }
+
     boolean outputIsComplete() {
         return false;
     }
+
     void process() {
         return;
     }
@@ -49,9 +51,9 @@ public class MultiThreadHandler implements Runnable {
     @Override
     public void run() {
         try {
-            if(state == READING) {
+            if (state == READING) {
                 read();
-            } else if(state == SENDING) {
+            } else if (state == SENDING) {
                 send();
             }
         } catch (IOException e) {
@@ -61,7 +63,7 @@ public class MultiThreadHandler implements Runnable {
 
     synchronized void read() throws IOException {
         channel.read(input);
-        if(inputIsComplete()) {
+        if (inputIsComplete()) {
             state = PROCESSING;
             //使用线程pool异步执行
             pool.execute(new Processer());
@@ -72,7 +74,7 @@ public class MultiThreadHandler implements Runnable {
         channel.write(output);
 
         //write完就结束了，关闭select key
-        if(outputIsComplete()) {
+        if (outputIsComplete()) {
             selectionKey.cancel();
         }
     }

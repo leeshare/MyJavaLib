@@ -6,9 +6,10 @@ abstract class LAbstractStringBuilder implements Appendable, CharSequence {
 
     int count;
 
-    LAbstractStringBuilder(){}
+    LAbstractStringBuilder() {
+    }
 
-    LAbstractStringBuilder(int capacity){
+    LAbstractStringBuilder(int capacity) {
         value = new char[capacity];
     }
 

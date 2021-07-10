@@ -43,9 +43,9 @@ class User implements Principal {
 
     @Override
     public boolean equals(Object o) {
-        if(this == o)
+        if (this == o)
             return true;
-        else if(o == null || getClass() != o.getClass())
+        else if (o == null || getClass() != o.getClass())
             return false;
         else
             return ((fullName.equals(((User) o).fullName)) && (authMethod == ((User) o).authMethod));
@@ -60,7 +60,6 @@ class User implements Principal {
     public String toString() {
         return fullName;
     }
-
 
 
 }

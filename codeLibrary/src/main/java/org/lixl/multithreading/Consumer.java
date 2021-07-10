@@ -13,7 +13,7 @@ public class Consumer implements Runnable {
     private BlockingQueue<PCData> queue;
     private static final int SLEEPTIME = 1000;
 
-    public Consumer(BlockingQueue<PCData> queue){
+    public Consumer(BlockingQueue<PCData> queue) {
         this.queue = queue;
     }
 
@@ -21,15 +21,15 @@ public class Consumer implements Runnable {
         System.out.println("start Consumer id: " + Thread.currentThread().getId());
         Random r = new Random();
         try {
-            while(true){
+            while (true) {
                 PCData data = queue.take();
-                if(data != null){
+                if (data != null) {
                     int re = data.getData() * data.getData();
                     System.out.println(MessageFormat.format("{0}*{1}={2}", data.getData(), data.getData(), String.valueOf(re)));
                     Thread.sleep(r.nextInt(SLEEPTIME));
                 }
             }
-        } catch(InterruptedException e){
+        } catch (InterruptedException e) {
             e.printStackTrace();
             Thread.currentThread().interrupt();
         }

@@ -27,7 +27,7 @@ public class NettyTimeServer {
             ChannelFuture future = bootStrap.bind(port).sync();
             future.channel().closeFuture().sync();
 
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         } finally {
             bossGroup.shutdownGracefully();
@@ -49,7 +49,7 @@ public class NettyTimeServer {
 
     public static void main(String[] args) throws Exception {
         int port = 8070;
-        if(args != null && args.length > 0){
+        if (args != null && args.length > 0) {
             try {
                 port = Integer.valueOf(args[0]);
             } catch (NumberFormatException e) {
@@ -60,14 +60,13 @@ public class NettyTimeServer {
     }
 
 
-
-    public static class NettyTimeServerHandler extends ChannelInboundHandlerAdapter{
+    public static class NettyTimeServerHandler extends ChannelInboundHandlerAdapter {
         private int counter;
 
         @Override
         public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
             //super.channelRead(ctx, msg);
-            String body = (String)msg;
+            String body = (String) msg;
             System.out.println("The time server receive order: " + body + " ; the counter is : " + ++counter);
             String currentTime = "Query time order".equalsIgnoreCase(body) ? new java.util.Date(System.currentTimeMillis()).toString()
                     : "BAD ORDER";

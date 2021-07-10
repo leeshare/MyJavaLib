@@ -10,8 +10,8 @@ import org.lixl.hadoop.lixlsource.conf.Configuration;
 public class ReflectionUtils {
 
     public static void setConf(Object theObject, Configuration conf) {
-        if(conf != null) {
-            if(theObject instanceof Configurable) {
+        if (conf != null) {
+            if (theObject instanceof Configurable) {
                 ((Configurable) theObject).setConf(conf);
             }
             //setJobConf(theObject, conf);

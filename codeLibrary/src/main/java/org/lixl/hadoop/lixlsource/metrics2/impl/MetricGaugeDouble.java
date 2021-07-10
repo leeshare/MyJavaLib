@@ -14,7 +14,7 @@ class MetricGaugeDouble extends AbstractMetric {
     }
 
     @Override
-    public Double value(){
+    public Double value() {
         return value;
     }
 

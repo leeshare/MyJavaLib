@@ -28,11 +28,13 @@ public class MutableGaugeFloat extends MutableGauge {
     @Override
     public void decr() {
         incr(-1.0f);
-    };
+    }
+
+    ;
 
     @Override
     public void snapshot(MetricsRecordBuilder builder, boolean all) {
-        if(all || changed()) {
+        if (all || changed()) {
             builder.addGauge(info(), value());
             clearChanged();
         }
@@ -55,11 +57,11 @@ public class MutableGaugeFloat extends MutableGauge {
 
     //这个增加的方法太牛了
     private void incr(float delta) {
-        while(true) {
+        while (true) {
             float current = value.get();
             float next = current + delta;
             // 这个 current 和 next 怎么可能相等呢 ???
-            if(compareAndSet(current, next)) {
+            if (compareAndSet(current, next)) {
                 setChanged();
                 return;
             }

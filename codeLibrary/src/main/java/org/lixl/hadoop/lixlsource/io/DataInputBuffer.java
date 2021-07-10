@@ -10,9 +10,10 @@ import java.io.DataInputStream;
 @InterfaceStability.Unstable
 public class DataInputBuffer extends DataInputStream {
     private static class Buffer extends ByteArrayInputStream {
-        public Buffer(){
-            super(new byte[] {});
+        public Buffer() {
+            super(new byte[]{});
         }
+
         public void reset(byte[] input, int start, int length) {
             this.buf = input;
             this.count = start + length;
@@ -31,41 +32,45 @@ public class DataInputBuffer extends DataInputStream {
         public int getLength() {
             return count;
         }
+
         @Override
         public int read() {
             return (pos < count) ? (buf[pos++] & 0xff) : -1;
         }
+
         @Override
         public int read(byte[] b, int off, int len) {
-            if(b == null) {
+            if (b == null) {
                 throw new NullPointerException();
-            } else if(off < 0 || len < 0 || len > b.length - off) {
+            } else if (off < 0 || len < 0 || len > b.length - off) {
                 throw new IndexOutOfBoundsException();
             }
-            if(pos >= count) {
+            if (pos >= count) {
                 return -1;
             }
-            if(pos + len > count) {
+            if (pos + len > count) {
                 len = count - pos;
             }
-            if(len <= 0) {
+            if (len <= 0) {
                 return 0;
             }
             System.arraycopy(buf, pos, b, off, len);
             pos += len;
             return len;
         }
+
         @Override
         public long skip(long n) {
-            if(pos + n > count) {
+            if (pos + n > count) {
                 n = count - pos;
             }
-            if(n < 0) {
+            if (n < 0) {
                 return 0;
             }
             pos += n;
             return n;
         }
+
         @Override
         public int available() {
             return count - pos;
@@ -73,9 +78,11 @@ public class DataInputBuffer extends DataInputStream {
     }
 
     private Buffer buffer;
+
     public DataInputBuffer() {
         this(new Buffer());
     }
+
     public DataInputBuffer(Buffer buffer) {
         super(buffer);
         this.buffer = buffer;
@@ -84,6 +91,7 @@ public class DataInputBuffer extends DataInputStream {
     public void reset(byte[] input, int length) {
         buffer.reset(input, 0, length);
     }
+
     public void reset(byte[] input, int start, int length) {
         buffer.reset(input, start, length);
     }
@@ -91,6 +99,7 @@ public class DataInputBuffer extends DataInputStream {
     public byte[] getData() {
         return buffer.getData();
     }
+
     public int getPosition() {
         return buffer.getPosition();
     }

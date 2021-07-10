@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit;
  * 第13秒 发了2个 “hadoop”，第15秒 统计（5-15内）得 2
  * 第16秒 发了1个 “hadoop”，第20秒 统计（10-20内）得 3
  * 第25秒 统计（15-25内）得 1
- *
+ * <p>
  * 这是没有特殊情况的 计数
  */
 public class TimeWindowWordCountInOrder {
@@ -28,7 +28,7 @@ public class TimeWindowWordCountInOrder {
         env.setParallelism(1);
         DataStreamSource<String> dataStream = env.addSource(new TestSource());
         //SingleOutputStreamOperator<Tuple2<String, Integer>> result =
-                dataStream.flatMap(new FlatMapFunction<String, Tuple2<String, Integer>>() {
+        dataStream.flatMap(new FlatMapFunction<String, Tuple2<String, Integer>>() {
             @Override
             public void flatMap(String s, Collector<Tuple2<String, Integer>> collector) throws Exception {
                 String[] fields = s.split(",");
@@ -38,7 +38,7 @@ public class TimeWindowWordCountInOrder {
 
             }
         }).keyBy(0).timeWindow(Time.seconds(10), Time.seconds(5)).process(new SumProcessWindowFunction())
-                        .print().setParallelism(1);
+                .print().setParallelism(1);
         //result.print().setParallelism(1);
         env.execute("TimeWindowWordCount In Order");
     }
@@ -74,14 +74,16 @@ public class TimeWindowWordCountInOrder {
     }
 
     public static class SumProcessWindowFunction extends
-            ProcessWindowFunction<Tuple2<String,Integer>,Tuple2<String,Integer>, Tuple, TimeWindow> {
+            ProcessWindowFunction<Tuple2<String, Integer>, Tuple2<String, Integer>, Tuple, TimeWindow> {
         FastDateFormat dataFormat = FastDateFormat.getInstance("HH:mm:ss");
+
         /**
          * 当一个window触发计算的时候会调用这个方法
-         * @param tuple key
-         * @param context operator的上下文
+         *
+         * @param tuple    key
+         * @param context  operator的上下文
          * @param elements 指定window的所有元素
-         * @param out 用户输出
+         * @param out      用户输出
          */
         @Override
         public void process(Tuple tuple, Context context,

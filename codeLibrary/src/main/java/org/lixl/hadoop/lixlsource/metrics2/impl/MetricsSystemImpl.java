@@ -14,7 +14,7 @@ import java.util.Map;
  * 一个基本类 用于 指标系统 单实例
  */
 @InterfaceAudience.Private
-@Metrics(context="metricssystem")
+@Metrics(context = "metricssystem")
 public class MetricsSystemImpl extends MetricsSystem implements MetricsSource {
     static final String MS_NAME = "MetricsSystem";
     static final String MS_STATS_NAME = MS_NAME + ",sub=Stats";
@@ -92,7 +92,7 @@ public class MetricsSystemImpl extends MetricsSystem implements MetricsSource {
         return null;
     }
 
-    enum InitMode { NORMAL, STANDBY }
+    enum InitMode {NORMAL, STANDBY}
 
     private final Map<String, MetricsSourceAdapter> sources;
 

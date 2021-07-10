@@ -38,14 +38,14 @@ public class MultiThreadReactor implements Runnable {
     @Override
     public void run() {
         try {
-            while(!Thread.interrupted()) {
-                for(int i = 0; i < 2; i++) {
+            while (!Thread.interrupted()) {
+                for (int i = 0; i < 2; i++) {
                     selectors[i].select();
                     Set selected = selectors[i].selectedKeys();
                     Iterator it = selected.iterator();
                     while (it.hasNext()) {
                         //Reactor负责dispatch收到的事件
-                        myDispatch((SelectionKey)(it.next()));
+                        myDispatch((SelectionKey) (it.next()));
                     }
                     selected.clear();
                 }
@@ -59,7 +59,7 @@ public class MultiThreadReactor implements Runnable {
     void myDispatch(SelectionKey k) {
         Runnable r = (Runnable) (k.attachment());
         //调用之前注册的callback对象
-        if(r != null) {
+        if (r != null) {
             r.run();
         }
     }
@@ -68,12 +68,12 @@ public class MultiThreadReactor implements Runnable {
         public synchronized void run() throws IOException {
             //主selector负责accept
             SocketChannel connection = serverSocket.accept();
-            if(connection != null) {
+            if (connection != null) {
                 //选个 subReactor去负责接收到的connection
                 //new SingleThreadHandler(selectors[next], connection);
                 new MultiThreadHandler(selectors[next], connection);
             }
-            if(++next == selectors.length) {
+            if (++next == selectors.length) {
                 next = 0;
             }
         }

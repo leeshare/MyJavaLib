@@ -10,11 +10,12 @@ public class PerceptronPoint {
     //y表示 分类值，只有-1和+1两类
     double y = 0;
 
-    PerceptronPoint(double[] x, double y){
+    PerceptronPoint(double[] x, double y) {
         this.x = x;
         this.y = y;
     }
-    public PerceptronPoint(){
+
+    public PerceptronPoint() {
 
     }
 }

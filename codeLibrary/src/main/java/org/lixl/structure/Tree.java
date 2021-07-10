@@ -8,38 +8,39 @@ public class Tree {
     //根节点
     private Node root;
 
-    public Tree(){
+    public Tree() {
 
     }
 
-    public Tree(Node root){
+    public Tree(Node root) {
         this.root = root;
     }
 
     /**
      * 插入节点
+     *
      * @param key
      * @param value
      */
-    public void insert(int key, Object value){
+    public void insert(int key, Object value) {
         Node node = new Node(key, value);
-        if(this.root == null){
+        if (this.root == null) {
             this.root = node;
-        }else {
+        } else {
             Node currentNode = this.root;
-            while(true){
-                if(key > currentNode.key){
-                    if(currentNode.rightChildNode == null){
+            while (true) {
+                if (key > currentNode.key) {
+                    if (currentNode.rightChildNode == null) {
                         currentNode.rightChildNode = node;
                         return;
-                    }else {
+                    } else {
                         currentNode = currentNode.rightChildNode;
                     }
-                }else {
-                    if(currentNode.leftChildNode == null){
+                } else {
+                    if (currentNode.leftChildNode == null) {
                         currentNode.leftChildNode = node;
                         return;
-                    }else {
+                    } else {
                         currentNode = currentNode.leftChildNode;
                     }
                 }
@@ -49,19 +50,20 @@ public class Tree {
 
     /**
      * 查找节点
+     *
      * @param key
      * @return
      */
-    public Node find(int key){
-        if(this.root != null){
+    public Node find(int key) {
+        if (this.root != null) {
             Node currentNode = this.root;
-            while(currentNode.key != key){
-                if(key > currentNode.key){
+            while (currentNode.key != key) {
+                if (key > currentNode.key) {
                     currentNode = currentNode.rightChildNode;
-                }else {
+                } else {
                     currentNode = currentNode.leftChildNode;
                 }
-                if(currentNode == null){
+                if (currentNode == null) {
                     return null;
                 }
             }
@@ -72,10 +74,11 @@ public class Tree {
 
     /**
      * 采用中序遍历法
+     *
      * @param node
      */
-    public void show(Node node){
-        if(node != null){
+    public void show(Node node) {
+        if (node != null) {
             this.show(node.leftChildNode);
             System.out.println(node.key + ":" + node.value);
             this.show(node.rightChildNode);

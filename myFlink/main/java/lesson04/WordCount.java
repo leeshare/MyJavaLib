@@ -22,9 +22,7 @@ public class WordCount {
     }
 
 
-
-
-    public static class SplitLine implements  FlatMapFunction<String,WordAndCount>{
+    public static class SplitLine implements FlatMapFunction<String, WordAndCount> {
         @Override
         public void flatMap(String line, Collector<WordAndCount> out) throws Exception {
             String[] fields = line.split(",");
@@ -35,12 +33,11 @@ public class WordCount {
     }
 
 
-
-    public static class WordAndCount{
+    public static class WordAndCount {
         private String word;
         private int count;
 
-        public WordAndCount(){
+        public WordAndCount() {
 
         }
 

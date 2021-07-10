@@ -26,7 +26,7 @@ public class ProviderApp {
         ServerSocket listener = new ServerSocket(9089);
 
         try {
-            while(true) {
+            while (true) {
 
                 Socket socket = listener.accept();
 
@@ -39,12 +39,12 @@ public class ProviderApp {
 
                     //调用服务
                     int result = 0;
-                    if(object instanceof CalculateRpcRequest){
+                    if (object instanceof CalculateRpcRequest) {
                         CalculateRpcRequest calculateRpcRequest = (CalculateRpcRequest) object;
                         //下面这里只是一个演示，正规应该是用到反射来实现
-                        if("add".equals(calculateRpcRequest.getMethod())){
+                        if ("add".equals(calculateRpcRequest.getMethod())) {
                             result = calculator.add(calculateRpcRequest.getA(), calculateRpcRequest.getB());
-                        }else {
+                        } else {
                             throw new UnsupportedOperationException();
                         }
                     }

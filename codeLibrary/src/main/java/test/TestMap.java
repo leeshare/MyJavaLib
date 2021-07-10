@@ -23,7 +23,7 @@ public class TestMap {
         System.out.println("整合后第一个Map大小为" + original.size());
 
         Iterator<Map.Entry<String, Object>> it = original.entrySet().iterator();
-        while(it.hasNext()){
+        while (it.hasNext()) {
             Map.Entry<String, Object> entry = it.next();
             System.out.println(entry.getValue());
         }
@@ -51,24 +51,27 @@ public class TestMap {
         RecordingMap() {
             this("");
         }
+
         RecordingMap(String prefix) {
             this.prefix = prefix;
         }
+
         RecordingMap(Map<String, ? extends V> m) {
             this(m, "");
         }
+
         RecordingMap(Map<String, ? extends V> m, String prefix) {
             super(m);
             this.prefix = prefix;
         }
 
         @Override
-        public V get(Object key){
-            if(key instanceof String) {
+        public V get(Object key) {
+            if (key instanceof String) {
                 String keyWithPrefix;
-                if(prefix.isEmpty()){
-                    keyWithPrefix = (String)key;
-                }else {
+                if (prefix.isEmpty()) {
+                    keyWithPrefix = (String) key;
+                } else {
                     keyWithPrefix = prefix + (String) key;
                 }
             }

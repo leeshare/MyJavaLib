@@ -20,13 +20,19 @@ public @interface Metric {
 
     /**
      * 速记 于 可选名和描述
+     *
      * @return
      */
     String[] value() default {};
+
     String about() default "";
+
     String sampleName() default "0ps";
+
     String valueName() default "Time";
+
     boolean always() default false;
+
     Type type() default Type.DEFAULT;
 
 }

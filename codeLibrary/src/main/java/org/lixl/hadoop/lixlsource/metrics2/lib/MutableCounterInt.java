@@ -37,7 +37,7 @@ public class MutableCounterInt extends MutableCounter {
 
     @Override
     public void snapshot(MetricsRecordBuilder builder, boolean all) {
-        if(all || changed()) {
+        if (all || changed()) {
             builder.addCounter(info(), value());
             clearChanged();
         }

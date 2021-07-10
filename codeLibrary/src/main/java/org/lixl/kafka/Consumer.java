@@ -12,7 +12,8 @@ import java.util.*;
 public class Consumer {
     KafkaConsumer<String, String> consumer;
     Properties props = new Properties();
-    public Consumer(){
+
+    public Consumer() {
         props.put("bootstrap.servers", "broker1:9092,borker2:9092");
         props.put("group.id", "CountryCounter");    //指定了消费者群组的名字
         props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
@@ -24,7 +25,7 @@ public class Consumer {
 
     //1 自动提交
     //将 auto.commit.offset 设为 true auto.commit.interval.ms 默认为5s
-    public void get(){
+    public void get() {
         //subscribe()方法接受一个主题列表作为参数
         consumer.subscribe(Collections.singletonList("customerCountries"));
         //可以用正则表达式 来匹配多个主题
@@ -32,9 +33,9 @@ public class Consumer {
 
         try {
             //轮询
-            while(true){
+            while (true) {
                 ConsumerRecords<String, String> records = consumer.poll(100); //100是超时时间,用于控制poll的注射器时间
-                for(ConsumerRecord<String, String> record: records){
+                for (ConsumerRecord<String, String> record : records) {
 
                     int updatedCount = 1;
 
@@ -46,16 +47,16 @@ public class Consumer {
     }
 
     //2 手动提交(同步)
-    public void get2(){
-        while(true){
+    public void get2() {
+        while (true) {
             ConsumerRecords<String, String> records = consumer.poll(100);
-            for(ConsumerRecord<String, String> record: records){
+            for (ConsumerRecord<String, String> record : records) {
                 System.out.printf("topic = %s, partition = %s, offset = %d, customer = %s, country = %s\n",
                         record.topic(), (record), record.offset(), record.key(), record.value());
                 try {
                     //将自动提交 auto.commit.offset 设为 false. 用 commitSync() 来手动提交偏移量.
                     consumer.commitSync();
-                } catch(CommitFailedException e){
+                } catch (CommitFailedException e) {
                     //log e
                 }
             }
@@ -63,10 +64,10 @@ public class Consumer {
     }
 
     //3 异步提交
-    public void get3(){
-        while(true){
+    public void get3() {
+        while (true) {
             ConsumerRecords<String, String> records = consumer.poll(100);
-            for(ConsumerRecord<String, String> record: records){
+            for (ConsumerRecord<String, String> record : records) {
                 System.out.printf("topic = %s, partition = %s, offset = %d, customer = %s, country = %s\n",
                         record.topic(), record.partition(), record.offset(), record.key(), record.value());
 
@@ -75,7 +76,7 @@ public class Consumer {
                 consumer.commitAsync(new OffsetCommitCallback() {
                     @Override
                     public void onComplete(Map<TopicPartition, OffsetAndMetadata> map, Exception e) {
-                        if(e != null){
+                        if (e != null) {
                             //log error
                         }
 
@@ -86,9 +87,9 @@ public class Consumer {
     }
 
     //4 同步和异步组合提交
-    public void get4(){
-        try{
-            while(true) {
+    public void get4() {
+        try {
+            while (true) {
                 ConsumerRecords<String, String> records = consumer.poll(100);
                 for (ConsumerRecord<String, String> record : records) {
                     System.out.printf("topic = %s, partition = %s, offset = %d, customer = %s, country = %s\n",
@@ -96,12 +97,12 @@ public class Consumer {
                 }
                 consumer.commitAsync();
             }
-        } catch(Exception e){
+        } catch (Exception e) {
             //log e
         } finally {
             try {
                 consumer.commitSync();
-            }catch(CommitFailedException e){
+            } catch (CommitFailedException e) {
                 //log e
             }
         }
@@ -112,14 +113,16 @@ public class Consumer {
     //
 
 
-    public void commitDBTransaction(){
+    public void commitDBTransaction() {
 
     }
-    public int getOffsetFromDB(TopicPartition partition){
+
+    public int getOffsetFromDB(TopicPartition partition) {
         return 0;
     }
 
     //再均衡监听器
+
     /**
      * 消费者在退出和进行分区再均衡前,会做一些清理工作
      * 如 消费者失去对一个分区的所有权之前 提交最后一个已处理记录的偏移量,比如关闭文件句柄\数据库连接等
@@ -140,14 +143,14 @@ public class Consumer {
     }
 
     //重特点偏移量处开始处理记录(比如从数据库总存储的偏移量)
-    public void getFromDb(){
+    public void getFromDb() {
         List<String> topics = Collections.singletonList("consumerCountries");
         //consumer.subscribe(topics, new SaveOffsetsOnRebalace(consumer));
         //报错???
         consumer.poll(0);
-        while(true){
+        while (true) {
             ConsumerRecords<String, String> records = consumer.poll(100);
-            for(ConsumerRecord<String, String> record: records){
+            for (ConsumerRecord<String, String> record : records) {
                 //processRecord(record);
                 //storeRecordInDB(record);
                 //storeOffsetInDB(record.toString(), record.partition(), record.offset());

@@ -14,7 +14,7 @@ class MetricGaugeFloat extends AbstractMetric {
     }
 
     @Override
-    public Float value(){
+    public Float value() {
         return value;
     }
 

@@ -43,22 +43,27 @@ class MBeanInfoBuilder implements MetricsVisitor {
     public void gauge(MetricsInfo info, int value) {
         attrs.add(newAttrInfo(info, "java.long.Integer"));
     }
+
     @Override
     public void gauge(MetricsInfo info, long value) {
         attrs.add(newAttrInfo(info, "java.lang.Long"));
     }
+
     @Override
     public void gauge(MetricsInfo info, float value) {
         attrs.add(newAttrInfo(info, "java.long.Float"));
     }
+
     @Override
     public void gauge(MetricsInfo info, double value) {
         attrs.add(newAttrInfo(info, "java.long.Double"));
     }
+
     @Override
     public void counter(MetricsInfo info, int value) {
         attrs.add(newAttrInfo(info, "java.long.Integer"));
     }
+
     @Override
     public void counter(MetricsInfo info, long value) {
         attrs.add(newAttrInfo(info, "java.long.Long"));
@@ -70,11 +75,11 @@ class MBeanInfoBuilder implements MetricsVisitor {
 
     MBeanInfo get() {
         curRecNo = 0;
-        for(MetricsRecordImpl rec : recs) {
-            for(MetricsTag t : rec.tags()) {
+        for (MetricsRecordImpl rec : recs) {
+            for (MetricsTag t : rec.tags()) {
                 attrs.add(newAttrInfo("tag." + t.name(), t.description(), "java.long.String"));
             }
-            for(AbstractMetric m : rec.metrics()) {
+            for (AbstractMetric m : rec.metrics()) {
                 m.visit(this);
             }
             ++curRecNo;
@@ -84,7 +89,6 @@ class MBeanInfoBuilder implements MetricsVisitor {
         return new MBeanInfo(name, description, attrs.toArray(attrsArray),
                 null, null, null);
     }
-
 
 
 }

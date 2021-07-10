@@ -20,10 +20,11 @@ public class Interns {
         private final Map<K1, Map<K2, V>> k1Map = new LinkedHashMap<K1, Map<K2, V>>() {
             private static final long serialVersionUID = 1L;
             private boolean gotOverflow = false;
+
             @Override
             protected boolean removeEldestEntry(Map.Entry<K1, Map<K2, V>> e) {
                 boolean overflow = expireKey1At(size());
-                if(overflow && !gotOverflow) {
+                if (overflow && !gotOverflow) {
                     //LOG.info("实习指标缓存于 {} 溢出 {}", size(), e);
                     gotOverflow = true;
                 }
@@ -32,19 +33,22 @@ public class Interns {
         };
 
         abstract protected boolean expireKey1At(int size);
+
         abstract protected boolean expireKey2At(int size);
+
         abstract protected V newValue(K1 k1, K2 k2);
 
         synchronized V add(K1 k1, K2 k2) {
             Map<K2, V> k2Map = k1Map.get(k1);
-            if(k2Map == null) {
+            if (k2Map == null) {
                 k2Map = new LinkedHashMap<K2, V>() {
                     private static final long serialVersionUID = 1L;
                     private boolean gotOverflow = false;
+
                     @Override
                     protected boolean removeEldestEntry(Map.Entry<K2, V> e) {
                         boolean overflow = expireKey2At(size());
-                        if(overflow && !gotOverflow) {
+                        if (overflow && !gotOverflow) {
                             //LOG.info("实习指标缓存于 {} 溢出 {}", size(), e);
                             gotOverflow = true;
                         }
@@ -54,7 +58,7 @@ public class Interns {
                 k1Map.put(k1, k2Map);
             }
             V v = k2Map.get(k2);
-            if(v == null) {
+            if (v == null) {
                 v = newValue(k1, k2);
                 k2Map.put(k2, v);
             }
@@ -91,6 +95,7 @@ public class Interns {
 
     /**
      * 获取一个指标信息对象
+     *
      * @param name
      * @param description
      * @return
@@ -127,6 +132,7 @@ public class Interns {
 
     /**
      * 获取一个指标标签
+     *
      * @param info
      * @param value
      * @return
@@ -137,6 +143,7 @@ public class Interns {
 
     /**
      * 获取一个指标标签
+     *
      * @param name
      * @param description
      * @param value

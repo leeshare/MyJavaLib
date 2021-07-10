@@ -21,16 +21,16 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * 第13秒 生成2个 2个 “hadoop”，但只发了1个，
- *      第15秒 统计（5-15内）得 1  ————没问题（唯一遗憾13秒发的没有统计进来）
+ * 第15秒 统计（5-15内）得 1  ————没问题（唯一遗憾13秒发的没有统计进来）
  * 第16秒 发了1个 “hadoop”
  * 第19秒 发第13秒生成的一个 “hadoop”（事件时间是第13）
- *      第20秒 统计（10-20内）得 3 ————没问题
+ * 第20秒 统计（10-20内）得 3 ————没问题
  * 第25秒 统计（15-25内）得 1 ————没问题
- *
+ * <p>
  * 这是有特殊情况的 计数
  * 即乱序了
  * （正常情况应该是：2 3 1）
- *
+ * <p>
  * 解决：用 EventTime 来处理
  */
 public class TimeWindowWordCountNoOrderFixByEventTime {
@@ -91,14 +91,16 @@ public class TimeWindowWordCountNoOrderFixByEventTime {
     }
 
     public static class SumProcessWindowFunction extends
-            ProcessWindowFunction<Tuple2<String,Long>,Tuple2<String,Integer>, Tuple, TimeWindow> {
+            ProcessWindowFunction<Tuple2<String, Long>, Tuple2<String, Integer>, Tuple, TimeWindow> {
         FastDateFormat dataFormat = FastDateFormat.getInstance("HH:mm:ss");
+
         /**
          * 当一个window触发计算的时候会调用这个方法
-         * @param tuple key
-         * @param context operator的上下文
+         *
+         * @param tuple    key
+         * @param context  operator的上下文
          * @param elements 指定window的所有元素
-         * @param out 用户输出
+         * @param out      用户输出
          */
         @Override
         public void process(Tuple tuple, Context context,
@@ -116,6 +118,7 @@ public class TimeWindowWordCountNoOrderFixByEventTime {
             out.collect(Tuple2.of(tuple.getField(0), sum));
         }
     }
+
     private static class EventTimeExtractor implements AssignerWithPeriodicWatermarks<Tuple2<String, Long>> {
         FastDateFormat dateFormat = FastDateFormat.getInstance("HH:mm:ss");
 

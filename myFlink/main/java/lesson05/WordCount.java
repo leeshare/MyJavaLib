@@ -18,7 +18,7 @@ public class WordCount {
         String hostname = parameterTool.get("hostname");
         int port = parameterTool.getInt("port");
         //步骤二：数据的输入
-        DataStreamSource<String> data = env.socketTextStream(hostname,port);
+        DataStreamSource<String> data = env.socketTextStream(hostname, port);
         //步骤三：数据的处理
         SingleOutputStreamOperator<WordAndCount> result = data.flatMap(new SplitLine()).keyBy("word")
                 .sum("count");
@@ -29,9 +29,7 @@ public class WordCount {
     }
 
 
-
-
-    public static class SplitLine implements  FlatMapFunction<String,WordAndCount>{
+    public static class SplitLine implements FlatMapFunction<String, WordAndCount> {
         @Override
         public void flatMap(String line, Collector<WordAndCount> out) throws Exception {
             String[] fields = line.split(",");
@@ -42,12 +40,11 @@ public class WordCount {
     }
 
 
-
-    public static class WordAndCount{
+    public static class WordAndCount {
         private String word;
         private int count;
 
-        public WordAndCount(){
+        public WordAndCount() {
 
         }
 

@@ -22,7 +22,7 @@ public class MetricsCollectorImpl implements MetricsCollector, Iterable<MetricsR
     public MetricsRecordBuilderImpl addRecord(MetricsInfo info) {
         boolean acceptable = recordFilter == null || recordFilter.accepts(info.name());
         MetricsRecordBuilderImpl rb = new MetricsRecordBuilderImpl(this, info, recordFilter, metricFilter, acceptable);
-        if(acceptable) {
+        if (acceptable) {
             rbs.add(rb);
         }
         return rb;
@@ -35,9 +35,9 @@ public class MetricsCollectorImpl implements MetricsCollector, Iterable<MetricsR
 
     public List<MetricsRecordImpl> getRecords() {
         List<MetricsRecordImpl> recs = Lists.newArrayListWithCapacity(rbs.size());
-        for(MetricsRecordBuilderImpl rb : rbs) {
+        for (MetricsRecordBuilderImpl rb : rbs) {
             MetricsRecordImpl mr = rb.getRecord();
-            if(mr != null) {
+            if (mr != null) {
                 recs.add(mr);
             }
         }

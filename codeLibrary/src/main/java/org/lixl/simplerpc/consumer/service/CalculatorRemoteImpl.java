@@ -15,7 +15,7 @@ import java.util.List;
 public class CalculatorRemoteImpl implements Calculator {
     public static final int PORT = 9089;
 
-    public int add (int a, int b) {
+    public int add(int a, int b) {
         List<String> addressList = lookupProvider("Calculator.add");
         String address = chooseTarget(addressList);
         try {
@@ -34,12 +34,12 @@ public class CalculatorRemoteImpl implements Calculator {
 
             //log.info("response is {}", response);
 
-            if(response instanceof Integer)
+            if (response instanceof Integer)
                 return (Integer) response;
             else
                 throw new InternalError();
 
-        } catch (Exception e){
+        } catch (Exception e) {
             //log.error("fail", e);
             throw new InternalError();
         }
@@ -54,14 +54,14 @@ public class CalculatorRemoteImpl implements Calculator {
         return calculateRpcRequest;
     }
 
-    private String chooseTarget(List<String> providers){
-        if(null == providers || providers.size() == 0){
+    private String chooseTarget(List<String> providers) {
+        if (null == providers || providers.size() == 0) {
             throw new IllegalArgumentException();
         }
         return providers.get(0);
     }
 
-    public static List<String> lookupProvider(String name){
+    public static List<String> lookupProvider(String name) {
         List<String> addrs = new ArrayList<>();
         addrs.add("127.0.0.1");
         return addrs;

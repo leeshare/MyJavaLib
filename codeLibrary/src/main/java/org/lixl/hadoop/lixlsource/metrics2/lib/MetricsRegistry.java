@@ -46,6 +46,7 @@ public class MetricsRegistry {
 
     /**
      * 创建一个可变的整型计数器
+     *
      * @param name
      * @param desc
      * @param iVal
@@ -57,6 +58,7 @@ public class MetricsRegistry {
 
     /**
      * 创建一个可变的整型计数器
+     *
      * @param info
      * @param iVal
      * @return
@@ -70,6 +72,7 @@ public class MetricsRegistry {
 
     /**
      * 创建一个可变long计数器
+     *
      * @param name
      * @param desc
      * @param iVal
@@ -81,6 +84,7 @@ public class MetricsRegistry {
 
     /**
      * 创建一个可变long计数器
+     *
      * @param info
      * @param iVal
      * @return
@@ -94,6 +98,7 @@ public class MetricsRegistry {
 
     /**
      * 创建一个可变int估值
+     *
      * @param name
      * @param desc
      * @param iVal
@@ -105,6 +110,7 @@ public class MetricsRegistry {
 
     /**
      * 创建一个可变int估值
+     *
      * @param info
      * @param iVal
      * @return
@@ -118,6 +124,7 @@ public class MetricsRegistry {
 
     /**
      * 创建一个可变long估值
+     *
      * @param name
      * @param desc
      * @param iVal
@@ -129,6 +136,7 @@ public class MetricsRegistry {
 
     /**
      * 创建一个可变long估值
+     *
      * @param info
      * @param iVal
      * @return
@@ -142,6 +150,7 @@ public class MetricsRegistry {
 
     /**
      * 创建一个可变float估值
+     *
      * @param name
      * @param desc
      * @param iVal
@@ -153,6 +162,7 @@ public class MetricsRegistry {
 
     /**
      * 创建一个可变float估值
+     *
      * @param info
      * @param iVal
      * @return
@@ -166,6 +176,7 @@ public class MetricsRegistry {
 
     /**
      * 创建一个可变的标准 估算一个值的流的分位数
+     *
      * @param name
      * @param desc
      * @param sampleName
@@ -176,7 +187,7 @@ public class MetricsRegistry {
     public synchronized MutableQuantiles newQuantiles(String name, String desc,
                                                       String sampleName, String valueName, int interval) {
         checkMetricName(name);
-        if(interval <= 0) {
+        if (interval <= 0) {
             throw new MetricsException("间隔应该为正数. 传入的值是: " + interval);
         }
         MutableQuantiles ret = new MutableQuantiles(name, desc, sampleName, valueName, interval);
@@ -210,10 +221,10 @@ public class MetricsRegistry {
 
     @InterfaceAudience.Private
     public synchronized MutableRate newRate(String name, String desc, boolean extended, boolean returnExisting) {
-        if(returnExisting) {
+        if (returnExisting) {
             MutableMetric rate = metricsMap.get(name);
-            if(rate != null) {
-                if(rate instanceof MutableRate) {
+            if (rate != null) {
+                if (rate instanceof MutableRate) {
                     return (MutableRate) rate;
                 }
                 throw new MetricsException("非metrics类型 " + rate.getClass() + " for " + name);
@@ -247,13 +258,13 @@ public class MetricsRegistry {
     public synchronized void add(String name, long value) {
         MutableMetric m = metricsMap.get(name);
 
-        if(m != null) {
-            if(m instanceof MutableStat) {
+        if (m != null) {
+            if (m instanceof MutableStat) {
                 ((MutableStat) m).add(value);
-            }else {
+            } else {
                 throw new MetricsException("Unsupported add(value) for metric " + name);
             }
-        }else {
+        } else {
             metricsMap.put(name, newRate(name));    //默认是一个比率标准
             add(name, value);
         }
@@ -272,7 +283,7 @@ public class MetricsRegistry {
     }
 
     public synchronized MetricsRegistry tag(MetricsInfo info, String value, boolean override) {
-        if(!override) {
+        if (!override) {
             checkTagName(info.name());
         }
         tagsMap.put(info.name(), Interns.tag(info, value));
@@ -294,32 +305,32 @@ public class MetricsRegistry {
 
     private void checkMetricName(String name) {
         boolean foundWhitespace = false;
-        for(int i = 0; i < name.length(); i++) {
+        for (int i = 0; i < name.length(); i++) {
             char c = name.charAt(i);
-            if(Character.isWhitespace(c)) {
+            if (Character.isWhitespace(c)) {
                 foundWhitespace = true;
                 break;
             }
         }
-        if(foundWhitespace) {
+        if (foundWhitespace) {
             throw new MetricsException("指标名 '" + name + "' 包含非法的空白字符");
         }
-        if(metricsMap.containsKey(name)) {
+        if (metricsMap.containsKey(name)) {
             throw new MetricsException("指标名 " + name + "已存在！");
         }
     }
 
     public void checkTagName(String name) {
-        if(tagsMap.containsKey(name)) {
+        if (tagsMap.containsKey(name)) {
             throw new MetricsException("标签" + name + "已存在！");
         }
     }
 
     public synchronized void snapshot(MetricsRecordBuilder builder, boolean all) {
-        for(MetricsTag tag : tags()) {
+        for (MetricsTag tag : tags()) {
             builder.add(tag);
         }
-        for(MutableMetric metric : metrics()) {
+        for (MutableMetric metric : metrics()) {
             metric.snapshot(builder, all);
         }
     }

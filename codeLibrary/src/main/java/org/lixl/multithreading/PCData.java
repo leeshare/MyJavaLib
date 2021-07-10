@@ -6,22 +6,23 @@ package org.lixl.multithreading;
 public class PCData {
     private final int data;
 
-    public PCData(int data){
+    public PCData(int data) {
         this.data = data;
     }
-    public PCData(String d){
+
+    public PCData(String d) {
         data = Integer.valueOf(d);
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         return "data:" + data;
     }
 
     /*public void setData(int data){
         this.data = data;
     }*/
-    public int getData(){
+    public int getData() {
         return data;
     }
 

@@ -10,10 +10,10 @@ public class Path implements Comparable, Serializable, ObjectInputValidation {
     private URI uri;
 
     private void checkPathArg(String path) throws IllegalArgumentException {
-        if(path == null) {
+        if (path == null) {
             throw new IllegalArgumentException("Can not create a Path from a null string");
         }
-        if(path.length() == 0){
+        if (path.length() == 0) {
             throw new IllegalArgumentException("Can not create a Path from an empty string");
         }
     }
@@ -24,7 +24,7 @@ public class Path implements Comparable, Serializable, ObjectInputValidation {
 
     @Override
     public void validateObject() throws InvalidObjectException {
-        if(uri == null)
+        if (uri == null)
             throw new InvalidObjectException("no URI in deserialized Path");
     }
 

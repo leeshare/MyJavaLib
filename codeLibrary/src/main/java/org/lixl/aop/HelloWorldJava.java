@@ -5,11 +5,11 @@ package org.lixl.aop;
  */
 public class HelloWorldJava implements HelloWorld {
 
-    public void printHelloWorld(){
+    public void printHelloWorld() {
         System.out.println("Enter HelloWorldJava.printHelloWorld()");
     }
 
-    public void doPrint(){
+    public void doPrint() {
         System.out.println("Enter HelloWorldJava.doPrint()");
     }
 }

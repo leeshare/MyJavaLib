@@ -18,10 +18,10 @@ public class WordCount {
     public static void main(String[] args) throws Exception {
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         env.setParallelism(3);
-        String topic="nxtest";
+        String topic = "nxtest";
         Properties consumerProperties = new Properties();
-        consumerProperties.setProperty("bootstrap.servers","192.168.152.102:9092");
-        consumerProperties.setProperty("group.id","testConsumer");
+        consumerProperties.setProperty("bootstrap.servers", "192.168.152.102:9092");
+        consumerProperties.setProperty("group.id", "testConsumer");
 
 
         FlinkKafkaConsumer011<String> myConsumer =
@@ -41,7 +41,7 @@ public class WordCount {
 
         SingleOutputStreamOperator<Tuple2<String, Integer>> result = wordOneStream.keyBy(0).sum(1);
 
-        result.map( tuple -> tuple.toString())
+        result.map(tuple -> tuple.toString())
                 .print();
 
         env.execute("WordCount2");

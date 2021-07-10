@@ -15,8 +15,8 @@ public class Individual {
 
     public Individual(int chromosomeLength) {
         this.chromosome = new int[chromosomeLength];
-        for(int gene = 0; gene < chromosomeLength; gene++) {
-            if(0.5 < Math.random()) {
+        for (int gene = 0; gene < chromosomeLength; gene++) {
+            if (0.5 < Math.random()) {
                 this.setGene(gene, 1);
             } else {
                 this.setGene(gene, 0);
@@ -50,15 +50,16 @@ public class Individual {
 
     public String toString() {
         String output = "";
-        for(int gene = 0; gene < this.chromosome.length; gene++) {
+        for (int gene = 0; gene < this.chromosome.length; gene++) {
             output += this.chromosome[gene];
         }
         return output;
     }
+
     public String toStringZn() {
         String output = "";
-        for(int gene = 0; gene < this.chromosome.length; gene+=2) {
-            String c = this.chromosome[gene] + "" + this.chromosome[gene+1];
+        for (int gene = 0; gene < this.chromosome.length; gene += 2) {
+            String c = this.chromosome[gene] + "" + this.chromosome[gene + 1];
             switch (c) {
                 case "00":
                     output += "停止 ";

@@ -22,6 +22,7 @@ public class RemoteException extends IOException {
     public RemoteException(String className, String msg) {
         //this(className, msg, null);
     }
+
     /*public RemoteException(String className, String msg, RpcErrorCodeProto erCode) {
         super(msg);
         this.className = className;
@@ -30,7 +31,7 @@ public class RemoteException extends IOException {
         else
             errorCode = UNSPECIFIED_ERROR;
     }*/
-    public String getClassName(){
+    public String getClassName() {
         return className;
     }
     /*public RpcErrorCodeProto getErrorCode(){
@@ -38,14 +39,14 @@ public class RemoteException extends IOException {
     }*/
 
     public IOException unwrapRemoteException(Class<?>... lookupTypes) {
-        if(lookupTypes == null)
+        if (lookupTypes == null)
             return this;
-        for(Class<?> lookupClass : lookupTypes) {
-            if(!lookupClass.getName().equals(getClassName()))
+        for (Class<?> lookupClass : lookupTypes) {
+            if (!lookupClass.getName().equals(getClassName()))
                 continue;
             try {
                 return instantiateException(lookupClass.asSubclass(IOException.class));
-            } catch (Exception e){
+            } catch (Exception e) {
                 // cannot instantiate lookupClass, just return this
                 return this;
             }
@@ -54,17 +55,17 @@ public class RemoteException extends IOException {
         return this;
     }
 
-    public IOException unwrapRemoteException(){
+    public IOException unwrapRemoteException() {
         try {
             Class<?> realClass = Class.forName(getClassName());
             return instantiateException(realClass.asSubclass(IOException.class));
-        } catch (Exception e){
+        } catch (Exception e) {
             // cannot instantiate the original exception. just return this
         }
         return this;
     }
 
-    private IOException instantiateException(Class<? extends IOException> cls) throws Exception{
+    private IOException instantiateException(Class<? extends IOException> cls) throws Exception {
         Constructor<? extends IOException> cn = cls.getConstructor(String.class);
         cn.setAccessible(true);
         IOException ex = cn.newInstance(this.getMessage());

@@ -12,13 +12,13 @@ public class Individual {
 
     /**
      * 基于一个课程表 来初始化随机个体
-     *
+     * <p>
      * 这个课程表类是有点超载。它既知道混合信息（课程必须排，教授必须教，教室必须存在）
-     *      --也懂得如何解包 包含变量信息的染色体（哪个教授在何时教哪个班）
-     *
-     *  在这个案例中，我们使用课程表仅用于混合信息，并生成一个随机染色体，making guesses at hte variable information.
-     *
-     *  用课程表所给的混合信息，我们创建一个染色体随机分给时间段、教室和教授，再将此染色体对应到学生组和课程上。
+     * --也懂得如何解包 包含变量信息的染色体（哪个教授在何时教哪个班）
+     * <p>
+     * 在这个案例中，我们使用课程表仅用于混合信息，并生成一个随机染色体，making guesses at hte variable information.
+     * <p>
+     * 用课程表所给的混合信息，我们创建一个染色体随机分给时间段、教室和教授，再将此染色体对应到学生组和课程上。
      *
      * @param timetable
      */
@@ -31,9 +31,9 @@ public class Individual {
         int[] newChromosome = new int[chromosomeLength];
         int chromosomeIndex = 0;
         //循环学生组
-        for(Group group : timetable.getGroupsAsArray()) {
+        for (Group group : timetable.getGroupsAsArray()) {
             //循环课程
-            for(int moduleId : group.getModuleIds()) {
+            for (int moduleId : group.getModuleIds()) {
                 //添加随机时间
                 int timeslotId = timetable.getRandomTimeslot().getTimeslotId();
                 newChromosome[chromosomeIndex] = timeslotId;
@@ -94,15 +94,15 @@ public class Individual {
 
     public String toString() {
         String output = "";
-        for(int gene = 0; gene < this.chromosome.length; gene++) {
+        for (int gene = 0; gene < this.chromosome.length; gene++) {
             output += this.chromosome[gene] + ",";
         }
         return output;
     }
 
     public boolean containsGene(int gene) {
-        for(int i = 0; i < this.chromosome.length; i++) {
-            if(this.chromosome[i] == gene) {
+        for (int i = 0; i < this.chromosome.length; i++) {
+            if (this.chromosome[i] == gene) {
                 return true;
             }
         }

@@ -11,6 +11,7 @@ import org.lixl.hadoop.lixlsource.classification.InterfaceStability;
 public interface MetricsSource {
     /**
      * 从指标源 获取指标
+     *
      * @param collector
      * @param all
      */

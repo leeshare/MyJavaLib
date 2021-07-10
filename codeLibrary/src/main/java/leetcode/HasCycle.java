@@ -9,7 +9,8 @@ public class HasCycle {
     public static class ListNode {
         int val;
         ListNode next;
-        public ListNode(int x){
+
+        public ListNode(int x) {
             this.val = x;
             this.next = null;
         }
@@ -17,30 +18,30 @@ public class HasCycle {
 
     /**
      * 使用快慢指针：如果有环，那么一定会相遇
+     *
      * @param head
      * @return
      */
     public static boolean hasCycle(ListNode head) {
-        if(head == null){
+        if (head == null) {
             return false;
         }
         ListNode first = head, second = head;
 
-        while(true){
-            if(first.next != null){
+        while (true) {
+            if (first.next != null) {
                 first = first.next;
-            }else {
+            } else {
                 return false;
             }
-            if(second.next != null && second.next.next != null){
+            if (second.next != null && second.next.next != null) {
                 second = second.next.next;
-            }else {
+            } else {
                 return false;
             }
 
             //if(first.val == second.val)
-            if(first == second)
-            {
+            if (first == second) {
                 return true;
             }
         }

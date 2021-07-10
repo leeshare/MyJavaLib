@@ -15,7 +15,7 @@ public class StockDaoImpl extends JdbcDaoSupport implements IStockDao {
     @Override
     public void updateStock(String sname, int amount, boolean isBuy) {
         String sql = "update t_stock set count = count - ? where name = ?";
-        if(isBuy){
+        if (isBuy) {
             //购买股票
             sql = "update t_stock set count = count + ? where name = ?";
         }

@@ -13,6 +13,7 @@ public interface MetricsVisitor {
 
     /**
      * 回调用于整型估值
+     *
      * @param info
      * @param value
      */
@@ -26,6 +27,7 @@ public interface MetricsVisitor {
 
     /**
      * 回调用于整型的计数
+     *
      * @param info
      * @param value
      */

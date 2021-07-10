@@ -23,29 +23,29 @@ public interface LCharSequence {
 
     public String toString();
 
-    public default IntStream chars(){
-       class CharIterator implements PrimitiveIterator.OfInt {
-           int cur = 0;
+    public default IntStream chars() {
+        class CharIterator implements PrimitiveIterator.OfInt {
+            int cur = 0;
 
-           public boolean hasNext() {
-               return cur < length();
-           }
+            public boolean hasNext() {
+                return cur < length();
+            }
 
-           public int nextInt() {
-               if(hasNext()) {
-                   return charAt(cur++);
-               }else {
-                   throw new NoSuchElementException();
-               }
-           }
+            public int nextInt() {
+                if (hasNext()) {
+                    return charAt(cur++);
+                } else {
+                    throw new NoSuchElementException();
+                }
+            }
 
-           @Override
-           public void forEachRemaining(IntConsumer block) {
-               for(; cur < length(); cur++){
-                   block.accept(charAt(cur));
-               }
-           }
-       }
+            @Override
+            public void forEachRemaining(IntConsumer block) {
+                for (; cur < length(); cur++) {
+                    block.accept(charAt(cur));
+                }
+            }
+        }
         return StreamSupport.intStream(() ->
                 Spliterators.spliterator(new CharIterator(), length(), Spliterator.ORDERED), Spliterator.SUBSIZED | Spliterator.SIZED | Spliterator.ORDERED, false);
     }
@@ -101,9 +101,9 @@ public interface LCharSequence {
         }
 
         return StreamSupport.intStream(() ->
-                Spliterators.spliteratorUnknownSize(
-                        new CodePointIterator(),
-                        Spliterator.ORDERED),
+                        Spliterators.spliteratorUnknownSize(
+                                new CodePointIterator(),
+                                Spliterator.ORDERED),
                 Spliterator.ORDERED,
                 false);
     }

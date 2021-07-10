@@ -6,13 +6,15 @@ package test;
 public class TestBean {
     private String testStr = "testStr";
 
-    public String getTestStr(){
+    public String getTestStr() {
         return testStr;
     }
-    public void setTestStr(String testStr){
+
+    public void setTestStr(String testStr) {
         this.testStr = testStr;
     }
-    public void test(){
+
+    public void test() {
         System.out.println("src/main/java/test");
     }
 }

@@ -7,10 +7,13 @@ package org.lixl.hadoop.lixlsource.common.fs;
 public final class Options {
 
     public static class CreateOpts {
-        private CreateOpts() {}
+        private CreateOpts() {
+        }
+
         public static BlockSize blockSize(long bs) {
             return new BlockSize(bs);
         }
+
         public static BufferSize bufferSize(int bs) {
             return new BufferSize(bs);
         }
@@ -18,12 +21,14 @@ public final class Options {
 
     public static class BlockSize extends CreateOpts {
         private final long blockSize;
+
         protected BlockSize(long bs) {
-            if(bs <= 0){
+            if (bs <= 0) {
                 throw new IllegalArgumentException("Block size must be greater then 0");
             }
             blockSize = bs;
         }
+
         public long getValue() {
             return blockSize;
         }
@@ -31,13 +36,15 @@ public final class Options {
 
     public static class BufferSize extends CreateOpts {
         private final int bufferSize;
+
         protected BufferSize(int bs) {
-            if(bs <= 0){
+            if (bs <= 0) {
                 throw new IllegalArgumentException("Buffer size must be greater then 0");
             }
             bufferSize = bs;
         }
-        public int getValue(){
+
+        public int getValue() {
             return bufferSize;
         }
     }
@@ -48,12 +55,15 @@ public final class Options {
         TO_TRASH((byte) 2);
 
         private final byte code;
+
         private Rename(byte code) {
             this.code = code;
         }
+
         public static Rename valueOf(byte code) {
             return code < 0 || code >= values().length ? null : values()[code];
         }
+
         public byte value() {
             return code;
         }

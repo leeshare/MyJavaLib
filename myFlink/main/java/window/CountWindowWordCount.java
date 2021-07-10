@@ -19,7 +19,7 @@ import org.apache.flink.util.Collector;
 
 /**
  * 自定义 触发器 Trigger
- *      实现 CountTrigger的功能
+ * 实现 CountTrigger的功能
  */
 public class CountWindowWordCount {
     public static void main(String[] args) throws Exception {
@@ -65,42 +65,46 @@ public class CountWindowWordCount {
                         return aLong + t1;
                     }
                 }, Long.class);
+
         public MyCountTrigger(long maxCount) {
             this.maxCount = maxCount;
         }
-/**
- * 当一个元素进入到一个 window 中的时候就会调用这个方法
- * @param element 元素
- * @param timestamp 进来的时间
- * @param window 元素所属的窗口
- * @param ctx 上下文
- * @return TriggerResult
- * 1. TriggerResult.CONTINUE ：表示对 window 不做任何处理
- * 2. TriggerResult.FIRE ：表示触发 window 的计算
- * 3. TriggerResult.PURGE ：表示清除 window 中的所有数据
- * 4. TriggerResult.FIRE_AND_PURGE ：表示先触发 window 计算，然后删除
-window 中的数据
- * @throws Exception
- */
-@Override
-public TriggerResult onElement(Tuple2<String, Integer> element,
-                               long timestamp,
-                               GlobalWindow window,
-                               TriggerContext ctx) throws Exception {
+
+        /**
+         * 当一个元素进入到一个 window 中的时候就会调用这个方法
+         *
+         * @param element   元素
+         * @param timestamp 进来的时间
+         * @param window    元素所属的窗口
+         * @param ctx       上下文
+         * @return TriggerResult
+         * 1. TriggerResult.CONTINUE ：表示对 window 不做任何处理
+         * 2. TriggerResult.FIRE ：表示触发 window 的计算
+         * 3. TriggerResult.PURGE ：表示清除 window 中的所有数据
+         * 4. TriggerResult.FIRE_AND_PURGE ：表示先触发 window 计算，然后删除
+         * window 中的数据
+         * @throws Exception
+         */
+        @Override
+        public TriggerResult onElement(Tuple2<String, Integer> element,
+                                       long timestamp,
+                                       GlobalWindow window,
+                                       TriggerContext ctx) throws Exception {
 // 拿到当前 key 对应的 count 状态值
-    ReducingState<Long> count =
-            ctx.getPartitionedState(stateDescriptor);
+            ReducingState<Long> count =
+                    ctx.getPartitionedState(stateDescriptor);
 // count 累加 1
-    count.add(1L);
+            count.add(1L);
 // 如果当前 key 的 count 值等于 maxCount
-    if (count.get() == maxCount) {
-        count.clear();
+            if (count.get() == maxCount) {
+                count.clear();
 // 触发 window 计算，删除数据
-        return TriggerResult.FIRE_AND_PURGE;
-    }
+                return TriggerResult.FIRE_AND_PURGE;
+            }
 // 否则，对 window 不做任何的处理
-    return TriggerResult.CONTINUE;
-}
+            return TriggerResult.CONTINUE;
+        }
+
         @Override
         public TriggerResult onProcessingTime(long time,
                                               GlobalWindow window,
@@ -108,6 +112,7 @@ public TriggerResult onElement(Tuple2<String, Integer> element,
 // 写基于 Processing Time 的定时器任务逻辑
             return TriggerResult.CONTINUE;
         }
+
         @Override
         public TriggerResult onEventTime(long time,
                                          GlobalWindow window,
@@ -115,6 +120,7 @@ public TriggerResult onElement(Tuple2<String, Integer> element,
 // 写基于 Event Time 的定时器任务逻辑
             return TriggerResult.CONTINUE;
         }
+
         @Override
         public void clear(GlobalWindow window, TriggerContext ctx) throws Exception {
 // 清除状态值

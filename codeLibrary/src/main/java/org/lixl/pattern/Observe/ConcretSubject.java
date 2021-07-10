@@ -8,7 +8,7 @@ package org.lixl.pattern.Observe;
 public class ConcretSubject extends Subject {
     private String state;
 
-    public String getState(){
+    public String getState() {
         return state;
     }
 
@@ -20,8 +20,8 @@ public class ConcretSubject extends Subject {
         notifyEveryone(newState);
     }
 
-    public static void main(String[] args){
-        ConcretSubject sub  = new ConcretSubject();
+    public static void main(String[] args) {
+        ConcretSubject sub = new ConcretSubject();
         Observer a = new ObserverA();
         Observer a2 = new ObserverA();
         Observer b = new ObserverB();

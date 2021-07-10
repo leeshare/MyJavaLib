@@ -9,6 +9,7 @@ import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer011;
 import org.apache.flink.util.Collector;
 
+import java.util.Arrays;
 import java.util.Properties;
 
 /**
@@ -19,10 +20,10 @@ public class WordCount {
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         //设置并行度
 
-        String topic="nxtest";
+        String topic = "nxtest";
         Properties consumerProperties = new Properties();
-        consumerProperties.setProperty("bootstrap.servers","192.168.152.102:9092");
-        consumerProperties.setProperty("group.id","testConsumer");
+        consumerProperties.setProperty("bootstrap.servers", "192.168.152.102:9092");
+        consumerProperties.setProperty("group.id", "testConsumer");
 
 
         FlinkKafkaConsumer011<String> myConsumer =
@@ -41,12 +42,14 @@ public class WordCount {
                 }
             }
         }).setParallelism(2);
+        //data.flatMap((String r, Collector<Tuple2<String, Integer>> out) -> Arrays.stream(r.split("\\,")).forEach(x -> out.collect(Tuple2.of(x, 1))) );
+
 
         //keyBy sum  2 task
         SingleOutputStreamOperator<Tuple2<String, Integer>> result = wordOneStream.keyBy(0).sum(1).setParallelism(2);
 
         //map  2 task
-        result.map( tuple -> tuple.toString()).setParallelism(2)
+        result.map(tuple -> tuple.toString()).setParallelism(2)
                 .print().setParallelism(1); //sink 1 task
 
         env.execute("WordCount2");

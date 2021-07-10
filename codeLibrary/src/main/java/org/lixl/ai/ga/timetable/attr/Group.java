@@ -18,10 +18,12 @@ public class Group {
     public int getGroupId() {
         return this.groupId;
     }
-    public int getGroupSize(){
+
+    public int getGroupSize() {
         return this.groupSize;
     }
-    public int[] getModuleIds(){
+
+    public int[] getModuleIds() {
         return this.moduleIds;
     }
 }

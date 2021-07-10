@@ -6,7 +6,7 @@ package org.lixl.pattern.Proxy;
  */
 public class Singer implements ISinger {
     //private Logger log = LoggerFactory.getLogger(Singer.class);
-    public void sing(){
+    public void sing() {
         //log.info("唱一首歌");
     }
 }

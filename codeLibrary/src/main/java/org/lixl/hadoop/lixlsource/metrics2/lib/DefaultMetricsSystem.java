@@ -40,7 +40,7 @@ public enum DefaultMetricsSystem {
 
     void shutdownInstance() {
         boolean last = impl.get().shutdown();
-        if(last) {
+        if (last) {
             synchronized (this) {
                 mBeanNames.map.clear();
                 sourceNames.map.clear();
@@ -65,22 +65,27 @@ public enum DefaultMetricsSystem {
     public static void setMiniClusterMode(boolean choice) {
         INSTANCE.miniClusterMode = choice;
     }
+
     @VisibleForTesting
     public static boolean inMiniClusterMode() {
         return INSTANCE.miniClusterMode;
     }
+
     @InterfaceAudience.Private
     public static ObjectName newMBeanName(String name) {
         return INSTANCE.newObjectName(name);
     }
+
     @InterfaceAudience.Private
     public static void removeMBeanName(ObjectName name) {
         INSTANCE.removeObjectName(name.toString());
     }
+
     @InterfaceAudience.Private
     public static void removeSourceName(String name) {
         INSTANCE.removeSource(name);
     }
+
     @InterfaceAudience.Private
     public static String sourceName(String name, boolean dupOK) {
         return INSTANCE.newSourceName(name, dupOK);
@@ -88,7 +93,7 @@ public enum DefaultMetricsSystem {
 
     synchronized ObjectName newObjectName(String name) {
         try {
-            if(mBeanNames.map.containsKey(name) && !miniClusterMode) {
+            if (mBeanNames.map.containsKey(name) && !miniClusterMode) {
                 throw new MetricsException(name + " 已存在！");
             }
             return new ObjectName(mBeanNames.uniqueName(name));
@@ -100,14 +105,16 @@ public enum DefaultMetricsSystem {
     synchronized void removeObjectName(String name) {
         mBeanNames.map.remove(name);
     }
+
     synchronized void removeSource(String name) {
         sourceNames.map.remove(name);
     }
+
     synchronized String newSourceName(String name, boolean dupOK) {
-        if(sourceNames.map.containsKey(name)) {
-            if(dupOK) {
+        if (sourceNames.map.containsKey(name)) {
+            if (dupOK) {
                 return name;
-            } else if(!miniClusterMode) {
+            } else if (!miniClusterMode) {
                 throw new MetricsException("指标源 " + name + " 已存在！");
             }
         }

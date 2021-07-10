@@ -23,6 +23,7 @@ public @interface Metrics {
      * @return 指标的可选描述
      */
     String about() default "";
+
     /**
      * @return 一组指标的内容名
      */

@@ -3,7 +3,7 @@ package javax.cache;
 public class CacheException extends RuntimeException {
     private static final long serialVersionUID = 1L;
 
-    public CacheException(){
+    public CacheException() {
         super();
     }
 
@@ -11,7 +11,7 @@ public class CacheException extends RuntimeException {
         super(message);
     }
 
-    public CacheException(String message, Throwable cause){
+    public CacheException(String message, Throwable cause) {
         super(message, cause);
     }
 

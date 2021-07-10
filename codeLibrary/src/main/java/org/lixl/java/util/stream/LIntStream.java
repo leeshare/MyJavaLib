@@ -7,7 +7,7 @@ import java.util.function.IntUnaryOperator;
 /**
  * Created by lxl on 18/12/27.
  */
-public interface LIntStream extends LBaseStream<Integer, LIntStream>  {
+public interface LIntStream extends LBaseStream<Integer, LIntStream> {
 
     LIntStream filter(IntPredicate predicate);
 

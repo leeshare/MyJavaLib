@@ -8,12 +8,12 @@ import java.lang.reflect.Proxy;
 /**
  * Created by Administrator on 11/11/2019.
  * 2 动态代理
- *  缺点：目标对象必须实现一个或多个接口
+ * 缺点：目标对象必须实现一个或多个接口
  */
 public class SingerProxyDynamic {
     //private Logger log = LoggerFactory.getLogger(SingerProxyDynamic.class);
 
-    public void singSong(){
+    public void singSong() {
         Singer target = new Singer();
         ISinger proxy = (ISinger) Proxy.newProxyInstance(target.getClass().getClassLoader(), target.getClass().getInterfaces(), new InvocationHandler() {
             @Override

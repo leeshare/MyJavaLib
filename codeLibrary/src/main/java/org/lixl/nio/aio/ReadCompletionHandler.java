@@ -14,9 +14,9 @@ public class ReadCompletionHandler implements CompletionHandler<Integer, ByteBuf
     private AsynchronousSocketChannel channel;
 
     public ReadCompletionHandler(AsynchronousSocketChannel channel) {
-       if(this.channel == null) {
-           this.channel = channel;
-       }
+        if (this.channel == null) {
+            this.channel = channel;
+        }
     }
 
     @Override
@@ -46,7 +46,7 @@ public class ReadCompletionHandler implements CompletionHandler<Integer, ByteBuf
     }
 
     private void doWrite(String currentTime) {
-        if(currentTime != null && currentTime.trim().length() > 0) {
+        if (currentTime != null && currentTime.trim().length() > 0) {
             byte[] bytes = (currentTime).getBytes();
             ByteBuffer writeBuffer = ByteBuffer.allocate(bytes.length);
             writeBuffer.flip();
@@ -54,7 +54,7 @@ public class ReadCompletionHandler implements CompletionHandler<Integer, ByteBuf
                 @Override
                 public void completed(Integer result, ByteBuffer attachment) {
                     //如果没有发完，继续发送
-                    if(attachment.hasRemaining())
+                    if (attachment.hasRemaining())
                         channel.write(attachment, attachment, this);
                 }
 

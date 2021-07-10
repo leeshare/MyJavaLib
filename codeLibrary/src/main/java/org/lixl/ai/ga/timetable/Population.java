@@ -18,7 +18,7 @@ public class Population {
     public Population(int populationSize, Timetable timetable) {
         this.population = new Individual[populationSize];
 
-        for(int i = 0; i < populationSize; i++) {
+        for (int i = 0; i < populationSize; i++) {
             Individual individual = new Individual(timetable);
             this.population[i] = individual;
         }
@@ -27,7 +27,7 @@ public class Population {
     public Population(int populationSize, int chromosomeLength) {
         this.population = new Individual[populationSize];
 
-        for(int i = 0; i < populationSize; i++) {
+        for (int i = 0; i < populationSize; i++) {
             Individual individual = new Individual(chromosomeLength);
             this.population[i] = individual;
         }
@@ -41,9 +41,9 @@ public class Population {
         Arrays.sort(this.population, new Comparator<Individual>() {
             @Override
             public int compare(Individual o1, Individual o2) {
-                if(o1.getFitness() > o2.getFitness()){
+                if (o1.getFitness() > o2.getFitness()) {
                     return -1;
-                } else if(o1.getFitness() < o2.getFitness()) {
+                } else if (o1.getFitness() < o2.getFitness()) {
                     return 1;
                 }
                 return 0;
@@ -76,7 +76,7 @@ public class Population {
     public void shuffle() {
         Random random = new Random();
         //for(int i = 0; i < population.length - 1; i++) {
-        for(int i = population.length - 1; i > 0; i--) {
+        for (int i = population.length - 1; i > 0; i--) {
             int index = random.nextInt(i + 1);  //生成 0 ～ i + 1 之间的一个随机数
             Individual temp = population[index];
             population[index] = population[i];

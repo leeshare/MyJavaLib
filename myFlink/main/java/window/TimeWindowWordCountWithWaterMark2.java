@@ -23,13 +23,13 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * WaterMark 且使用  allowedLateness()
- *
- *
+ * <p>
+ * <p>
  * 每个3秒统计前3秒内相同key的所有事件
- *
+ * <p>
  * 那么watermark时间怎么计算呢？
- *      用当前窗口最大事件时间 - 允许延迟时间
- *
+ * 用当前窗口最大事件时间 - 允许延迟时间
+ * <p>
  * -- window 计算触发的条件
  * 000001,1461756862000         --|19:34:22|19:34:22|19:34:12  事件时间是 22
  * 000001,1461756866000         --|19:34:26|19:34:26|19:34:16
@@ -38,23 +38,23 @@ import java.util.concurrent.TimeUnit;
  * 000001,1461756874000         --wartermark时间=24 输到这条时才触发，触发 21s - 24s 的窗口的数据
  * 000001,1461756876000
  * 000001,1461756877000         --watermark时间=27  会把小于27窗口的所有事件都触发
- *
+ * <p>
  * 发现触发时间，和当前时间没关系，和事件时间没关系，只和watermark时间有关！！！
- *
- *
+ * <p>
+ * <p>
  * flink,1461756879000
  * flink,1461756871000
  * flink,1461756883000
  * 这个例子，尽管第二条乱序，还是正确计算出来了
- *
+ * <p>
  * flink,1461756870000
  * flink,1461756883000
  * flink,1461756870000
  * flink,1461756871000
  * flink,1461756872000
  * 这几组数据：对于迟到太多的数据就丢弃了
- *      比如 watermark = 33s, 触发之前的，
- *      那么再来 事件时间 < 33s的 就不会再触发了，就丢弃了
+ * 比如 watermark = 33s, 触发之前的，
+ * 那么再来 事件时间 < 33s的 就不会再触发了，就丢弃了
  */
 public class TimeWindowWordCountWithWaterMark2 {
     public static void main(String[] args) throws Exception {
@@ -79,7 +79,7 @@ public class TimeWindowWordCountWithWaterMark2 {
                 .keyBy(0)
                 .timeWindow(Time.seconds(3))
                 .allowedLateness(Time.seconds(2))   //允许在延迟10秒的基础上再延迟2s
-                    //所有符合条件的，每次都打印出来
+                //所有符合条件的，每次都打印出来
                 .process(new SumProcessWindowFunction());//.print().setParallelism(1);
 
         result.print().setParallelism(1);
@@ -87,21 +87,23 @@ public class TimeWindowWordCountWithWaterMark2 {
     }
 
     public static class SumProcessWindowFunction extends
-            ProcessWindowFunction<Tuple2<String,Long>, String, Tuple, TimeWindow> {
+            ProcessWindowFunction<Tuple2<String, Long>, String, Tuple, TimeWindow> {
         FastDateFormat dataFormat = FastDateFormat.getInstance("HH:mm:ss");
+
         /**
          * 当一个window触发计算的时候会调用这个方法
-         * @param tuple key
-         * @param context operator的上下文
+         *
+         * @param tuple    key
+         * @param context  operator的上下文
          * @param elements 指定window的所有元素
-         * @param out 用户输出
+         * @param out      用户输出
          */
         @Override
         public void process(Tuple tuple, Context context,
                             Iterable<Tuple2<String, Long>> elements,
                             Collector<String> out) {
             System.out.println("处理时间：" + dataFormat.format(context.currentProcessingTime()));
-            System.out.println("Window开始时间："+dataFormat.format(context.window().getStart()));
+            System.out.println("Window开始时间：" + dataFormat.format(context.window().getStart()));
 
             List<String> list = new ArrayList<>();
             for (Tuple2<String, Long> ele : elements) {
@@ -111,6 +113,7 @@ public class TimeWindowWordCountWithWaterMark2 {
             System.out.println("window结束时间" + context.window().getEnd());
         }
     }
+
     private static class EventTimeExtractor implements AssignerWithPeriodicWatermarks<Tuple2<String, Long>> {
         FastDateFormat dateFormat = FastDateFormat.getInstance("HH:mm:ss");
 

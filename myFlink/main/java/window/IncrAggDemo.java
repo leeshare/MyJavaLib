@@ -21,6 +21,8 @@ public class IncrAggDemo {
                 return last + current;
             }
         }).print();
+        //key 是 integer
+        //windowResult.reduce((r1, r2) -> r1 + r2).print();
 
         env.execute(IncrAggDemo.class.getSimpleName());
     }

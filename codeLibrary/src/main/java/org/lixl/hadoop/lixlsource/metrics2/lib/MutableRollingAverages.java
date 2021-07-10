@@ -52,6 +52,7 @@ public class MutableRollingAverages extends MutableMetric implements Closeable {
         public double getSum() {
             return sum;
         }
+
         public long getCount() {
             return count;
         }
@@ -63,7 +64,7 @@ public class MutableRollingAverages extends MutableMetric implements Closeable {
     private static final int NUM_WINDOWS_DEFAULT = 36;
 
     public MutableRollingAverages(String metricValueName) {
-        if(metricValueName == null) {
+        if (metricValueName == null) {
             metricValueName = "";
         }
         avgInfoNameTemplate = "[%s]RollingAvg" + StringUtils.capitalize(metricValueName);
@@ -82,8 +83,8 @@ public class MutableRollingAverages extends MutableMetric implements Closeable {
 
     @Override
     public void snapshot(MetricsRecordBuilder builder, boolean all) {
-        if(all || changed()) {
-            for(final Map.Entry<String, LinkedBlockingDeque<SumAndCount>> entry : averages.entrySet()) {
+        if (all || changed()) {
+            for (final Map.Entry<String, LinkedBlockingDeque<SumAndCount>> entry : averages.entrySet()) {
                 final String name = entry.getKey();
                 final MetricsInfo avgInfo = info(
                         String.format(avgInfoNameTemplate, StringUtils.capitalize(name)),
@@ -91,11 +92,11 @@ public class MutableRollingAverages extends MutableMetric implements Closeable {
                 double totalSum = 0;
                 long totalCount = 0;
 
-                if(totalCount != 0) {
+                if (totalCount != 0) {
                     builder.addGauge(avgInfo, totalSum / totalCount);
                 }
             }
-            if(changed()) {
+            if (changed()) {
                 clearChanged();
             }
         }
@@ -134,10 +135,10 @@ public class MutableRollingAverages extends MutableMetric implements Closeable {
     }
 
     private synchronized void rollOverAvgs() {
-        if(currentSnapshot == null) {
+        if (currentSnapshot == null) {
             return;
         }
-        for(Map.Entry<String, MutableRate> entry : currentSnapshot.entrySet()) {
+        for (Map.Entry<String, MutableRate> entry : currentSnapshot.entrySet()) {
             final MutableRate rate = entry.getValue();
             final LinkedBlockingDeque<SumAndCount> deque = averages.computeIfAbsent(
                     entry.getKey(),
@@ -149,7 +150,7 @@ public class MutableRollingAverages extends MutableMetric implements Closeable {
                     }
             );
             final SumAndCount sumAndCount = new SumAndCount(rate.lastStat().total(), rate.lastStat().numSamples());
-            if(!deque.offerLast(sumAndCount)) {
+            if (!deque.offerLast(sumAndCount)) {
                 deque.pollFirst();
                 deque.offerLast(sumAndCount);
             }
@@ -159,7 +160,7 @@ public class MutableRollingAverages extends MutableMetric implements Closeable {
 
     @Override
     public void close() throws IOException {
-        if(scheduledTask != null) {
+        if (scheduledTask != null) {
             scheduledTask.cancel(false);
         }
         scheduledTask = null;
@@ -168,22 +169,23 @@ public class MutableRollingAverages extends MutableMetric implements Closeable {
     /**
      * 取回一个指标名称的map -> 总数
      * 过滤出 不包含至少最小样例的 实体
+     *
      * @param minSamples
      * @return
      */
     public synchronized Map<String, Double> getStats(long minSamples) {
         final Map<String, Double> stats = new HashMap<>();
-        for(final Map.Entry<String, LinkedBlockingDeque<SumAndCount>> entry : averages.entrySet()) {
+        for (final Map.Entry<String, LinkedBlockingDeque<SumAndCount>> entry : averages.entrySet()) {
             final String name = entry.getKey();
             double totalSum = 0;
             long totalCount = 0;
 
-            for(final SumAndCount sumAndCount : entry.getValue()) {
+            for (final SumAndCount sumAndCount : entry.getValue()) {
                 totalCount += sumAndCount.getCount();
                 totalSum += sumAndCount.getSum();
             }
 
-            if(totalCount > minSamples) {
+            if (totalCount > minSamples) {
                 stats.put(name, totalSum / totalCount);
             }
         }

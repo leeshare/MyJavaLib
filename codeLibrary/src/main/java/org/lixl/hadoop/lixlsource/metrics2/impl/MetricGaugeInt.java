@@ -14,7 +14,7 @@ class MetricGaugeInt extends AbstractMetric {
     }
 
     @Override
-    public Integer value(){
+    public Integer value() {
         return value;
     }
 

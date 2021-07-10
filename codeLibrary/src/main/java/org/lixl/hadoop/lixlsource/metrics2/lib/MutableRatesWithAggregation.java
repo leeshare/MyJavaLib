@@ -20,7 +20,7 @@ import java.util.concurrent.ConcurrentMap;
 
 /**
  * 可变速率及总计： 帮助类 管理一组可变 速率指标 (rate metrics)
- *
+ * <p>
  * 每个线程将维持一个本地速率计数、快照，这些值将和计入总速率。
  * 此类应仅被用于长期运行的线程，比如一些指标生成在最后的快照和线程死亡间将丢失。
  * 这考虑到有重大意义的高并发。
@@ -35,16 +35,16 @@ public class MutableRatesWithAggregation extends MutableMetric {
     //ConcurrentLinkedDeque 双向链表
     //WeakReference 弱引用（当一个对象仅被弱引用指向时，如果这时GC运行，那么这个对象就会被回收，而不论当前内存空间是否足够）
     private final ConcurrentLinkedDeque<WeakReference<ConcurrentMap<String, ThreadSafeSampleStat>>>
-        weakReferenceQueue = new ConcurrentLinkedDeque<>();
+            weakReferenceQueue = new ConcurrentLinkedDeque<>();
     private final ThreadLocal<ConcurrentMap<String, ThreadSafeSampleStat>>
-        threadLocalMetricsMap = new ThreadLocal<>();
+            threadLocalMetricsMap = new ThreadLocal<>();
 
     public void init(Class<?> protocol) {
-        if(protocolCache.contains(protocol)) {
+        if (protocolCache.contains(protocol)) {
             return;
         }
         protocolCache.add(protocol);
-        for(Method method : protocol.getDeclaredMethods()) {
+        for (Method method : protocol.getDeclaredMethods()) {
             String name = method.getName();
             Log.debug(name);
             addMetricIfNotExists(name);
@@ -53,13 +53,13 @@ public class MutableRatesWithAggregation extends MutableMetric {
 
     public void add(String name, long elapsed) {
         ConcurrentMap<String, ThreadSafeSampleStat> localStats = threadLocalMetricsMap.get();
-        if(localStats == null) {
+        if (localStats == null) {
             localStats = new ConcurrentHashMap<>();
             threadLocalMetricsMap.set(localStats);
             weakReferenceQueue.add(new WeakReference<>(localStats));
         }
         ThreadSafeSampleStat stat = localStats.get(name);
-        if(stat == null) {
+        if (stat == null) {
             stat = new ThreadSafeSampleStat();
             localStats.put(name, stat);
         }
@@ -69,28 +69,28 @@ public class MutableRatesWithAggregation extends MutableMetric {
     @Override
     public synchronized void snapshot(MetricsRecordBuilder rb, boolean all) {
         Iterator<WeakReference<ConcurrentMap<String, ThreadSafeSampleStat>>> iter = weakReferenceQueue.iterator();
-        while(iter.hasNext()) {
+        while (iter.hasNext()) {
             ConcurrentMap<String, ThreadSafeSampleStat> map = iter.next().get();
-            if(map == null) {
+            if (map == null) {
                 iter.remove();
             } else {
                 aggregateLocalStatesToGlobalMetrics(map);
             }
         }
-        for(MutableRate globalMetric : globalMetrics.values()) {
+        for (MutableRate globalMetric : globalMetrics.values()) {
             globalMetric.snapshot(rb, all);
         }
     }
 
     synchronized void collectThreadLocalStates() {
         final ConcurrentMap<String, ThreadSafeSampleStat> localStats = threadLocalMetricsMap.get();
-        if(localStats != null) {
+        if (localStats != null) {
             aggregateLocalStatesToGlobalMetrics(localStats);
         }
     }
 
     private void aggregateLocalStatesToGlobalMetrics(final ConcurrentMap<String, ThreadSafeSampleStat> localStats) {
-        for(Map.Entry<String, ThreadSafeSampleStat> entry : localStats.entrySet()) {
+        for (Map.Entry<String, ThreadSafeSampleStat> entry : localStats.entrySet()) {
             String name = entry.getKey();
             MutableRate globalMetric = addMetricIfNotExists(name);
             entry.getValue().snapshotInfo(globalMetric);
@@ -103,7 +103,7 @@ public class MutableRatesWithAggregation extends MutableMetric {
 
     private synchronized MutableRate addMetricIfNotExists(String name) {
         MutableRate metric = globalMetrics.get(name);
-        if(metric == null) {
+        if (metric == null) {
             metric = new MutableRate(name, name, false);
             globalMetrics.put(name, metric);
         }
@@ -111,14 +111,15 @@ public class MutableRatesWithAggregation extends MutableMetric {
     }
 
 
-
     private static class ThreadSafeSampleStat {
         private SampleStat stat = new SampleStat();
+
         synchronized void add(double x) {
             stat.add(x);
         }
+
         synchronized void snapshotInfo(MutableRate metric) {
-            if(stat.numSamples() > 0) {
+            if (stat.numSamples() > 0) {
                 metric.add(stat.numSamples(), Math.round(stat.total()));
                 stat.reset();
             }

@@ -21,7 +21,7 @@ class TestSerialMain {
         oos.close();
     }
 
-    public static void main(String[] args) throws IOException, ClassNotFoundException{
+    public static void main(String[] args) throws IOException, ClassNotFoundException {
         createFile();
         readFile();
     }

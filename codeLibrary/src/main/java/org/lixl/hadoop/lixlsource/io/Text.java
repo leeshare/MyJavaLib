@@ -22,14 +22,14 @@ import java.util.Arrays;
 @InterfaceStability.Stable
 public class Text extends BinaryComparable implements WritableComparable<BinaryComparable> {
 
-    private static final ThreadLocal<CharsetEncoder> ENCODER_FACTORY = new ThreadLocal<CharsetEncoder>(){
+    private static final ThreadLocal<CharsetEncoder> ENCODER_FACTORY = new ThreadLocal<CharsetEncoder>() {
         @Override
         protected CharsetEncoder initialValue() {
             return Charset.forName("UTF-8").newEncoder().onMalformedInput(CodingErrorAction.REPORT)
                     .onUnmappableCharacter(CodingErrorAction.REPORT);
         }
     };
-    private static final ThreadLocal<CharsetDecoder> DECODER_FACTORY = new ThreadLocal<CharsetDecoder>(){
+    private static final ThreadLocal<CharsetDecoder> DECODER_FACTORY = new ThreadLocal<CharsetDecoder>() {
         @Override
         protected CharsetDecoder initialValue() {
             return Charset.forName("UTF-8").newDecoder().onMalformedInput(CodingErrorAction.REPORT)
@@ -44,12 +44,15 @@ public class Text extends BinaryComparable implements WritableComparable<BinaryC
     public Text() {
         bytes = EMPTY_BYTES;
     }
+
     public Text(String string) {
         set(string);
     }
+
     public Text(Text utf8) {
         set(utf8);
     }
+
     public Text(byte[] utf8) {
         set(utf8);
     }
@@ -61,9 +64,9 @@ public class Text extends BinaryComparable implements WritableComparable<BinaryC
     }
 
     public int charAt(int position) {
-        if(position > this.length)
+        if (position > this.length)
             return -1;
-        if(position < 0)
+        if (position < 0)
             return -1;
         ByteBuffer bb = (ByteBuffer) ByteBuffer.wrap(bytes).position(position);
         return bytesToCodePoint(bb.slice());
@@ -80,27 +83,27 @@ public class Text extends BinaryComparable implements WritableComparable<BinaryC
             byte b = target.get();
             src.position(start);
 
-            while(src.hasRemaining()) {
-                if(b == src.get()) {
+            while (src.hasRemaining()) {
+                if (b == src.get()) {
                     src.mark();
                     target.mark();
                     boolean found = true;
                     int pos = src.position() - 1;
-                    while(target.hasRemaining()) {
-                        if(!src.hasRemaining()) {
+                    while (target.hasRemaining()) {
+                        if (!src.hasRemaining()) {
                             target.reset();
                             src.reset();
                             found = false;
                             break;
                         }
-                        if(!(target.get() == src.get())) {
+                        if (!(target.get() == src.get())) {
                             target.reset();
                             src.reset();
                             found = false;
                             break;
                         }
                     }
-                    if(found) {
+                    if (found) {
                         return pos;
                     }
                 }
@@ -121,12 +124,15 @@ public class Text extends BinaryComparable implements WritableComparable<BinaryC
             throw new RuntimeException("Should not have happened ", e);
         }
     }
+
     public void set(byte[] utf8) {
         set(utf8, 0, utf8.length);
     }
+
     public void set(Text other) {
         set(other.getBytes(), 0, other.getLength());
     }
+
     public void set(byte[] utf8, int start, int len) {
         setCapacity(len, false);
         System.arraycopy(utf8, start, bytes, 0, len);
@@ -144,8 +150,8 @@ public class Text extends BinaryComparable implements WritableComparable<BinaryC
     }
 
     private void setCapacity(int len, boolean keepData) {
-        if(bytes == null || bytes.length < len) {
-            if(bytes != null && keepData) {
+        if (bytes == null || bytes.length < len) {
+            if (bytes != null && keepData) {
                 bytes = Arrays.copyOf(bytes, Math.max(len, length << 1));
             } else {
                 bytes = new byte[len];
@@ -188,7 +194,7 @@ public class Text extends BinaryComparable implements WritableComparable<BinaryC
     }
 
     public void write(DataOutput out, int maxLength) throws IOException {
-        if(length > maxLength) {
+        if (length > maxLength) {
             throw new IOException("Data was too long to write! Expected less than or equal to " + maxLength + " bytes, but got " + length + " bytes.");
         }
         WritableUtils.writeVInt(out, length);
@@ -204,9 +210,9 @@ public class Text extends BinaryComparable implements WritableComparable<BinaryC
 
     public void readFields(DataInput in, int maxLength) throws IOException {
         int newLength = WritableUtils.readVInt(in);
-        if(newLength < 0) {
+        if (newLength < 0) {
             throw new IOException("tried to deserialize " + newLength + " bytes of data! newLength must be non-negative.");
-        } else if(newLength >= maxLength) {
+        } else if (newLength >= maxLength) {
             throw new IOException("tried to deserialize " + newLength + " bytes of data, but maxLength = " + maxLength);
         }
         readWithKnownLength(in, newLength);
@@ -223,7 +229,7 @@ public class Text extends BinaryComparable implements WritableComparable<BinaryC
 
     @Override
     public boolean equals(Object o) {
-        if(o instanceof Text)
+        if (o instanceof Text)
             return super.equals(o);
         return false;
     }
@@ -234,7 +240,7 @@ public class Text extends BinaryComparable implements WritableComparable<BinaryC
     }
 
     public static class Comparator extends WritableComparator {
-        public Comparator(){
+        public Comparator() {
             super(Text.class);
         }
 
@@ -242,7 +248,7 @@ public class Text extends BinaryComparable implements WritableComparable<BinaryC
         public int compare(byte[] b1, int s1, int l1, byte[] b2, int s2, int l2) {
             int n1 = WritableUtils.decodeVIntSize(b1[s1]);
             int n2 = WritableUtils.decodeVIntSize(b2[s2]);
-            return compareBytes(b1, s1+n1, l1-n1, b2, s2+n2, l2-n2);
+            return compareBytes(b1, s1 + n1, l1 - n1, b2, s2 + n2, l2 - n2);
         }
     }
 
@@ -264,12 +270,12 @@ public class Text extends BinaryComparable implements WritableComparable<BinaryC
 
     private static String decode(ByteBuffer utf8, boolean replace) throws CharacterCodingException {
         CharsetDecoder decoder = DECODER_FACTORY.get();
-        if(replace) {
+        if (replace) {
             decoder.onMalformedInput(CodingErrorAction.REPLACE);
             decoder.onUnmappableCharacter(CodingErrorAction.REPLACE);
         }
         String str = decoder.decode(utf8).toString();
-        if(replace) {
+        if (replace) {
             decoder.onMalformedInput(CodingErrorAction.REPORT);
             decoder.onUnmappableCharacter(CodingErrorAction.REPORT);
         }
@@ -282,12 +288,12 @@ public class Text extends BinaryComparable implements WritableComparable<BinaryC
 
     public static ByteBuffer encode(String string, boolean replace) throws CharacterCodingException {
         CharsetEncoder encoder = ENCODER_FACTORY.get();
-        if(replace) {
+        if (replace) {
             encoder.onMalformedInput(CodingErrorAction.REPLACE);
             encoder.onUnmappableCharacter(CodingErrorAction.REPLACE);
         }
         ByteBuffer bytes = encoder.encode(CharBuffer.wrap(string.toCharArray()));
-        if(replace) {
+        if (replace) {
             encoder.onMalformedInput(CodingErrorAction.REPORT);
             encoder.onUnmappableCharacter(CodingErrorAction.REPORT);
         }
@@ -318,7 +324,7 @@ public class Text extends BinaryComparable implements WritableComparable<BinaryC
     public static int writeString(DataOutput out, String s, int maxLength) throws IOException {
         ByteBuffer bytes = encode(s);
         int length = bytes.limit();
-        if(length > maxLength) {
+        if (length > maxLength) {
             throw new IOException("字符串太长致无法写入！除了小于等于" + maxLength + "字节，但此处为" + length + "字节。");
         }
         WritableUtils.writeVInt(out, length);
@@ -339,7 +345,7 @@ public class Text extends BinaryComparable implements WritableComparable<BinaryC
         int leadByte = 0;
         int length = 0;
         int state = LEAD_BYTE;
-        while(count < start + len) {
+        while (count < start + len) {
             int aByte = utf8[count] & 0xFF;
 
             switch (state) {
@@ -349,41 +355,41 @@ public class Text extends BinaryComparable implements WritableComparable<BinaryC
 
                     switch (length) {
                         case 0:
-                            if(leadByte > 0x7F)
+                            if (leadByte > 0x7F)
                                 throw new MalformedInputException(count);
                             break;
                         case 1:
-                            if(leadByte < 0xC2 || leadByte > 0xDF)
+                            if (leadByte < 0xC2 || leadByte > 0xDF)
                                 throw new MalformedInputException(count);
                             state = TRAIL_BYTE_1;
                             break;
                         case 2:
-                            if(leadByte < 0xE0 || leadByte > 0xEF)
+                            if (leadByte < 0xE0 || leadByte > 0xEF)
                                 throw new MalformedInputException(count);
                             state = TRAIL_BYTE_1;
                             break;
                         case 3:
-                            if(leadByte < 0xF0 || leadByte > 0xF4)
+                            if (leadByte < 0xF0 || leadByte > 0xF4)
                                 throw new MalformedInputException(count);
                             state = TRAIL_BYTE_1;
                             break;
-                            default:
-                                throw new MalformedInputException(count);
+                        default:
+                            throw new MalformedInputException(count);
                     }
                     break;
                 case TRAIL_BYTE_1:
-                    if(leadByte == 0xF0 && aByte < 0x90)
+                    if (leadByte == 0xF0 && aByte < 0x90)
                         throw new MalformedInputException(count);
-                    if(leadByte == 0xF4 && aByte > 0x8F)
+                    if (leadByte == 0xF4 && aByte > 0x8F)
                         throw new MalformedInputException(count);
-                    if(leadByte == 0xE0 && aByte < 0xA0)
+                    if (leadByte == 0xE0 && aByte < 0xA0)
                         throw new MalformedInputException(count);
-                    if(leadByte == 0xED && aByte > 0x9F)
+                    if (leadByte == 0xED && aByte > 0x9F)
                         throw new MalformedInputException(count);
                 case TRAIL_BYTE:
-                    if(aByte < 0x80 || aByte > 0xBF)
+                    if (aByte < 0x80 || aByte > 0xBF)
                         throw new MalformedInputException(count);
-                    if(--length == 0) {
+                    if (--length == 0) {
                         state = LEAD_BYTE;
                     } else {
                         state = TRAIL_BYTE;
@@ -419,7 +425,7 @@ public class Text extends BinaryComparable implements WritableComparable<BinaryC
         byte b = bytes.get();
         bytes.reset();
         int extraBytesToRead = bytesFromUTF8[(b & 0xFF)];
-        if(extraBytesToRead < 0)
+        if (extraBytesToRead < 0)
             return -1;
         int ch = 0;
 
@@ -455,7 +461,7 @@ public class Text extends BinaryComparable implements WritableComparable<BinaryC
         CharacterIterator iter = new StringCharacterIterator(string);
         char ch = iter.first();
         int size = 0;
-        while(ch != CharacterIterator.DONE) {
+        while (ch != CharacterIterator.DONE) {
             if ((ch >= 0xD800) && (ch < 0xDC00)) {
                 // surrogate pair?
                 char trail = iter.next();

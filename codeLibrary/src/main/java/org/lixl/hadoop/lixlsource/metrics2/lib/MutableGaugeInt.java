@@ -51,7 +51,7 @@ public class MutableGaugeInt extends MutableGauge {
 
     @Override
     public void snapshot(MetricsRecordBuilder builder, boolean all) {
-        if(all || changed()) {
+        if (all || changed()) {
             builder.addGauge(info(), value());
             clearChanged();
         }

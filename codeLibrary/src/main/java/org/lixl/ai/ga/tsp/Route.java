@@ -13,22 +13,23 @@ public class Route {
     public Route(Individual individual, City cities[]) {
         int chromosome[] = individual.getChromosome();
         this.route = new City[cities.length];
-        for(int geneIndex = 0; geneIndex < chromosome.length; geneIndex++) {
+        for (int geneIndex = 0; geneIndex < chromosome.length; geneIndex++) {
             this.route[geneIndex] = cities[chromosome[geneIndex]];
         }
     }
 
     /**
      * Get route distance
+     *
      * @return
      */
     public double getDistance() {
-        if(this.distance > 0) {
+        if (this.distance > 0) {
             return this.distance;
         }
 
         double totalDistance = 0;
-        for(int cityIndex = 0; cityIndex + 1 < this.route.length; cityIndex++) {
+        for (int cityIndex = 0; cityIndex + 1 < this.route.length; cityIndex++) {
             totalDistance += this.route[cityIndex].distanceFrom(this.route[cityIndex + 1]);
         }
 

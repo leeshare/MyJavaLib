@@ -18,7 +18,7 @@ import java.io.PrintWriter;
 public class JMSSubscriber extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
-    public JMSSubscriber(){
+    public JMSSubscriber() {
         super();
     }
 
@@ -26,24 +26,24 @@ public class JMSSubscriber extends HttpServlet {
         PrintWriter out = response.getWriter();
         try {
             InitialContext ctx = new InitialContext();
-            Topic topic = (Topic)ctx.lookup("java:/comp/env/topic/topic0");
-            TopicConnectionFactory connectionFactory = (TopicConnectionFactory)ctx.lookup("java:comp/env/topic/connectionFactory");
+            Topic topic = (Topic) ctx.lookup("java:/comp/env/topic/topic0");
+            TopicConnectionFactory connectionFactory = (TopicConnectionFactory) ctx.lookup("java:comp/env/topic/connectionFactory");
             TopicConnection topicConnection = connectionFactory.createTopicConnection();
             TopicSession topicSession = topicConnection.createTopicSession(false, Session.AUTO_ACKNOWLEDGE);
             TopicSubscriber topicSubscriber = topicSession.createSubscriber(topic);
             topicConnection.start();
 
-            TextMessage message = (TextMessage)topicSubscriber.receive();
+            TextMessage message = (TextMessage) topicSubscriber.receive();
             out.write("Message received: " + message.getText());
             topicConnection.close();
 
-        } catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
     }
 
-    protected  void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
     }
 }

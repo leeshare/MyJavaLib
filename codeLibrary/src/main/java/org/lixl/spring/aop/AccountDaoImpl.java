@@ -15,7 +15,7 @@ public class AccountDaoImpl extends JdbcDaoSupport implements IAccountDao {
     @Override
     public void updateAccount(String aname, double money, boolean isBuy) {
         String sql = "update t_account set money=money + ? where name = ?";
-        if(isBuy){
+        if (isBuy) {
             sql = "update t_account set money = money - ？ where name = ?";
         }
         this.getJdbcTemplate().update(sql, money, aname);

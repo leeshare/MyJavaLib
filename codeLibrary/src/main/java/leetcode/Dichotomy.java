@@ -7,7 +7,7 @@ import java.util.Arrays;
  * 快速在一个数组中，找出 是否存在 给定数
  */
 public class Dichotomy {
-    static int[] A = new int[]{1,2,3,4,5,6,7};
+    static int[] A = new int[]{1, 2, 3, 4, 5, 6, 7};
 
     public static void main(String[] args) {
 
@@ -18,31 +18,31 @@ public class Dichotomy {
         System.out.println(result);
     }
 
-    private static int find(int[] a, int x){
-        while (true){
-            if(a.length >= 2){
+    private static int find(int[] a, int x) {
+        while (true) {
+            if (a.length >= 2) {
                 int middle = a.length / 2;
-                if(a[middle] == x){
+                if (a[middle] == x) {
                     return a[middle];
-                }else if(a[middle] < x){
+                } else if (a[middle] < x) {
                     int[] big = Arrays.copyOfRange(a, middle, a.length);
                     a = big;
                 } else {
                     int[] small = Arrays.copyOfRange(a, 0, middle);
                     a = small;
                 }
-            }else {
+            } else {
                 return a.length == 0 ? -1 : a[0] == x ? a[0] : -1;
             }
         }
     }
 
-    private static int findIndex(int[] a, int x){
+    private static int findIndex(int[] a, int x) {
         int b = 0, e = a.length;
-        if(a.length >= 2){
+        if (a.length >= 2) {
             while (true) {
                 int middle = (e - b) / 2;
-                if(middle < b){
+                if (middle < b) {
                     return -1;
                 }
                 if (a[middle] == x) {
@@ -59,7 +59,7 @@ public class Dichotomy {
                     e = middle - 1;
                 }
             }
-        }else {
+        } else {
             return a[b] == x ? b : -1;
         }
     }

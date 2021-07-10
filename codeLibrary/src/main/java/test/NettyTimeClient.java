@@ -29,7 +29,7 @@ public class NettyTimeClient {
                     });
             ChannelFuture future = b.bind(host, port).sync();
             future.channel().closeFuture().sync();
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         } finally {
             group.shutdownGracefully();
@@ -38,10 +38,10 @@ public class NettyTimeClient {
 
     public static void main(String[] args) throws Exception {
         int port = 8070;
-        if(args != null && args.length > 0){
+        if (args != null && args.length > 0) {
             try {
                 port = Integer.valueOf(args[0]);
-            } catch (NumberFormatException e){
+            } catch (NumberFormatException e) {
 
             }
         }
@@ -52,14 +52,14 @@ public class NettyTimeClient {
         private int counter;
         private byte[] req;
 
-        public NettyTimeClientHandler(){
+        public NettyTimeClientHandler() {
             req = ("query time order" + System.getProperty("line.separator")).getBytes();
         }
 
         @Override
         public void channelActive(ChannelHandlerContext ctx) throws Exception {
             ByteBuf message = null;
-            for(int i = 0; i < 100; i++){
+            for (int i = 0; i < 100; i++) {
                 message = Unpooled.buffer(req.length);
                 message.writeBytes(req);
                 ctx.writeAndFlush(message);
@@ -68,7 +68,7 @@ public class NettyTimeClient {
 
         @Override
         public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-            String body = (String)msg;
+            String body = (String) msg;
             System.out.println("Now is : " + body + " ; the counter is : " + ++counter);
         }
 

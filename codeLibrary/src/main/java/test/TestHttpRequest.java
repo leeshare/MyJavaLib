@@ -15,7 +15,7 @@ import java.util.Map;
 public class TestHttpRequest {
     // http://q.stock.sohu.com/hisHq?code=cn_000002&start=20181119&end=20181120
 
-    public static void main(String[] args){
+    public static void main(String[] args) {
         //http://quote.eastmoney.com/stocklist.html
         String url = "http://q.stock.sohu.com/hisHq";
         String params = "code=cn_000002&start=20181119&end=20181120";
@@ -27,7 +27,7 @@ public class TestHttpRequest {
         //System.out.println(sr);
     }
 
-    public static String sendGet(String url, String param){
+    public static String sendGet(String url, String param) {
         String result = "";
         BufferedReader in = null;
         try {
@@ -39,25 +39,25 @@ public class TestHttpRequest {
             connection.setRequestProperty("user-agent", "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1;SV1)");
             connection.connect();
             //获取所有响应的头字段
-            Map<String, List<String >> map = connection.getHeaderFields();
-            for(String key: map.keySet()) {
+            Map<String, List<String>> map = connection.getHeaderFields();
+            for (String key : map.keySet()) {
                 System.out.println(key + "--->" + map.get(key));
             }
             //定义BufferedReader输入流来读取URL的响应
             in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
             String line;
-            while((line = in.readLine()) != null){
+            while ((line = in.readLine()) != null) {
                 result += line;
             }
-        }catch(Exception e) {
+        } catch (Exception e) {
             System.out.println("发送GET请求出现异常：" + e);
             e.printStackTrace();
-        }finally {
-            try{
-                if(in != null){
+        } finally {
+            try {
+                if (in != null) {
                     in.close();
                 }
-            }catch(Exception e2){
+            } catch (Exception e2) {
                 e2.printStackTrace();
             }
         }
@@ -65,7 +65,7 @@ public class TestHttpRequest {
         return result;
     }
 
-    public static String sendPost(String url, String param){
+    public static String sendPost(String url, String param) {
         String result = "";
         PrintWriter out = null;
         BufferedReader in = null;
@@ -84,21 +84,21 @@ public class TestHttpRequest {
             //定义BufferedReader输入流来读取URL的响应
             in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
             String line;
-            while((line = in.readLine()) != null){
+            while ((line = in.readLine()) != null) {
                 result += line;
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
             System.out.println("发送POST请求出现异常：" + e);
             e.printStackTrace();
         } finally {
-            try{
-                if(out != null){
+            try {
+                if (out != null) {
                     out.close();
                 }
-                if(in != null){
+                if (in != null) {
                     in.close();
                 }
-            }catch(IOException ex){
+            } catch (IOException ex) {
                 ex.printStackTrace();
             }
         }

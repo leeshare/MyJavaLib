@@ -9,8 +9,8 @@ public class Individual {
     private double fitness = -1;    //适应度，0～1 值越大，表明越强壮，也就越适应
 
     /**
-     *
      * 使用指定的染色体来初始化个体
+     *
      * @param chromosome
      */
     public Individual(int[] chromosome) {
@@ -19,12 +19,13 @@ public class Individual {
 
     /**
      * 初始化一个随机个体
+     *
      * @param chromosomeLength
      */
     public Individual(int chromosomeLength) {
         this.chromosome = new int[chromosomeLength];
-        for(int gene = 0; gene < chromosomeLength; gene++){
-            if(0.5 < Math.random())
+        for (int gene = 0; gene < chromosomeLength; gene++) {
+            if (0.5 < Math.random())
                 this.setGene(gene, 1);
             else
                 this.setGene(gene, 0);
@@ -33,18 +34,20 @@ public class Individual {
 
     /**
      * 获取个体的染色体
+     *
      * @return
      */
-    public int[] getChromosome(){
+    public int[] getChromosome() {
         return this.chromosome;
     }
 
-    public int getChromosomeLength(){
+    public int getChromosomeLength() {
         return this.chromosome.length;
     }
 
     /**
      * 在偏移量处 设置 基因
+     *
      * @param offset
      * @param gene
      */
@@ -54,6 +57,7 @@ public class Individual {
 
     /**
      * 在偏移量处 获取 基因
+     *
      * @param offset
      * @return
      */
@@ -66,12 +70,12 @@ public class Individual {
     }
 
     public double getFitness() {
-        return  this.fitness;
+        return this.fitness;
     }
 
     public String toString() {
         String output = "";
-        for(int gene = 0; gene < this.chromosome.length; gene++) {
+        for (int gene = 0; gene < this.chromosome.length; gene++) {
             output += this.chromosome[gene];
         }
         return output;

@@ -11,7 +11,7 @@ public class PhoneFactoryTest {
 
     static class SimpleFactory {
         public static Phone choosePhone(int type) {
-            switch (type){
+            switch (type) {
                 case 1:
                     return new IPhone();
                 case 2:
@@ -23,6 +23,7 @@ public class PhoneFactoryTest {
 
     public interface Phone {
         public void call();
+
         public String os();
     }
 

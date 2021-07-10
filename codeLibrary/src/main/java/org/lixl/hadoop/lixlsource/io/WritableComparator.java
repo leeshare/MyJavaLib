@@ -12,7 +12,7 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * 一个比较器 用于 WritableComparable
  * Created by lxl on 20/1/20.
- *
+ * <p>
  * 提供了对原始 compare()方法对一个默认实现，该方法能反序列化将在流中进行比较的对象，并调用对象的compare()方法。
  * 充当RawComparator实例工厂（已注册Writable的实现）
  */
@@ -29,10 +29,10 @@ public class WritableComparator implements RawComparator, Configurable {
 
     public static WritableComparator get(Class<? extends WritableComparable> c, Configuration conf) {
         WritableComparator comparator = comparators.get(c);
-        if(comparator == null) {
+        if (comparator == null) {
             forceInit(c);
             comparator = comparators.get(c);
-            if(comparator == null) {
+            if (comparator == null) {
                 comparator = new WritableComparator(c, conf, true);
             }
         }
@@ -60,6 +60,7 @@ public class WritableComparator implements RawComparator, Configurable {
 
     /**
      * 注册一个优化的比较器用作WritableComparable的实现
+     *
      * @param c
      * @param comparator
      */
@@ -75,16 +76,19 @@ public class WritableComparator implements RawComparator, Configurable {
     protected WritableComparator() {
         this(null);
     }
+
     protected WritableComparator(Class<? extends WritableComparable> keyClass) {
         this(keyClass, null, false);
     }
+
     protected WritableComparator(Class<? extends WritableComparable> keyClass, boolean createInstances) {
         this(keyClass, null, createInstances);
     }
+
     protected WritableComparator(Class<? extends WritableComparable> keyClass, Configuration conf, boolean createInstances) {
         this.keyClass = keyClass;
         this.conf = (conf != null) ? conf : new Configuration();
-        if(createInstances) {
+        if (createInstances) {
             key1 = newKey();
             key2 = newKey();
             buffer = new DataInputBuffer();
@@ -105,6 +109,7 @@ public class WritableComparator implements RawComparator, Configurable {
 
     /**
      * 最佳钩子。重写来序列化文件排序
+     *
      * @param b1
      * @param s1
      * @param l1
@@ -133,7 +138,7 @@ public class WritableComparator implements RawComparator, Configurable {
 
     @Override
     public int compare(Object a, Object b) {
-        return compare((WritableComparable)a, (WritableComparable)b);
+        return compare((WritableComparable) a, (WritableComparable) b);
     }
 
     public int compareBytes(byte[] b1, int s1, int l1, byte[] b2, int s2, int l2) {

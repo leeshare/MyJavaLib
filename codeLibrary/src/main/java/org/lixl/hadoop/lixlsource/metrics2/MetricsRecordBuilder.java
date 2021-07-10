@@ -12,6 +12,7 @@ import org.lixl.hadoop.lixlsource.classification.InterfaceStability;
 public abstract class MetricsRecordBuilder {
     /**
      * 用指标信息 添加一个指标值
+     *
      * @param info
      * @param value
      * @return
@@ -20,6 +21,7 @@ public abstract class MetricsRecordBuilder {
 
     /**
      * 添加一个不可变指标标签对象
+     *
      * @param tag
      * @return
      */
@@ -27,6 +29,7 @@ public abstract class MetricsRecordBuilder {
 
     /**
      * 添加一个 pre-made 不可变指标对象
+     *
      * @param metric
      * @return
      */
@@ -34,6 +37,7 @@ public abstract class MetricsRecordBuilder {
 
     /**
      * 设置上下文标签
+     *
      * @param value
      * @return
      */
@@ -41,6 +45,7 @@ public abstract class MetricsRecordBuilder {
 
     /**
      * 添加一个整型指标
+     *
      * @param info
      * @param value
      * @return
@@ -49,6 +54,7 @@ public abstract class MetricsRecordBuilder {
 
     /**
      * 添加一个long指标
+     *
      * @param info
      * @param value
      * @return
@@ -57,6 +63,7 @@ public abstract class MetricsRecordBuilder {
 
     /**
      * 添加一个整型估值指标
+     *
      * @param info
      * @param value
      * @return
@@ -65,6 +72,7 @@ public abstract class MetricsRecordBuilder {
 
     /**
      * 添加一个long估值指标
+     *
      * @param info
      * @param value
      * @return
@@ -73,6 +81,7 @@ public abstract class MetricsRecordBuilder {
 
     /**
      * 添加一个float估值指标
+     *
      * @param info
      * @param value
      * @return
@@ -81,6 +90,7 @@ public abstract class MetricsRecordBuilder {
 
     /**
      * 添加一个double估值指标
+     *
      * @param info
      * @param value
      * @return
@@ -94,6 +104,7 @@ public abstract class MetricsRecordBuilder {
 
     /**
      * 在一个收集器中添加多条纪录到一个 liner 的语法糖
+     *
      * @return
      */
     public MetricsCollector endRecord() {

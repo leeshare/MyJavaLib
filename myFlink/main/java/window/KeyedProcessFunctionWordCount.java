@@ -16,7 +16,7 @@ import org.apache.flink.util.Collector;
 /**
  * 通过定时器 和 state
  * 对需求：5秒后，不再输入单词时，就打印出该单词
- *
+ * <p>
  * 完成了 SessionWindow的功能
  */
 public class KeyedProcessFunctionWordCount {
@@ -35,7 +35,6 @@ public class KeyedProcessFunctionWordCount {
         env.execute("KeyedProcessFunctionWordCount");
 
 
-
     }
 
 
@@ -45,7 +44,7 @@ public class KeyedProcessFunctionWordCount {
         @Override
         public void flatMap(String line, Collector<Tuple2<String, Integer>> out) throws Exception {
             String[] words = line.toLowerCase().split(" ");
-            for(String word : words) {
+            for (String word : words) {
                 Tuple2<String, Integer> wordOne = new Tuple2<>(word, 1);
                 //将单词计数 1 的二元组输出
                 out.collect(wordOne);
@@ -56,7 +55,7 @@ public class KeyedProcessFunctionWordCount {
 
     /**
      * 继承 KeyedProcessFunction  是因为 上文通过 keyBy
-     *      如果不经过 keyBy，就使用 ProcessFunction
+     * 如果不经过 keyBy，就使用 ProcessFunction
      * key的数据类型， 输入的数据类型，输出的数据类型
      */
     private static class CountWithTimeoutFunction extends KeyedProcessFunction<Tuple, Tuple2<String, Integer>, Tuple2<String, Integer>> {
@@ -73,7 +72,7 @@ public class KeyedProcessFunctionWordCount {
         public void processElement(Tuple2<String, Integer> element, Context ctx, Collector<Tuple2<String, Integer>> out) throws Exception {
             //拿到当前key 对应的 state
             CountWithTimestamp currentState = state.value();
-            if(currentState == null) {
+            if (currentState == null) {
                 currentState = new CountWithTimestamp();
                 currentState.key = element.f0;
             }
@@ -90,7 +89,7 @@ public class KeyedProcessFunctionWordCount {
         @Override
         public void onTimer(long timestamp, OnTimerContext ctx, Collector<Tuple2<String, Integer>> out) throws Exception {
             CountWithTimestamp curr = state.value();
-            if(timestamp == curr.lastModified + 5000) {
+            if (timestamp == curr.lastModified + 5000) {
                 out.collect(Tuple2.of(curr.key, curr.count));
                 state.clear();
             }

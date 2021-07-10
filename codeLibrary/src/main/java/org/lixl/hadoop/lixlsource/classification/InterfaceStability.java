@@ -15,14 +15,17 @@ public class InterfaceStability {
 
     @Documented
     @Retention(RetentionPolicy.RUNTIME)
-    public @interface Stable {}
+    public @interface Stable {
+    }
 
     @Documented
     @Retention(RetentionPolicy.RUNTIME)
-    public @interface Evolving {}
+    public @interface Evolving {
+    }
 
     @Documented
     @Retention(RetentionPolicy.RUNTIME)
-    public @interface Unstable {}
+    public @interface Unstable {
+    }
 
 }

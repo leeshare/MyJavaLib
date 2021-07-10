@@ -31,6 +31,7 @@ public class Module {
 
     /**
      * 随机取一个“教授”Id
+     *
      * @return
      */
     public int getRandomProfessorId() {

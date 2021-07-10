@@ -17,7 +17,7 @@ import java.io.PrintWriter;
 public class JMSSend extends HttpServlet {
     public static final long serialVersionID = 1L;
 
-    public JMSSend(){
+    public JMSSend() {
         super();
     }
 
@@ -27,8 +27,8 @@ public class JMSSend extends HttpServlet {
 
         try {
             InitialContext ctx = new InitialContext();
-            Topic topic = (Topic)ctx.lookup("java:comp/env/topic/topic0");
-            TopicConnectionFactory connectionFactory = (TopicConnectionFactory)ctx.lookup("java:comp/env/topic/connectionFactory");
+            Topic topic = (Topic) ctx.lookup("java:comp/env/topic/topic0");
+            TopicConnectionFactory connectionFactory = (TopicConnectionFactory) ctx.lookup("java:comp/env/topic/connectionFactory");
             TopicConnection topicConnection = connectionFactory.createTopicConnection();
             TopicSession topicSession = topicConnection.createTopicSession(false, Session.AUTO_ACKNOWLEDGE);
             TopicPublisher topicPublisher = topicSession.createPublisher(topic);
@@ -41,7 +41,7 @@ public class JMSSend extends HttpServlet {
             out.write("Message published: " + message.getText());
 
             topicConnection.close();
-        } catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

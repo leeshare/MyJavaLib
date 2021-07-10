@@ -10,6 +10,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class TimeServerHandleExecutePool {
     private ExecutorService executor;
+
     public TimeServerHandleExecutePool(int maxPoolSize, int queueSize) {
         executor = new ThreadPoolExecutor(Runtime.getRuntime().availableProcessors(),
                 maxPoolSize,

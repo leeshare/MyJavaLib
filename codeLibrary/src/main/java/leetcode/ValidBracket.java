@@ -26,19 +26,19 @@ public class ValidBracket {
     }
 
     private static boolean valid(String s) {
-        for(int i = 0; i < s.length(); i++){
+        for (int i = 0; i < s.length(); i++) {
             heap.add(s.substring(i, i + 1));
             int size = heap.size();
-            if(size >= 2){
+            if (size >= 2) {
                 String right = heap.get(size - 1);
                 String left = heap.get(size - 2);
-                if(branckets.containsKey(left) && branckets.get(left).equalsIgnoreCase(right)){
+                if (branckets.containsKey(left) && branckets.get(left).equalsIgnoreCase(right)) {
                     heap.remove(size - 1);
                     heap.remove(size - 2);
                 }
             }
         }
-        if(heap.size() == 0){
+        if (heap.size() == 0) {
             return true;
         }
         return false;
@@ -46,10 +46,10 @@ public class ValidBracket {
 
     //想用递归写，写不下去
     private static String checkAndRemove(String expect, String s) {
-        if(s.startsWith(expect)){
+        if (s.startsWith(expect)) {
             String ss = s.substring(1, s.length());
             return ss;
-        }else if(s.length() > 0){
+        } else if (s.length() > 0) {
             String head = s.substring(0, 1);
             String tail = branckets.get(head);
             String ss = checkAndRemove(tail, s.substring(1, s.length()));

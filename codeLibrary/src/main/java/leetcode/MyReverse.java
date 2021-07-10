@@ -21,10 +21,10 @@ public class MyReverse {
     public static int reverse(int x) {
         Boolean isContainNative = x < 0;
         String strX = String.valueOf(Math.abs(x));
-        if(strX.startsWith("-")){
+        if (strX.startsWith("-")) {
             strX = strX.substring(1, strX.length());
         }
-        while(strX.endsWith("0")){
+        while (strX.endsWith("0")) {
             strX = strX.substring(0, strX.length() - 1);
             //strX = new String(strX, 0, strX.length - 1);
         }
@@ -32,7 +32,7 @@ public class MyReverse {
         //String[] arr = new String[arrX.length];
         StringBuilder r = new StringBuilder();
 
-        for(int i = arrX.length - 1; i >= 0; i--){
+        for (int i = arrX.length - 1; i >= 0; i--) {
             r.append(arrX[i]);
             //arr[i] = String.valueOf( arrX[arrX.length - 1 - i] );
         }
@@ -40,13 +40,13 @@ public class MyReverse {
         String strReverse = r.toString();
         int intReverse = 0;
         try {
-           intReverse = Integer.parseInt(strReverse);
+            intReverse = Integer.parseInt(strReverse);
         } catch (Exception e) {
 
         }
         intReverse = isContainNative ? -intReverse : intReverse;
 
-        return (int)intReverse;
+        return (int) intReverse;
     }
 
     /**
@@ -57,11 +57,11 @@ public class MyReverse {
      */
     public static int reverse2(int x) {
         long n = 0;
-        while(x != 0){
+        while (x != 0) {
             n = n * 10 + x % 10;
             x = x / 10;
         }
-        return (int)n == n ? (int)n : 0;
+        return (int) n == n ? (int) n : 0;
     }
 
 }

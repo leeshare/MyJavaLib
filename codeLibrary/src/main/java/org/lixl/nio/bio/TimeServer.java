@@ -16,7 +16,7 @@ public class TimeServer {
 
     public static void main(String[] args) throws IOException {
         int port = 8080;
-        if(args != null && args.length > 0) {
+        if (args != null && args.length > 0) {
             try {
                 port = Integer.valueOf(args[0]);
             } catch (NumberFormatException e) {
@@ -28,13 +28,13 @@ public class TimeServer {
             server = new ServerSocket(port);
             System.out.println("此时间服务器启动端口是：" + port);
             Socket socket = null;
-            while(true) {
+            while (true) {
                 socket = server.accept();
                 new Thread(new TimeServerHandler(socket)).start();
             }
 
         } finally {
-            if(server != null) {
+            if (server != null) {
                 System.out.println("The time server close");
                 server.close();
                 server = null;

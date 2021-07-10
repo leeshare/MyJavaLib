@@ -70,10 +70,10 @@ public class MutableStat extends MutableMetric {
 
     @Override
     public synchronized void snapshot(MetricsRecordBuilder builder, boolean all) {
-        if(all || changed()) {
+        if (all || changed()) {
             numSamples += intervalStat.numSamples();
             builder.addCounter(numInfo, numSamples).addGauge(avgInfo, lastStat().mean());
-            if(extended) {
+            if (extended) {
                 builder.addGauge(stdevInfo, lastStat().stddev())
                         .addGauge(iMinInfo, lastStat().min())
                         .addGauge(iMaxInfo, lastStat().max())
@@ -81,8 +81,8 @@ public class MutableStat extends MutableMetric {
                         .addGauge(maxInfo, minMax.max())
                         .addGauge(iNumInfo, lastStat().numSamples());
             }
-            if(changed()) {
-                if(numSamples > 0) {
+            if (changed()) {
+                if (numSamples > 0) {
                     intervalStat.copyTo(prevStat);
                     intervalStat.reset();
                 }
@@ -93,6 +93,7 @@ public class MutableStat extends MutableMetric {
 
     /**
      * 返回一个统计样例对象
+     *
      * @return
      */
     public SampleStat lastStat() {

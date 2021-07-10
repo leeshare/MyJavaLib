@@ -17,7 +17,7 @@ public class Test {
         cglibProxy();
     }
 
-    private static void staticProxy(){
+    private static void staticProxy() {
         //目标对象
         ISinger target = new Singer();
         //代理对象
@@ -26,13 +26,13 @@ public class Test {
         proxy.sing();
     }
 
-    private static void dynamicProxy(){
+    private static void dynamicProxy() {
         SingerProxyDynamic proxy = new SingerProxyDynamic();
         proxy.singSong();
 
     }
 
-    private static void cglibProxy(){
+    private static void cglibProxy() {
         //目标对象
         Singer target = new Singer();
         //代理对象

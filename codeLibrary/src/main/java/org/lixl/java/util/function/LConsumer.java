@@ -15,6 +15,9 @@ public interface LConsumer<T> {
 
     default LConsumer<T> andThen(LConsumer<? super T> after) {
         Objects.requireNonNull(after);
-        return (T t) -> { accept(t); after.accept(t);};
+        return (T t) -> {
+            accept(t);
+            after.accept(t);
+        };
     }
 }

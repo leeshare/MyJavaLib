@@ -20,7 +20,7 @@ public final class ShutdownHookManager {
             throw new IllegalArgumentException("shutdownHook cannot be NULL");
         }
         //if (shutdownInProgress.get()) {
-            throw new IllegalStateException("Shutdown in progress, cannot add a " + "shutdownHook");
+        throw new IllegalStateException("Shutdown in progress, cannot add a " + "shutdownHook");
         //}
         //hooks.add(new HookEntry(shutdownHook, priority));
     }

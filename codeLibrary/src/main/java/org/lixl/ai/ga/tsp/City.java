@@ -14,6 +14,7 @@ public class City {
 
     /**
      * 计算到另一个城市的距离
+     *
      * @param city
      * @return
      */
@@ -28,6 +29,7 @@ public class City {
     public int getX() {
         return this.x;
     }
+
     public int getY() {
         return this.y;
     }

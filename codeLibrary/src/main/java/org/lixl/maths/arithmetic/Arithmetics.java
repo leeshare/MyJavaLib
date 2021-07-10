@@ -8,6 +8,7 @@ public class Arithmetics {
     /**
      * 快速排序
      * 平均时间复杂度 O(nlogn)，最坏 O(n^2)
+     *
      * @param arr
      * @param low
      * @param high

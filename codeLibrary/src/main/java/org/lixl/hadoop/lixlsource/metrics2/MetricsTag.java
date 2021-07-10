@@ -18,10 +18,12 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class MetricsTag implements MetricsInfo {
     private final MetricsInfo info;
     private final String value;
+
     public MetricsTag(MetricsInfo info, String value) {
         this.info = checkNotNull(info, "tag info");
         this.value = value;
     }
+
     @Override
     public String name() {
         return info.name();
@@ -35,13 +37,14 @@ public class MetricsTag implements MetricsInfo {
     public MetricsInfo info() {
         return info;
     }
+
     public String value() {
         return value;
     }
 
     public boolean equals(Object obj) {
         //instanceof 用于判断 某对象 是否是某个超类或接口的子类或实现类
-        if(obj instanceof  MetricsTag) {
+        if (obj instanceof MetricsTag) {
             final MetricsTag other = (MetricsTag) obj;
             return Objects.equal(info, other.info()) && Objects.equal(value, other.value());
 

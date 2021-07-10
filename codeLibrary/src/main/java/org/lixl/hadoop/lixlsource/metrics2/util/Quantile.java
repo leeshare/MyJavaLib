@@ -20,10 +20,10 @@ public class Quantile implements Comparable<Quantile> {
 
     @Override
     public boolean equals(Object aThat) {
-        if(this == aThat) {
+        if (this == aThat) {
             return true;
         }
-        if(!(aThat instanceof Quantile)) {
+        if (!(aThat instanceof Quantile)) {
             return false;
         }
 

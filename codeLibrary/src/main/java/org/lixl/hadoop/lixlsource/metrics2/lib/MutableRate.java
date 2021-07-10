@@ -10,7 +10,7 @@ import org.lixl.hadoop.lixlsource.classification.InterfaceStability;
 @InterfaceStability.Evolving
 public class MutableRate extends MutableStat {
 
-        //至少有一个缺省构造函数
+    //至少有一个缺省构造函数
     MutableRate(String name, String description, boolean extended) {
         super(name, description, "0ps", "Time", extended);
     }

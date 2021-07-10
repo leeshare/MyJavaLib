@@ -11,10 +11,10 @@ public class WordCount {
     public static void main(String[] args) throws Exception {
         //步骤一：获取执行环境
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
-        //步骤二：数据的输入
-        DataStreamSource<String> data = env.socketTextStream("192.168.152.102", 9999);
+        //步骤二：数据的输入     nc -lk 9999
+        DataStreamSource<String> data = env.socketTextStream("bigdata05", 9999);
         //步骤三：数据的处理
-        SingleOutputStreamOperator<WordAndCount> result = data.flatMap(new FlatMapFunction<String, WordAndCount>() {
+        SingleOutputStreamOperator<WordAndCount> flatMapStream = data.flatMap(new FlatMapFunction<String, WordAndCount>() {
             @Override
             public void flatMap(String line, Collector<WordAndCount> out) throws Exception {
                 String[] fields = line.split(",");
@@ -22,9 +22,11 @@ public class WordCount {
                     out.collect(new WordAndCount(word, 1));
                 }
             }
-        }).keyBy("word")
+        });
+        SingleOutputStreamOperator<WordAndCount> result = flatMapStream
+                .keyBy("word")
                 .sum("count");
-
+        //输出结果： WordAndCount{word='ww', count=2}
 
         //步骤四：数据的输出
         result.print();
@@ -33,11 +35,11 @@ public class WordCount {
     }
 
 
-    public static class WordAndCount{
+    public static class WordAndCount {
         private String word;
         private int count;
 
-        public WordAndCount(){
+        public WordAndCount() {
 
         }
 

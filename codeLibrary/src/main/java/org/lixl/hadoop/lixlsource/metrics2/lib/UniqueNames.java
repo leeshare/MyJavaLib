@@ -23,22 +23,22 @@ public class UniqueNames {
 
     public synchronized String uniqueName(String name) {
         Count c = map.get(name);
-        if(c == null) {
+        if (c == null) {
             c = new Count(name, 0);
             map.put(name, c);
             return name;
         }
-        if(!c.baseName.equals(name)) {
+        if (!c.baseName.equals(name)) {
             c = new Count(name, 0);
         }
         do {
             String newName = joiner.join(name, ++c.value);
             Count c2 = map.get(newName);
-            if(c2 == null) {
+            if (c2 == null) {
                 map.put(newName, c);
                 return newName;
             }
-        } while(true);
+        } while (true);
     }
 
 }

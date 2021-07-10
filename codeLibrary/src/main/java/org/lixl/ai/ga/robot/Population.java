@@ -18,7 +18,7 @@ public class Population {
     public Population(int populationSize, int chromosomeLength) {
         this.population = new Individual[populationSize];
 
-        for(int individualCount = 0; individualCount < populationSize; individualCount++) {
+        for (int individualCount = 0; individualCount < populationSize; individualCount++) {
             Individual individual = new Individual(chromosomeLength);
             this.population[individualCount] = individual;
         }
@@ -32,9 +32,9 @@ public class Population {
         Arrays.sort(this.population, new Comparator<Individual>() {
             @Override
             public int compare(Individual o1, Individual o2) {
-                if(o1.getFitness() > o2.getFitness()) {
+                if (o1.getFitness() > o2.getFitness()) {
                     return -1;
-                } else if(o1.getFitness() < o2.getFitness()) {
+                } else if (o1.getFitness() < o2.getFitness()) {
                     return 1;
                 }
                 return 0;
@@ -68,7 +68,7 @@ public class Population {
      */
     public void shuffle() {
         Random random = new Random();
-        for(int i = population.length - 1; i > 0; i--) {
+        for (int i = population.length - 1; i > 0; i--) {
             int index = random.nextInt(i + 1);
             Individual a = population[index];
             population[index] = population[i];

@@ -10,7 +10,7 @@ import org.apache.flink.util.Collector;
 
 
 public class WordCount {
-    public static void main(String[] args) throws Exception{
+    public static void main(String[] args) throws Exception {
         //步骤一，获取执行环境
         StreamExecutionEnvironment env = StreamExecutionEnvironment.createLocalEnvironmentWithWebUI(new Configuration());
         env.setParallelism(3);

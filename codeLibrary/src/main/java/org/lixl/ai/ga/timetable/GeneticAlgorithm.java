@@ -48,7 +48,7 @@ public class GeneticAlgorithm {
     public void evalPopulation(Population population, Timetable timetable) {
         double populationFitness = 0;
 
-        for(Individual individual : population.getIndividuals()) {
+        for (Individual individual : population.getIndividuals()) {
             populationFitness += this.calcFitness(individual, timetable);
         }
 
@@ -59,7 +59,7 @@ public class GeneticAlgorithm {
         Population tournament = new Population(this.tournamentSize);
 
         population.shuffle();
-        for(int i = 0; i < this.tournamentSize; i++) {
+        for (int i = 0; i < this.tournamentSize; i++) {
             Individual individual = population.getIndividual(i);
             tournament.setIndividual(i, individual);
         }
@@ -68,7 +68,7 @@ public class GeneticAlgorithm {
 
     public Population mutatePopulation(Population population, Timetable timetable) {
         Population newPopulation = new Population(this.populationSize);
-        for(int populationIndex = 0; populationIndex < population.size(); populationIndex++) {
+        for (int populationIndex = 0; populationIndex < population.size(); populationIndex++) {
             Individual individual = population.getFittest(populationIndex);
 
             //创建一个随机个体 来用于 交换基因
@@ -77,12 +77,12 @@ public class GeneticAlgorithm {
             //经过测试：放在外面 基本得不到解决方案；而放在里面 50代以内就可以得到最佳解
             //if(populationIndex > this.elitismCount && Math.random() < this.mutateRate) {
             for (int geneIndex = 0; geneIndex < individual.getChromosomeLength(); geneIndex++) {
-                    //为什么 这两个判断 要放在 个体遍历基因中呢 ？？？
-                    if(populationIndex > this.elitismCount) {
-                        if(this.mutationRate > Math.random()){
-                            //交换新的基因
-                            individual.setGene(geneIndex, randomIndividual.getGene(geneIndex));
-                        }
+                //为什么 这两个判断 要放在 个体遍历基因中呢 ？？？
+                if (populationIndex > this.elitismCount) {
+                    if (this.mutationRate > Math.random()) {
+                        //交换新的基因
+                        individual.setGene(geneIndex, randomIndividual.getGene(geneIndex));
+                    }
                 }
             }
 
@@ -95,19 +95,19 @@ public class GeneticAlgorithm {
     public Population crossoverPopulation(Population population) {
         Population newPopulation = new Population(population.size());
 
-        for(int populationIndex = 0; populationIndex < population.size(); populationIndex++) {
+        for (int populationIndex = 0; populationIndex < population.size(); populationIndex++) {
             //这里 我写错了，也没有太大的问题，就是更优解会延迟到来
             //Individual parent1 = population.getIndividual(populationIndex);
             Individual parent1 = population.getFittest(populationIndex);
             //但我不明白 为什么 用 getFittest() 比 getIndividual 会更到得到最优解
 
-            if(this.crossoverRate > Math.random() && populationIndex > this.elitismCount) {
+            if (this.crossoverRate > Math.random() && populationIndex > this.elitismCount) {
                 Individual offspring = new Individual(parent1.getChromosomeLength());
 
                 Individual parent2 = selectParent(population);
 
-                for(int geneIndex = 0; geneIndex < parent1.getChromosomeLength(); geneIndex++) {
-                    if(0.5 > Math.random()) {
+                for (int geneIndex = 0; geneIndex < parent1.getChromosomeLength(); geneIndex++) {
+                    if (0.5 > Math.random()) {
                         offspring.setGene(geneIndex, parent1.getGene(geneIndex));
                     } else {
                         offspring.setGene(geneIndex, parent2.getGene(geneIndex));

@@ -13,10 +13,10 @@ public class TimeServer {
 
     public static void main(String[] args) throws IOException {
         int port = 8080;
-        if(args != null && args.length > 0) {
+        if (args != null && args.length > 0) {
             try {
                 port = Integer.valueOf(args[0]);
-            } catch (NumberFormatException e){
+            } catch (NumberFormatException e) {
                 //采用默认值
             }
         }
@@ -28,12 +28,12 @@ public class TimeServer {
             //创建I/O任务线程池
             TimeServerHandleExecutePool singleExecutor =
                     new TimeServerHandleExecutePool(50, 10000);
-            while(true) {
+            while (true) {
                 socket = server.accept();
                 singleExecutor.execute(new TimeServerHandler(socket));
             }
         } finally {
-            if(server != null) {
+            if (server != null) {
                 System.out.println("The time server close");
                 server.close();
                 server = null;

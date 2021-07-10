@@ -20,6 +20,7 @@ public class MyInvocationHandler implements InvocationHandler {
 
     /**
      * 执行目标对象的方法
+     *
      * @param proxy
      * @param method
      * @param args
@@ -40,9 +41,10 @@ public class MyInvocationHandler implements InvocationHandler {
 
     /**
      * 获取目标对象的代理对象
+     *
      * @return
      */
-    public Object getProxy(){
+    public Object getProxy() {
         return Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), target.getClass().getInterfaces(), this);
     }
 }

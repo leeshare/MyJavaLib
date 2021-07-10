@@ -15,7 +15,7 @@ public class DFSClient implements Cloneable//, RemotePee
     volatile boolean clientRunning = true;
 
     void checkOpen() throws IOException {
-        if(!clientRunning) {
+        if (!clientRunning) {
             throw new IOException("Filesystem closed");
         }
     }
@@ -30,7 +30,6 @@ public class DFSClient implements Cloneable//, RemotePee
             );
         }*/
     }
-
 
 
     TraceScope newStrDstTraceScope(String description, String src, String dst) {

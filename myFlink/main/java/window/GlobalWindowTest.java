@@ -14,9 +14,8 @@ import org.apache.flink.util.Collector;
 
 /**
  * 全局窗口，配合触发器 CountTrigger 使用
- *
+ * <p>
  * 每3个相同的 单词，才去打印一次
- *
  */
 public class GlobalWindowTest {
     public static void main(String[] args) throws Exception {

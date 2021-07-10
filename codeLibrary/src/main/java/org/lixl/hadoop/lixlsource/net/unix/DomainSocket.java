@@ -18,9 +18,9 @@ import java.nio.channels.ReadableByteChannel;
 @InterfaceAudience.LimitedPrivate("HDFS")
 public class DomainSocket implements Closeable {
     static {
-        if(SystemUtils.IS_OS_WINDOWS) {
+        if (SystemUtils.IS_OS_WINDOWS) {
             loadingFailureReason = "Unix域套接字在Windows上不可用。";
-        } else if(!NativeCodeLoader.isNativeCodeLoaded()) {
+        } else if (!NativeCodeLoader.isNativeCodeLoaded()) {
             loadingFailureReason = "hadoop库无法加载";
         } else {
             String problem;
@@ -54,6 +54,7 @@ public class DomainSocket implements Closeable {
     /**
      * 这个方法被设计用于验证一个选中的Unix域套接字的路径是否安全。
      * 这样的套接字路径是安全的：若其不允许无权限用户执行一个中间人攻击它。
+     *
      * @param path
      * @param skipComponents
      * @throws IOException
@@ -75,6 +76,7 @@ public class DomainSocket implements Closeable {
 
     /**
      * 给定一个路径和端口，通过替换“_Port”为此端口来计算得有效路径
+     *
      * @param path
      * @param port
      * @return
@@ -122,7 +124,7 @@ public class DomainSocket implements Closeable {
     private static native int bind0(String path) throws IOException;
 
     private void unreference(boolean checkClosed) throws ClosedChannelException {
-        if(checkClosed) {
+        if (checkClosed) {
             refCount.unreferenceCheckClosed();
         } else {
             refCount.unreference();
@@ -131,15 +133,16 @@ public class DomainSocket implements Closeable {
 
     /**
      * 创建一个新的域套接字来监听这个给定的路径
+     *
      * @param path
      * @return
      * @throws IOException
      */
     public static DomainSocket bindAndListen(String path) throws IOException {
-        if(loadingFailureReason != null) {
+        if (loadingFailureReason != null) {
             throw new UnsupportedOperationException(loadingFailureReason);
         }
-        if(validateBindPaths) {
+        if (validateBindPaths) {
             validateSocketPathSecurity0(path, 0);
         }
         int fd = bind0(path);
@@ -148,12 +151,13 @@ public class DomainSocket implements Closeable {
 
     /**
      * 创建一个UNIX域套接字的配对，通过调用 socketpair(2) 来连接彼此
+     *
      * @return
      * @throws IOException
      */
     public static DomainSocket[] socketpair() throws IOException {
         int fds[] = socketpair0();
-        return new DomainSocket[] {
+        return new DomainSocket[]{
                 new DomainSocket("(anonymous0)", fds[0]),
                 new DomainSocket("(anonymous1)", fds[1])
         };
@@ -165,6 +169,7 @@ public class DomainSocket implements Closeable {
 
     /**
      * 接受一个新的UNIX域套接字的连接
+     *
      * @return
      * @throws IOException
      */
@@ -184,12 +189,13 @@ public class DomainSocket implements Closeable {
 
     /**
      * 创建一个新的域套接字连接到给定的路径
+     *
      * @param path
      * @return
      * @throws IOException
      */
     public static DomainSocket connect(String path) throws IOException {
-        if(loadingFailureReason != null) {
+        if (loadingFailureReason != null) {
             throw new UnsupportedOperationException(loadingFailureReason);
         }
         int fd = connect0(path);
@@ -198,6 +204,7 @@ public class DomainSocket implements Closeable {
 
     /**
      * 返回 true：如果文件描述当前是打开的
+     *
      * @return
      */
     public boolean isOpen() {
@@ -261,6 +268,7 @@ public class DomainSocket implements Closeable {
 
     /**
      * 关闭这个套接字
+     *
      * @throws IOException
      */
     public void close() throws IOException {
@@ -275,8 +283,8 @@ public class DomainSocket implements Closeable {
         //等待所有引用都释放掉
         boolean didShutdown = false;
         boolean interrupted = false;
-        while(count > 0) {
-            if(!didShutdown) {
+        while (count > 0) {
+            if (!didShutdown) {
                 try {
                     //在此套接字上调用关闭，将打断阻塞系统
                     //调用像 accept, write, read 都将开启不同的线程。
@@ -299,13 +307,14 @@ public class DomainSocket implements Closeable {
         //过了此刻，这个文件描述数将被其他再使用
         //尽管这个域套接字对象继续持有旧文件描述数，但我们再也不能使用了，因为已关闭了。
         close0(fd);
-        if(interrupted) {
+        if (interrupted) {
             Thread.currentThread().interrupt();
         }
     }
 
     /**
      * 调用 shutdown(SHUT_RDWR)在这个UNIX域套接字
+     *
      * @throws IOException
      */
     public void shutdown() throws IOException {
@@ -322,6 +331,7 @@ public class DomainSocket implements Closeable {
 
     /**
      * 发送一些FileDescriptor对象到套接字另一边的进程去
+     *
      * @param descriptors
      * @param jbuf
      * @param offset
@@ -344,14 +354,14 @@ public class DomainSocket implements Closeable {
     public int recvFileInputStreams(FileInputStream streams[], byte buf[], int offset, int length) throws IOException {
         FileDescriptor descriptors[] = new FileDescriptor[streams.length];
         boolean success = false;
-        for(int i = 0; i < streams.length; i++) {
+        for (int i = 0; i < streams.length; i++) {
             streams[i] = null;
         }
         refCount.reference();
         try {
             int ret = receiveFileDescriptors0(fd, descriptors, buf, offset, length);
-            for(int i = 0, j = 0; i < descriptors.length; i++) {
-                if(descriptors[i] != null) {
+            for (int i = 0, j = 0; i < descriptors.length; i++) {
+                if (descriptors[i] != null) {
                     streams[j++] = new FileInputStream(descriptors[i]);
                     descriptors[i] = null;
                 }
@@ -359,15 +369,15 @@ public class DomainSocket implements Closeable {
             success = true;
             return ret;
         } finally {
-            if(!success) {
-                for(int i = 0; i < descriptors.length; i++) {
-                    if(descriptors[i] != null) {
+            if (!success) {
+                for (int i = 0; i < descriptors.length; i++) {
+                    if (descriptors[i] != null) {
                         try {
                             closeFileDescriptor0(descriptors[i]);
                         } catch (Throwable t) {
                             //LOG.warn(t.toString());
                         }
-                    } else if(streams[i] != null) {
+                    } else if (streams[i] != null) {
                         try {
                             streams[i].close();
                         } catch (Throwable t) {
@@ -460,7 +470,7 @@ public class DomainSocket implements Closeable {
             boolean exc = true;
             try {
                 byte b[] = new byte[1];
-                b[0] = (byte)val;
+                b[0] = (byte) val;
                 DomainSocket.writeArray0(DomainSocket.this.fd, b, 0, 1);
                 exc = false;
             } finally {
@@ -499,14 +509,14 @@ public class DomainSocket implements Closeable {
             boolean exc = true;
             try {
                 int nread = 0;
-                if(dst.isDirect()) {
+                if (dst.isDirect()) {
                     nread = DomainSocket.readByteBufferDirect0(DomainSocket.this.fd, dst, dst.position(), dst.remaining());
-                } else if(dst.hasArray()) {
+                } else if (dst.hasArray()) {
                     nread = DomainSocket.readArray0(DomainSocket.this.fd, dst.array(), dst.position(), dst.remaining());
                 } else {
                     throw new AssertionError("我们不支持使用既不主导也不依靠数组的ByteBuffers");
                 }
-                if(nread > 0) {
+                if (nread > 0) {
                     dst.position(dst.position() + nread);
                 }
                 exc = false;

@@ -36,6 +36,7 @@ public abstract class Shell {
 
     /**
      * 查询看系统是否是java7或更新的
+     *
      * @return
      */
     @Deprecated
@@ -48,6 +49,7 @@ public abstract class Shell {
 
     /**
      * 查询看是否java规范的主要版本等于或大于参数
+     *
      * @param version 8，9，10 etc.
      * @return
      */
@@ -65,12 +67,12 @@ public abstract class Shell {
     @Deprecated
     public static final int WINDOWS_MAX_SHELL_LENGHT = WINDOWS_MAX_SHELL_LENGTH;
 
-    public static void checkWindowsCommandLineLength(String...commands) throws IOException {
+    public static void checkWindowsCommandLineLength(String... commands) throws IOException {
         int len = 0;
-        for(String s : commands) {
+        for (String s : commands) {
             len += s.length();
         }
-        if(len > WINDOWS_MAX_SHELL_LENGTH) {
+        if (len > WINDOWS_MAX_SHELL_LENGTH) {
             throw new IOException(String.format("此命令行有一个长度 %d 超过最大允许长度 %d. 命令开始于：%s",
                     len, WINDOWS_MAX_SHELL_LENGTH, StringUtils.join("", commands).substring(0, 100)));
         }
@@ -78,6 +80,7 @@ public abstract class Shell {
 
     /**
      * 引号 在参数中，bash将其当做一个单独的值
+     *
      * @param arg
      * @return
      */
@@ -89,9 +92,13 @@ public abstract class Shell {
         return buffer.toString();
     }
 
-    /** 一个Unix命令 用于获取当前用户名 */
+    /**
+     * 一个Unix命令 用于获取当前用户名
+     */
     public static final String USER_NAME_COMMAND = "whoami";
-    /** Windows 创建进程 同步对象 */
+    /**
+     * Windows 创建进程 同步对象
+     */
     public static final Object WindowsProcessLaunchLock = new Object();
 
     public enum OSType {
@@ -107,27 +114,28 @@ public abstract class Shell {
 
     private static OSType getOSType() {
         String osName = System.getProperty("os.name");
-        if(osName.startsWith("Windows")) {
+        if (osName.startsWith("Windows")) {
             return OSType.OS_TYPE_WIN;
-        } else if(osName.contains("SunOS") || osName.contains("Solaris")) {
+        } else if (osName.contains("SunOS") || osName.contains("Solaris")) {
             return OSType.OS_TYPE_SOLARIS;
-        } else if(osName.contains("FreeBSD")) {
+        } else if (osName.contains("FreeBSD")) {
             return OSType.OS_TYPE_FREEBSD;
-        } else if(osName.contains("Mac")) {
+        } else if (osName.contains("Mac")) {
             return OSType.OS_TYPE_MAC;
-        } else if(osName.startsWith("Linux")) {
+        } else if (osName.startsWith("Linux")) {
             return OSType.OS_TYPE_LINUX;
         } else {
             return OSType.OS_TYPE_OTHER;
         }
     }
+
     // 帮助者 静态变量 对应各个平台
     public static final boolean WINDOWS = (osType == OSType.OS_TYPE_WIN);
     public static final boolean SOLARIS = (osType == OSType.OS_TYPE_SOLARIS);
-    public static final boolean MAC     = (osType == OSType.OS_TYPE_MAC);
+    public static final boolean MAC = (osType == OSType.OS_TYPE_MAC);
     public static final boolean FREEBSD = (osType == OSType.OS_TYPE_FREEBSD);
-    public static final boolean LINUX   = (osType == OSType.OS_TYPE_LINUX);
-    public static final boolean OTHER   = (osType == OSType.OS_TYPE_OTHER);
+    public static final boolean LINUX = (osType == OSType.OS_TYPE_LINUX);
+    public static final boolean OTHER = (osType == OSType.OS_TYPE_OTHER);
 
     public static String[] getGroupsCommand() {
         return (WINDOWS) ? new String[]{"cmd", "/c", "groups"} : new String[]{"groups"};
@@ -136,52 +144,64 @@ public abstract class Shell {
     /**
      * 一个命令：获取用户分组列表
      * 如果不是win，命令将首先获取用户的主要分组，其次获取包含主要分组的分组列表
+     *
      * @param user
      * @return
      */
     public static String[] getGroupsForUserCommand(final String user) {
-        if(WINDOWS) {
-            return new String[] {getWinUtilsPath(), "groups", "-F", "\"" + user + "\""};
+        if (WINDOWS) {
+            return new String[]{getWinUtilsPath(), "groups", "-F", "\"" + user + "\""};
         } else {
             String quoteUser = bashQuote(user);
-            return new String[] {"bash", "-c", "id -gn" + quoteUser + "; id -Gn" + quoteUser};
+            return new String[]{"bash", "-c", "id -gn" + quoteUser + "; id -Gn" + quoteUser};
         }
     }
 
     /**
      * 一个命令 获取用户分组id列表
+     *
      * @param user
      * @return
      */
     public static String[] getGroupsIDForUserCommand(final String user) {
-        if(WINDOWS) {
+        if (WINDOWS) {
             return new String[]{getWinUtilsPath(), "groups", "-F", "\"" + user + "\""};
         } else {
             String quoteUser = bashQuote(user);
             return new String[]{"bash", "-c", "id -g" + quoteUser + "; id -G " + quoteUser};
         }
     }
-    /** 一个命令 获取给定netgroup的用户列表 */
+
+    /**
+     * 一个命令 获取给定netgroup的用户列表
+     */
     public static String[] getUsersForNetgroupCommand(final String netgroup) {
-        return new String[] {"getent", "netgroup", netgroup};
+        return new String[]{"getent", "netgroup", netgroup};
     }
-    /** 返回一个命令: 获取权限信息的命令 */
+
+    /**
+     * 返回一个命令: 获取权限信息的命令
+     */
     public static String[] getGetPermissionCommand() {
-        return (WINDOWS) ? new String[] { getWinUtilsPath(), "ls", "-F"} : new String[] {"ls", "-ld"};
+        return (WINDOWS) ? new String[]{getWinUtilsPath(), "ls", "-F"} : new String[]{"ls", "-ld"};
     }
-    /** 返回一个命令 设置权限 */
+
+    /**
+     * 返回一个命令 设置权限
+     */
     public static String[] getSetPermissionCommand(String perm, boolean recursive) {
-        if(recursive) {
-            return (WINDOWS) ? new String[] { getWinUtilsPath(), "chmod", "-R", perm }
-            : new String[] { "chmod", "-R", perm };
+        if (recursive) {
+            return (WINDOWS) ? new String[]{getWinUtilsPath(), "chmod", "-R", perm}
+                    : new String[]{"chmod", "-R", perm};
         } else {
-            return (WINDOWS) ? new String[] { getWinUtilsPath(), "chmod", perm }
-            : new String[] { "chmod", perm };
+            return (WINDOWS) ? new String[]{getWinUtilsPath(), "chmod", perm}
+                    : new String[]{"chmod", perm};
         }
     }
 
     /**
      * 返回
+     *
      * @param perm
      * @param recursive
      * @param file
@@ -193,44 +213,59 @@ public abstract class Shell {
         cmdWithFile[cmdWithFile.length - 1] = file;
         return cmdWithFile;
     }
-    /** 返回一条命令 设置使用者 */
+
+    /**
+     * 返回一条命令 设置使用者
+     */
     public static String[] getSetOwnerCommand(String owner) {
         return (WINDOWS)
-                ? new String[] { getWinUtilsPath(), "chown", "\"" + owner + "\"" }
-                : new String[] { "chown", owner };
+                ? new String[]{getWinUtilsPath(), "chown", "\"" + owner + "\""}
+                : new String[]{"chown", owner};
     }
-    /** 返回一条命令 创建 动态链接 */
+
+    /**
+     * 返回一条命令 创建 动态链接
+     */
     public static String[] getSymlinkCommand(String target, String link) {
         return WINDOWS
-                ? new String[] { getWinUtilsPath(), "symlink", link, target }
-                : new String[] { "ln", "-s", target, link };
+                ? new String[]{getWinUtilsPath(), "symlink", link, target}
+                : new String[]{"ln", "-s", target, link};
     }
-    /** 返回一个命令 用于读动态链接目标的命令  */
+
+    /**
+     * 返回一个命令 用于读动态链接目标的命令
+     */
     public static String[] getReadlinkCommand(String link) {
         return WINDOWS
-                ? new String[] { getWinUtilsPath(), "readlink", link }
-                : new String[] { "readlink", link };
+                ? new String[]{getWinUtilsPath(), "readlink", link}
+                : new String[]{"readlink", link};
     }
-    /** 返回一个命令 用于判定 指定pid的进程是否还活着 */
+
+    /**
+     * 返回一个命令 用于判定 指定pid的进程是否还活着
+     */
     public static String[] getCheckProcessIsAliveCommand(String pid) {
         return getSignalKillCommand(0, pid);
     }
-    /** 返回一个命令 发送一个信号给指定pid */
+
+    /**
+     * 返回一个命令 发送一个信号给指定pid
+     */
     public static String[] getSignalKillCommand(int code, String pid) {
         //Code == 0 表示还 活着
-        if(Shell.WINDOWS) {
-            if(0 == code) {
-                return new String[] { Shell.getWinUtilsPath(), "task", "isAlive", pid };
+        if (Shell.WINDOWS) {
+            if (0 == code) {
+                return new String[]{Shell.getWinUtilsPath(), "task", "isAlive", pid};
             } else {
-                return new String[] { Shell.getWinUtilsPath(), "task", "kill", pid };
+                return new String[]{Shell.getWinUtilsPath(), "task", "kill", pid};
             }
         }
 
         final String quotePid = bashQuote(pid);
-        if(isSetsidAvailable) {
-            return new String[] { "bash", "-c", "kill -" + code + " -- -" + quotePid };
+        if (isSetsidAvailable) {
+            return new String[]{"bash", "-c", "kill -" + code + " -- -" + quotePid};
         } else {
-            return new String[] { "bash", "-c", "kill -" + code + " " + quotePid };
+            return new String[]{"bash", "-c", "kill -" + code + " " + quotePid};
         }
     }
 
@@ -244,6 +279,7 @@ public abstract class Shell {
 
     /**
      * 返回一个文件 引用一个给定名称和父路径的脚本
+     *
      * @param parent
      * @param basename
      * @return
@@ -259,8 +295,8 @@ public abstract class Shell {
     public static String[] getRunScriptCommand(File script) {
         String absolutePath = script.getAbsolutePath();
         return WINDOWS
-                ? new String[] {"cmd", "/c", absolutePath}
-                : new String[] {"bash", bashQuote(absolutePath)};
+                ? new String[]{"cmd", "/c", absolutePath}
+                : new String[]{"bash", bashQuote(absolutePath)};
     }
 
     public static final String SET_PERMISSION_COMMAND = "chmod";
@@ -271,17 +307,20 @@ public abstract class Shell {
 
     protected long timeOutInterval = 0L;
     private final AtomicBoolean timedOut = new AtomicBoolean(false);
-    /** 指示 父环境变量 是否可继承 */
+    /**
+     * 指示 父环境变量 是否可继承
+     */
     protected boolean inheritParentEnv = true;
 
     /**
      * 集中逻辑 查找和验证hadoop home目录的有效性
+     *
      * @return
      * @throws FileNotFoundException
      */
     private static File checkHadoopHome() throws FileNotFoundException {
         String home = System.getProperty(SYSPROP_HADOOP_HOME_DIR);
-        if(home == null) {
+        if (home == null) {
             home = System.getenv(ENV_HADOOP_HOME);
         }
         return checkHadoopHomeInner(home);
@@ -298,36 +337,40 @@ public abstract class Shell {
 
     @VisibleForTesting
     static File checkHadoopHomeInner(String home) throws FileNotFoundException {
-        if(home == null) {
+        if (home == null) {
             throw new FileNotFoundException(E_HADOOP_PROPS_UNSET);
         }
         while (home.startsWith("\"")) {
             home = home.substring(1);
         }
-        while(home.endsWith("\"")) {
+        while (home.endsWith("\"")) {
             home = home.substring(0, home.length() - 1);
         }
 
-        if(home.isEmpty()) {
+        if (home.isEmpty()) {
             throw new FileNotFoundException(E_HADOOP_PROPS_EMPTY);
         }
 
         File homedir = new File(home);
-        if(!homedir.isAbsolute()) {
+        if (!homedir.isAbsolute()) {
             throw new FileNotFoundException("Hadoop home directory " + homedir + " " + E_IS_RELATIVE);
         }
-        if(!homedir.exists()) {
+        if (!homedir.exists()) {
             throw new FileNotFoundException("hadoop home directory " + homedir + " " + E_DOES_NOT_EXIST);
         }
-        if(!homedir.isDirectory()) {
+        if (!homedir.isDirectory()) {
             throw new FileNotFoundException("Hadoop home directory " + homedir + " " + E_NOT_DIRECTORY);
         }
         return homedir;
     }
 
-    /** Hadoop home路径 */
+    /**
+     * Hadoop home路径
+     */
     private static final File HADOOP_HOME_FILE;
-    /** 再次抛出原因：决定hadoop home路径失败 */
+    /**
+     * 再次抛出原因：决定hadoop home路径失败
+     */
     private static final IOException HADOOP_HOME_DIR_FAILURE_CAUSE;
 
     static {
@@ -360,7 +403,7 @@ public abstract class Shell {
     }
 
     private static File getHadoopHomeDir() throws FileNotFoundException {
-        if(HADOOP_HOME_DIR_FAILURE_CAUSE != null) {
+        if (HADOOP_HOME_DIR_FAILURE_CAUSE != null) {
             throw fileNotFoundException(addOsText(HADOOP_HOME_DIR_FAILURE_CAUSE.toString()), HADOOP_HOME_DIR_FAILURE_CAUSE);
         }
         return HADOOP_HOME_FILE;
@@ -374,6 +417,7 @@ public abstract class Shell {
 
     /**
      * 内部逻辑 getQualifiedBin
+     *
      * @param hadoopHomeDir
      * @param executable
      * @return
@@ -382,18 +426,18 @@ public abstract class Shell {
     static File getQualifiedBinInner(File hadoopHomeDir, String executable) throws FileNotFoundException {
         String binDirText = "Hadoop bin directory ";
         File bin = new File(hadoopHomeDir, "bin");
-        if(!bin.exists()) {
+        if (!bin.exists()) {
             throw new FileNotFoundException(addOsText(binDirText + E_DOES_NOT_EXIST + ": " + bin));
         }
-        if(!bin.isDirectory()) {
+        if (!bin.isDirectory()) {
             throw new FileNotFoundException(addOsText(binDirText + E_NOT_DIRECTORY + ": " + bin));
         }
 
         File exeFile = new File(bin, executable);
-        if(!exeFile.exists()) {
+        if (!exeFile.exists()) {
             throw new FileNotFoundException(addOsText(E_NO_EXECUTABLE + ": " + exeFile));
         }
-        if(!exeFile.isFile()) {
+        if (!exeFile.isFile()) {
             throw new FileNotFoundException(addOsText(E_NOT_EXECUTABLE_FILE + ": " + exeFile));
         }
         try {
@@ -421,7 +465,7 @@ public abstract class Shell {
         IOException ioe = null;
         String path = null;
         File file = null;
-        if(WINDOWS) {
+        if (WINDOWS) {
             try {
                 file = getQualifiedBin(WINUTILS_EXE);
                 path = file.getCanonicalPath();
@@ -448,7 +492,7 @@ public abstract class Shell {
     }
 
     public static String getWinUtilsPath() {
-        if(WINUTILS_FAILURE == null) {
+        if (WINUTILS_FAILURE == null) {
             return WINUTILS_PATH;
         } else {
             throw new RuntimeException(WINUTILS_FAILURE.toString(), WINUTILS_FAILURE);
@@ -456,7 +500,7 @@ public abstract class Shell {
     }
 
     public static File getWinUtilsFile() throws FileNotFoundException {
-        if(WINUTILS_FAILURE == null) {
+        if (WINUTILS_FAILURE == null) {
             return WINUTILS_FILE;
         } else {
             throw fileNotFoundException(WINUTILS_FAILURE.toString(), WINUTILS_FAILURE);
@@ -464,7 +508,7 @@ public abstract class Shell {
     }
 
     public static boolean checkIsBashSupported() throws InterruptedException {
-        if(Shell.WINDOWS) {
+        if (Shell.WINDOWS) {
             return false;
         }
 
@@ -477,10 +521,10 @@ public abstract class Shell {
         } catch (InterruptedIOException iioe) {
             //LOG.warn("中断，不能确定是否支持bash", iioe);
             //throw iioe;
-        } catch(IOException ioe) {
+        } catch (IOException ioe) {
             //LOG.warn("Bash不支持在此系统", ioe);
             supported = false;
-        } catch(SecurityException se) {
+        } catch (SecurityException se) {
             //LOG.info("此JVM安全管理 不允许Bash执行。认为它不支持。");
             supported = false;
         }
@@ -490,7 +534,7 @@ public abstract class Shell {
     public static final boolean isSetsidAvailable = isSetsidSupported();
 
     private static boolean isSetsidSupported() {
-        if(Shell.WINDOWS) {
+        if (Shell.WINDOWS) {
             return false;
         }
         ShellCommandExecutor shexec = null;
@@ -502,11 +546,11 @@ public abstract class Shell {
         } catch (IOException ioe) {
             //LOG.debug("setsid在此机器上不可用。所以不要使用它。");
             setsidSupported = false;
-        } catch(SecurityException se) {
+        } catch (SecurityException se) {
             //LOG.debug("setsid 不允许JVM安全管理执行。所以不要使用它。");
             setsidSupported = false;
         } catch (Error err) {
-            if(err.getMessage() != null
+            if (err.getMessage() != null
                     && err.getMessage().contains("posix_spawn is not a supported process launch mechanism")
                     && (Shell.FREEBSD || Shell.MAC)) {
                 //LOG.info("避免JKD-8047340在BSD系统。", err);
@@ -536,9 +580,11 @@ public abstract class Shell {
     protected Shell() {
         this(0L);
     }
+
     protected Shell(long interval) {
         this(interval, false);
     }
+
     protected Shell(long interval, boolean redirectErrorStream) {
         this.interval = interval;
         this.lastTime = (interval < 0) ? 0 : -interval;
@@ -548,15 +594,17 @@ public abstract class Shell {
     protected void setEnvironment(Map<String, String> env) {
         this.environment = env;
     }
+
     protected void setWorkingDirectory(File dir) {
         this.dir = dir;
     }
+
     protected void run() throws IOException {
-        if(lastTime + interval > Time.monotonicNow()) {
+        if (lastTime + interval > Time.monotonicNow()) {
             return;
         }
         exitCode = 0;   //reset 用于下次执行
-        if(Shell.MAC) {
+        if (Shell.MAC) {
             System.setProperty("jdk.lang.Process.launchMechanism", "POSIX_SPAWN");
         }
         runCommand();
@@ -569,29 +617,29 @@ public abstract class Shell {
         timedOut.set(false);
         completed.set(false);
 
-        if(!inheritParentEnv) {
+        if (!inheritParentEnv) {
             builder.environment().clear();
         }
-        if(environment != null) {
+        if (environment != null) {
             builder.environment().putAll(this.environment);
         }
-        if(dir != null) {
+        if (dir != null) {
             builder.directory(this.dir);
         }
         builder.redirectErrorStream(redirectErrorStream);
-        if(Shell.WINDOWS) {
+        if (Shell.WINDOWS) {
             synchronized (WindowsProcessLaunchLock) {
                 //
                 process = builder.start();
             }
-        }else {
+        } else {
             process = builder.start();
         }
 
         waitingThread = Thread.currentThread();
         CHILD_SHELLS.put(this, null);
 
-        if(timeOutInterval > 0) {
+        if (timeOutInterval > 0) {
             timeOutTimer = new Timer("Shell command timeout");
             timeoutTimerTask = new ShellTimeoutTimerTask(this);
             timeOutTimer.schedule(timeoutTimerTask, timeOutInterval);
@@ -605,13 +653,13 @@ public abstract class Shell {
             public void run() {
                 try {
                     String line = errReader.readLine();
-                    while((line != null) && !isInterrupted()) {
+                    while ((line != null) && !isInterrupted()) {
                         errMsg.append(line);
                         errMsg.append(System.getProperty("line.separator"));
                         line = errReader.readLine();
                     }
                 } catch (IOException ioe) {
-                    if(!isTimedOut()) {
+                    if (!isTimedOut()) {
                         //LOG.warn("Error reading the error stream", ioe);
                     } else {
                         //LOG.debug("Error reading the error stream due to shell command timeout", ioe);
@@ -630,13 +678,13 @@ public abstract class Shell {
         try {
             parseExecResult(inReader);
             String line = inReader.readLine();
-            while(line != null) {
+            while (line != null) {
                 line = inReader.readLine();
             }
             exitCode = process.waitFor();
             joinThread(errThread);
             completed.set(true);
-            if(exitCode != 0) {
+            if (exitCode != 0) {
                 throw new ExitCodeException(exitCode, errMsg.toString());
             }
         } catch (InterruptedException ie) {
@@ -644,7 +692,7 @@ public abstract class Shell {
             iie.initCause(ie);
             throw iie;
         } finally {
-            if(timeOutTimer != null) {
+            if (timeOutTimer != null) {
                 timeOutTimer.cancel();
             }
             try {
@@ -655,7 +703,7 @@ public abstract class Shell {
             } catch (IOException ioe) {
                 //LOG.warn("当关闭输入流时出错", ioe);
             }
-            if(!completed.get()) {
+            if (!completed.get()) {
                 errThread.interrupt();
                 joinThread(errThread);
             }
@@ -675,7 +723,7 @@ public abstract class Shell {
     }
 
     private static void joinThread(Thread t) {
-        while(t.isAlive()) {
+        while (t.isAlive()) {
             try {
                 t.join();
             } catch (InterruptedException ie) {
@@ -694,12 +742,15 @@ public abstract class Shell {
     public String getEnvironment(String env) {
         return environment.get(env);
     }
+
     public Process getProcess() {
         return process;
     }
+
     public int getExitCode() {
         return exitCode;
     }
+
     public Thread getWaitingThread() {
         return waitingThread;
     }
@@ -711,6 +762,7 @@ public abstract class Shell {
             super(message);
             this.exitCode = exitCode;
         }
+
         public int getExitCode() {
             return exitCode;
         }
@@ -727,8 +779,11 @@ public abstract class Shell {
 
     public interface CommandExecutor {
         void execute() throws IOException;
+
         int getExitCode() throws IOException;
+
         String getOutput() throws IOException;
+
         void close();
     }
 
@@ -742,36 +797,40 @@ public abstract class Shell {
         public ShellCommandExecutor(String[] execString) {
             this(execString, null);
         }
+
         public ShellCommandExecutor(String[] execString, File dir) {
             this(execString, dir, null);
         }
+
         public ShellCommandExecutor(String[] execString, File dir, Map<String, String> env) {
             this(execString, dir, env, 0L);
         }
-        public ShellCommandExecutor(String[] execString, File dir, Map<String, String> env, long  timeout) {
+
+        public ShellCommandExecutor(String[] execString, File dir, Map<String, String> env, long timeout) {
             this(execString, dir, env, timeout, true);
         }
 
         public ShellCommandExecutor(String[] execString, File dir,
                                     Map<String, String> env, long timeout, boolean inheritParentEnv) {
             command = execString.clone();
-            if(dir != null) {
+            if (dir != null) {
                 setWorkingDirectory(dir);
             }
-            if(env != null) {
+            if (env != null) {
                 setEnvironment(env);
             }
             timeOutInterval = timeout;
             this.inheritParentEnv = inheritParentEnv;
         }
+
         @VisibleForTesting
         public long getTimeoutInterval() {
             return timeOutInterval;
         }
 
         public void execute() throws IOException {
-            for(String s : command) {
-                if(s == null) {
+            for (String s : command) {
+                if (s == null) {
                     throw new IOException("(null)输入在命令数组中：" + StringUtils.join(" ", command));
                 }
             }
@@ -788,7 +847,7 @@ public abstract class Shell {
             output = new StringBuffer();
             char[] buf = new char[512];
             int nRead;
-            while( (nRead = lines.read(buf, 0, buf.length)) > 0 ) {
+            while ((nRead = lines.read(buf, 0, buf.length)) > 0) {
                 output.append(buf, 0, nRead);
             }
         }
@@ -801,8 +860,8 @@ public abstract class Shell {
         public String toString() {
             StringBuilder builder = new StringBuilder();
             String[] args = getExecString();
-            for(String s : args) {
-                if(s.indexOf(' ') >= 0) {
+            for (String s : args) {
+                if (s.indexOf(' ') >= 0) {
                     builder.append('"').append(s).append('"');
                 } else {
                     builder.append(s);
@@ -822,11 +881,12 @@ public abstract class Shell {
     public boolean isTimedOut() {
         return timedOut.get();
     }
+
     private void setTimedOut() {
         this.timedOut.set(true);
     }
 
-    public static String execCommand(String ... cmd) throws IOException {
+    public static String execCommand(String... cmd) throws IOException {
         return execCommand(null, cmd, 0L);
     }
 
@@ -836,13 +896,14 @@ public abstract class Shell {
         return exec.getOutput();
     }
 
-    public static String execCommand(Map<String, String> env, String ... cmd) throws IOException {
+    public static String execCommand(Map<String, String> env, String... cmd) throws IOException {
         return execCommand(env, cmd, 0L);
     }
 
 
     private static class ShellTimeoutTimerTask extends TimerTask {
         private final Shell shell;
+
         public ShellTimeoutTimerTask(Shell shell) {
             this.shell = shell;
         }
@@ -854,7 +915,7 @@ public abstract class Shell {
                 p.exitValue();
             } catch (Exception e) {
                 //进程未终止 所以检查它是否完成 如果没有就destory
-                if(p != null && !shell.completed.get()) {
+                if (p != null && !shell.completed.get()) {
                     shell.setTimedOut();
                     p.destroy();
                 }
@@ -864,8 +925,8 @@ public abstract class Shell {
 
     public static void destroyAllShellProcesses() {
         synchronized (CHILD_SHELLS) {
-            for(Shell shell : CHILD_SHELLS.keySet()) {
-                if(shell.getProcess() != null) {
+            for (Shell shell : CHILD_SHELLS.keySet()) {
+                if (shell.getProcess() != null) {
                     shell.getProcess().destroy();
                 }
             }
@@ -875,6 +936,7 @@ public abstract class Shell {
 
     /**
      * Map 转 Set
+     *
      * @return
      */
     public static Set<Shell> getAllShells() {
@@ -882,12 +944,14 @@ public abstract class Shell {
             return new HashSet<>(CHILD_SHELLS.keySet());
         }
     }
+
     /**
      * 静态方法 返回内存锁限制 用于 datanode
+     *
      * @return
      */
     public static Long getMemlockLimit(Long ulimit) {
-        if(WINDOWS) {
+        if (WINDOWS) {
             return Math.min(Integer.MAX_VALUE, ulimit);
         }
         return ulimit;

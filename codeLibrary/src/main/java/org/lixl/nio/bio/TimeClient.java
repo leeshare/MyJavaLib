@@ -13,10 +13,10 @@ public class TimeClient {
 
     public static void main(String[] args) {
         int port = 8080;
-        if(args != null && args.length > 0) {
+        if (args != null && args.length > 0) {
             try {
                 port = Integer.valueOf(args[0]);
-            }catch (NumberFormatException e) {
+            } catch (NumberFormatException e) {
 
             }
         }
@@ -31,14 +31,14 @@ public class TimeClient {
             System.out.println("Send order 2 server succeed.");
             String resp = in.readLine();
             System.out.println("Now is : " + resp);
-        }catch (Exception e) {
+        } catch (Exception e) {
 
-        }finally {
-            if(out != null) {
+        } finally {
+            if (out != null) {
                 out.close();
                 out = null;
             }
-            if(in != null) {
+            if (in != null) {
                 try {
                     in.close();
                 } catch (IOException e) {
@@ -46,10 +46,10 @@ public class TimeClient {
                 }
                 in = null;
             }
-            if(socket != null){
+            if (socket != null) {
                 try {
                     socket.close();
-                }catch (IOException e){
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
                 socket = null;

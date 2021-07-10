@@ -1,6 +1,7 @@
 package org.lixl.ai.ga.timetable;
 
 import org.lixl.ai.ga.timetable.attr.Class;
+
 /**
  * Created by Administrator on 12/19/2019.
  */
@@ -19,7 +20,7 @@ public class TimetableGA {
 
         int generation = 1;
 
-        while(ga.isTerminationConditionMet(generation, maxGeneration) == false
+        while (ga.isTerminationConditionMet(generation, maxGeneration) == false
                 && ga.isTerminationConditionMet(population) == false) {
             System.out.println("G" + generation + " 最强壮个体为：" + population.getFittest(0).getFitness());
 
@@ -39,7 +40,7 @@ public class TimetableGA {
         //System.out.println("Clashes:" + timetable.calcClashes());
         int clashNum = timetable.calcClashes();
         System.out.println("Clashes:" + clashNum);
-        if(clashNum > 0) {
+        if (clashNum > 0) {
             timetable.calcClashesAndPrint();
         }
 
@@ -47,7 +48,7 @@ public class TimetableGA {
         System.out.println();
         Class[] classes = timetable.getClasses();
         int classIndex = 1;
-        for(Class bestClass : classes) {
+        for (Class bestClass : classes) {
             System.out.print("--------");
             System.out.print("Class " + (bestClass.getClassId() < 10 ? "0" + bestClass.getClassId() : "" + bestClass.getClassId()) + ": ");
             System.out.print(" Group: " + timetable.getGroup(bestClass.getGroupId()).getGroupId());

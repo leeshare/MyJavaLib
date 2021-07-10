@@ -8,6 +8,7 @@ public interface MetricsCollector {
 
     /**
      * 添加一个指标纪录
+     *
      * @param name
      * @return
      */
@@ -15,6 +16,7 @@ public interface MetricsCollector {
 
     /**
      * 添加一个指标纪录
+     *
      * @param info
      * @return
      */

@@ -14,6 +14,7 @@ public class Population {
 
     /**
      * 初始化 空白种群
+     *
      * @param populationSize
      */
     public Population(int populationSize) {
@@ -22,6 +23,7 @@ public class Population {
 
     /**
      * 初始化 种群
+     *
      * @param populationSize
      * @param chromosomeLength
      */
@@ -30,7 +32,7 @@ public class Population {
         this.population = new Individual[populationSize];
 
         //创建每个个体
-        for(int individualCount = 0; individualCount < populationSize; individualCount++) {
+        for (int individualCount = 0; individualCount < populationSize; individualCount++) {
             //创建一个个体，初始化其染色体为给定值
             Individual individual = new Individual(chromosomeLength);
             //添加此个体到种群中
@@ -41,6 +43,7 @@ public class Population {
 
     /**
      * 获取种群的个体数组
+     *
      * @return
      */
     public Individual[] getIndividuals() {
@@ -49,9 +52,9 @@ public class Population {
 
     /**
      * 按适应度 在种群中 寻找一个个体
-     * @param offset
-     *      你想要的个体的偏移量
-     *      0 是最强壮的； 种群长度-1 是最弱的。
+     *
+     * @param offset 你想要的个体的偏移量
+     *               0 是最强壮的； 种群长度-1 是最弱的。
      * @return
      */
     public Individual getFittest(int offset) {
@@ -59,9 +62,9 @@ public class Population {
         Arrays.sort(this.population, new Comparator<Individual>() {
             @Override
             public int compare(Individual o1, Individual o2) {
-                if(o1.getFitness() > o2.getFitness()) {
+                if (o1.getFitness() > o2.getFitness()) {
                     return -1;
-                } else if(o1.getFitness() < o2.getFitness()) {
+                } else if (o1.getFitness() < o2.getFitness()) {
                     return 1;
                 }
                 return 0;
@@ -85,6 +88,7 @@ public class Population {
 
     /**
      * 在偏移量处 设置个体
+     *
      * @param offset
      * @param individual
      * @return
@@ -95,6 +99,7 @@ public class Population {
 
     /**
      * 获取偏移量处的个体
+     *
      * @param offset
      * @return
      */
@@ -107,8 +112,8 @@ public class Population {
      */
     public void shuffle() {
         Random random = new Random();
-        for(int i = population.length - 1; i > 0; i--) {
-            int index = random.nextInt(i+1);
+        for (int i = population.length - 1; i > 0; i--) {
+            int index = random.nextInt(i + 1);
             Individual a = population[index];
             population[index] = population[i];
             population[i] = a;

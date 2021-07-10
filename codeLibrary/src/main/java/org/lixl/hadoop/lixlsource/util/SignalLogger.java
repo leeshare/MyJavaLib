@@ -6,7 +6,7 @@ import org.lixl.hadoop.lixlsource.classification.InterfaceStability;
 
 @InterfaceAudience.Private
 @InterfaceStability.Unstable
-public enum  SignalLogger {
+public enum SignalLogger {
     INSTANCE;
 
     public void register(final Log LOG) {

@@ -28,6 +28,7 @@ public class MutableCounterLong extends MutableCounter {
 
     /**
      * 这里为何不加上关键字 synchronized ?
+     *
      * @param delta
      */
     public void incr(long delta) {
@@ -41,7 +42,7 @@ public class MutableCounterLong extends MutableCounter {
 
     @Override
     public void snapshot(MetricsRecordBuilder builder, boolean all) {
-        if(all || changed()) {
+        if (all || changed()) {
             builder.addCounter(info(), value());
             clearChanged();
         }

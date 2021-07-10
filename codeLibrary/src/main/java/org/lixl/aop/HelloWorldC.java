@@ -7,11 +7,11 @@ import jdk.nashorn.internal.runtime.Context;
  */
 public class HelloWorldC implements HelloWorld {
 
-    public void printHelloWorld(){
+    public void printHelloWorld() {
         System.out.println("Enter HelloWorldC.printHelloWorld()");
     }
 
-    public void doPrint(){
+    public void doPrint() {
         System.out.println("Enter HelloWorldC.doPrint()");
     }
 }

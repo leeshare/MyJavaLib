@@ -56,6 +56,7 @@ public class UserGroupInformation {
 
     /**
      * 为了单元测试的目的,我们想要从keytab测试登录并且不想等待,直到更新window
+     *
      * @param immediate
      */
     @VisibleForTesting
@@ -63,14 +64,15 @@ public class UserGroupInformation {
         shouldRenewImmediatelyForTests = immediate;
     }
 
-    @Metrics(about="用户和分组相关的指标", context="ugi")
+    @Metrics(about = "用户和分组相关的指标", context = "ugi")
     static class UgiMetrics {
         final MetricsRegistry registry = new MetricsRegistry("UgiMetrics");
         @Metric("按Kerberos协议 登录和等待时长 成功比率(milliseconds)")
         MutableRate loginSuccess;
         @Metric("按Kerberos协议 登录和等待时长 失败比率(milliseconds)")
         MutableRate loginFailure;
-        @Metric("获得分组") MutableRate getGroups;
+        @Metric("获得分组")
+        MutableRate getGroups;
         MutableQuantiles[] getGroupsQuantiles;
         @Metric("从启动 延续失败")
         private MutableGaugeLong renewalFailuresTotal;
@@ -80,13 +82,15 @@ public class UserGroupInformation {
         static UgiMetrics create() {
             return DefaultMetricsSystem.instance().register(new UgiMetrics());
         }
+
         static void reattach() {
             //metrics = UgiMetrics.create();
         }
+
         void addGetGroups(long latency) {
             getGroups.add(latency);
-            if(getGroupsQuantiles != null) {
-                for(MutableQuantiles q : getGroupsQuantiles) {
+            if (getGroupsQuantiles != null) {
+                for (MutableQuantiles q : getGroupsQuantiles) {
                     q.add(latency);
                 }
             }
@@ -107,17 +111,18 @@ public class UserGroupInformation {
         }
 
         private <T extends Principal> T getCannonicalUser(Class<T> cls) {
-            for(T user: subject.getPrincipals(cls)) {
+            for (T user : subject.getPrincipals(cls)) {
                 return user;
             }
             return null;
         }
+
         @Override
         public boolean commit() throws LoginException {
             //if(LOG.isDebugEnabled()) {
             //    LOG.debug("hadoop 登录提交");
             //}
-            if(!subject.getPrincipals(User.class).isEmpty()) {
+            if (!subject.getPrincipals(User.class).isEmpty()) {
                 //if(LOG.isDebugEnabled()) {
                 //    LOG.debug("使用已存在subject:" + subject.getPrincipals());
                 //}

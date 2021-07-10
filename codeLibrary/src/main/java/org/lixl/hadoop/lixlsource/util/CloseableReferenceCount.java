@@ -25,16 +25,18 @@ public class CloseableReferenceCount {
      */
     private final AtomicInteger status = new AtomicInteger(0);
 
-    public CloseableReferenceCount() {}
+    public CloseableReferenceCount() {
+    }
 
     /**
      * 增加引用数
+     *
      * @throws ClosedChannelException
      */
     public void reference() throws ClosedChannelException {
         int curBits = status.incrementAndGet();
         // & 是两个数的二进制 再进行与操作， 比如 7 & 6 = 6; 7 | 6 = 7;
-        if((curBits & STATUS_CLOSED_MASK) != 0) {
+        if ((curBits & STATUS_CLOSED_MASK) != 0) {
             status.decrementAndGet();
             throw new ClosedChannelException();
         }
@@ -42,6 +44,7 @@ public class CloseableReferenceCount {
 
     /**
      * 减少引用数
+     *
      * @return
      */
     public boolean unreference() {
@@ -52,17 +55,19 @@ public class CloseableReferenceCount {
 
     /**
      * 减少引用数，检查并确保“可关闭引用数”未关闭
+     *
      * @throws ClosedChannelException
      */
     public void unreferenceCheckClosed() throws ClosedChannelException {
         int newVal = status.decrementAndGet();
-        if((newVal & STATUS_CLOSED_MASK) != 0) {
+        if ((newVal & STATUS_CLOSED_MASK) != 0) {
             throw new AsynchronousCloseException();
         }
     }
 
     /**
      * 如果此状态当前为true 则返回true
+     *
      * @return
      */
     public boolean isOpen() {
@@ -71,16 +76,17 @@ public class CloseableReferenceCount {
 
     /**
      * 标识状态为关闭
+     *
      * @return
      * @throws ClosedChannelException
      */
     public int setClosed() throws ClosedChannelException {
-        while(true) {
+        while (true) {
             int curBits = status.get();
-            if((curBits & STATUS_CLOSED_MASK) != 0) {
+            if ((curBits & STATUS_CLOSED_MASK) != 0) {
                 throw new ClosedChannelException();
             }
-            if(status.compareAndSet(curBits, curBits | STATUS_CLOSED_MASK)) {
+            if (status.compareAndSet(curBits, curBits | STATUS_CLOSED_MASK)) {
                 return curBits & (~STATUS_CLOSED_MASK);
             }
         }
@@ -88,6 +94,7 @@ public class CloseableReferenceCount {
 
     /**
      * 获取当前引用数
+     *
      * @return
      */
     public int getReferenceCount() {

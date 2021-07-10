@@ -34,28 +34,31 @@ public class VersionInfo {
         //...
         return "";
     }
+
     public static String getUrl() {
         //return COMMON_VERSION_INFO._getUrl();
         return "";
     }
+
     public static String getRevision() {
         //return COMMON_VERSION_INFO._getRevision();
         return "";
     }
+
     public static String getDate() {
         //return COMMON_VERSION_INFO._getDate();
         return "";
     }
 
-      /**
-       * The user that compiled Hadoop.
-       * @return the username of the user
-       */
-      public static String getUser() {
-          //return COMMON_VERSION_INFO._getUser();
-          return "";
-      }
-
+    /**
+     * The user that compiled Hadoop.
+     *
+     * @return the username of the user
+     */
+    public static String getUser() {
+        //return COMMON_VERSION_INFO._getUser();
+        return "";
+    }
 
 
 }

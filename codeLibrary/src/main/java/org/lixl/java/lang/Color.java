@@ -5,6 +5,7 @@ public enum Color {
     //成员变量
     private String name;
     private int index;
+
     //构造方法
     private Color(String name, int index) {
         this.name = name;
@@ -14,19 +15,22 @@ public enum Color {
     public int getIndex() {
         return this.index;
     }
+
     public void setIndex(int index) {
         this.index = index;
     }
+
     public String getName() {
         return this.name;
     }
+
     public void setName(String name) {
         this.name = name;
     }
 
     public static String getName(int index) {
-        for(Color c : Color.values()) {
-            if(c.getIndex() == index) {
+        for (Color c : Color.values()) {
+            if (c.getIndex() == index) {
                 return c.getName();
             }
         }

@@ -20,7 +20,7 @@ public class Individual {
          * 我们也不再需要随机(randomize)或洗牌(shuffle)这个染色体，
          * as crossover and mutation will untimately take care of that for us.
          */
-        for(int gene = 0; gene < chromosomeLength; gene++) {
+        for (int gene = 0; gene < chromosomeLength; gene++) {
             individual[gene] = gene;
         }
 
@@ -53,7 +53,7 @@ public class Individual {
 
     public String toString() {
         String output = "";
-        for(int gene = 0; gene < this.chromosome.length; gene++) {
+        for (int gene = 0; gene < this.chromosome.length; gene++) {
             output += this.chromosome[gene] + ",";
         }
         return output;
@@ -61,14 +61,15 @@ public class Individual {
 
     /**
      * 在这个个体中 寻找一个特定的基因
-     *
+     * <p>
      * 用于距离，在一个旅行商问题中，哪个城市已经编码了，就用一个数字(0-99范围)表示，这个方法将检查比如城市“42”已存在
+     *
      * @param gene
      * @return
      */
     public boolean containsGene(int gene) {
-        for(int i = 0; i < this.chromosome.length; i++) {
-            if(this.chromosome[i] == gene) {
+        for (int i = 0; i < this.chromosome.length; i++) {
+            if (this.chromosome[i] == gene) {
                 return true;
             }
         }

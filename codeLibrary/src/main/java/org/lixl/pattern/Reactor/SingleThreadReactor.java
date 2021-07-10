@@ -34,7 +34,7 @@ public class SingleThreadReactor implements Runnable {
     void myDispatch(SelectionKey k) {
         Runnable r = (Runnable) (k.attachment());
         //调用之前注册的callback对象
-        if(r != null) {
+        if (r != null) {
             r.run();
         }
     }
@@ -42,11 +42,11 @@ public class SingleThreadReactor implements Runnable {
     @Override
     public void run() {
         try {
-            while(!Thread.interrupted()) {
+            while (!Thread.interrupted()) {
                 selector.select();
                 Set selected = selector.selectedKeys();
                 Iterator it = selected.iterator();
-                while(it.hasNext()) {
+                while (it.hasNext()) {
                     //Reactor负责dispatch收到的事件
                     myDispatch((SelectionKey) (it.next()));
                 }
@@ -64,7 +64,7 @@ public class SingleThreadReactor implements Runnable {
         public void run() {
             try {
                 SocketChannel channel = serverSocket.accept();
-                if(channel != null) {
+                if (channel != null) {
                     new SingleThreadHandler(selector, channel);
                 }
             } catch (IOException e) {

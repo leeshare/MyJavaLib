@@ -8,11 +8,11 @@ import java.util.HashMap;
  */
 public class TwoSum {
     public static void main(String[] args) {
-        int[] a = new int[]{2,7,11,15};
+        int[] a = new int[]{2, 7, 11, 15};
         int[] result = twoSum(a, 9);
         System.out.println(Arrays.toString(result));
 
-        a = new int[]{3,2,4};
+        a = new int[]{3, 2, 4};
         result = twoSum(a, 6);
         System.out.println(Arrays.toString(result));
 
@@ -47,15 +47,16 @@ public class TwoSum {
     /**
      * 把所有遍历过的数的 目标数（和-此数） 及其下标保存到一个map中
      * 每循环一个数时，和map中的数比较一遍，有相同的，说明就找到了！
+     *
      * @param nums
      * @param target
      * @return
      */
     public static int[] twoSum(int[] nums, int target) {
 
-        HashMap<Integer,Integer> map = new HashMap<>();
-        for(int i = 0; i < nums.length; i++){
-            if(map.containsKey(nums[i])){
+        HashMap<Integer, Integer> map = new HashMap<>();
+        for (int i = 0; i < nums.length; i++) {
+            if (map.containsKey(nums[i])) {
                 return new int[]{map.get(nums[i]), i};
             }
             map.put(target - nums[i], i);

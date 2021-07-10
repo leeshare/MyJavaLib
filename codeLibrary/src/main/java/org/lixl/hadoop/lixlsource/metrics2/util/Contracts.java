@@ -14,6 +14,7 @@ public class Contracts {
 
     /**
      * 检查参数的错误条件
+     *
      * @param arg
      * @param expression
      * @param msg
@@ -21,35 +22,35 @@ public class Contracts {
      * @return
      */
     public static <T> T checkAvg(T arg, boolean expression, Object msg) {
-        if(!expression) {
+        if (!expression) {
             throw new IllegalArgumentException(String.valueOf(msg) + ": " + arg);
         }
         return arg;
     }
 
     public static int checkArg(int arg, boolean expression, Object msg) {
-        if(!expression) {
+        if (!expression) {
             throw new IllegalArgumentException(String.valueOf(msg) + ": " + arg);
         }
         return arg;
     }
 
     public static long checkArg(long arg, boolean expression, Object msg) {
-        if(!expression) {
+        if (!expression) {
             throw new IllegalArgumentException(String.valueOf(msg) + ": " + arg);
         }
         return arg;
     }
 
     public static float checkArg(float arg, boolean expression, Object msg) {
-        if(!expression) {
+        if (!expression) {
             throw new IllegalArgumentException(String.valueOf(msg) + ": " + arg);
         }
         return arg;
     }
 
     public static double checkArg(double arg, boolean expression, Object msg) {
-        if(!expression) {
+        if (!expression) {
             throw new IllegalArgumentException(String.valueOf(msg) + ": " + arg);
         }
         return arg;

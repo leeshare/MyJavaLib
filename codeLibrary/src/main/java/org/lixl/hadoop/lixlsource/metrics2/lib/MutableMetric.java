@@ -15,6 +15,7 @@ public abstract class MutableMetric {
 
     /**
      * 获取一个指标快照
+     *
      * @param builder
      * @param all
      */
@@ -22,6 +23,7 @@ public abstract class MutableMetric {
 
     /**
      * 若发生改变,则获取一个指标快照
+     *
      * @param builder
      */
     public void snapshot(MetricsRecordBuilder builder) {

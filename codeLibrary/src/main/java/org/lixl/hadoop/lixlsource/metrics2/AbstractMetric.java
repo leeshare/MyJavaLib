@@ -31,23 +31,27 @@ public abstract class AbstractMetric implements MetricsInfo {
 
     /**
      * 获取指标的值
+     *
      * @return
      */
     public abstract Number value();
 
     /**
      * 获取指标类型
+     *
      * @return
      */
     public abstract MetricType type();
+
     /**
      * 接受一个访问者接口
+     *
      * @param visitor
      */
     public abstract void visit(MetricsVisitor visitor);
 
     public boolean equals(Object obj) {
-        if(obj instanceof AbstractMetric) {
+        if (obj instanceof AbstractMetric) {
             final AbstractMetric other = (AbstractMetric) obj;
             return Objects.equal(info, other.info()) && Objects.equal(value(), other.value());
         }

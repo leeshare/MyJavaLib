@@ -27,9 +27,10 @@ public class WordCountJava8 {
                 }
             }
         });
+        //data.flatMap((String r, Collector<Tuple2<String, Integer>> out) -> Arrays.stream(r.split("\\,")).forEach(x -> out.collect(Tuple2.of(x, 1))) );
+
         SingleOutputStreamOperator<Tuple2<String, Integer>> wordsAndCount = wordsAndOne.keyBy(0).sum(1);
         wordsAndCount.print();
-
 
 
         env.execute(WordCountJava8.class.getName());

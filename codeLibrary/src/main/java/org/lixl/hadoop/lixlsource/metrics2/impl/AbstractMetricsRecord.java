@@ -9,7 +9,7 @@ import java.util.StringJoiner;
 abstract class AbstractMetricsRecord implements MetricsRecord {
     @Override
     public boolean equals(Object obj) {
-        if(obj instanceof MetricsRecord) {
+        if (obj instanceof MetricsRecord) {
             final MetricsRecord other = (MetricsRecord) obj;
             return Objects.equal(timestamp(), other.timestamp()) &&
                     Objects.equal(name(), other.name()) &&

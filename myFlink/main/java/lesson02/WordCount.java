@@ -9,22 +9,20 @@ import org.apache.flink.util.Collector;
 
 /**
  * SparkStreaming: 完全没有状态也不对
- *
- *   2s:
- *      hadoop,hadoop,hive
- *
- *      hadoop2,hive1
- *   2s:
- *     hadoop,hive,hive
- *
- *     hadoop1,hive2
- *
+ * <p>
+ * 2s:
+ * hadoop,hadoop,hive
+ * <p>
+ * hadoop2,hive1
+ * 2s:
+ * hadoop,hive,hive
+ * <p>
+ * hadoop1,hive2
+ * <p>
  * SparkStreaming里面有两个算子是有状态的？
  * 1. mapWithState
  * 2. updateStateByKey
- *  里面的状态使用起来不是很灵活
- *
- *
+ * 里面的状态使用起来不是很灵活
  */
 public class WordCount {
     public static void main(String[] args) throws Exception {

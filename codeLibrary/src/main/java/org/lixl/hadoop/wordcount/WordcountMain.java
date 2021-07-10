@@ -27,7 +27,7 @@ public class WordcountMain {
         FileOutputFormat.setOutputPath(job, new Path(args[1]));
 
         boolean flag = job.waitForCompletion(true);
-        if(!flag) {
+        if (!flag) {
             System.out.println("wordcount failed!");
         }
     }

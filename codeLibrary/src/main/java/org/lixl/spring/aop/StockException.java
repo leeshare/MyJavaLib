@@ -6,11 +6,11 @@ package org.lixl.spring.aop;
 public class StockException extends Exception {
     private static final long serialVersionUID = 5377570098437361228L;
 
-    public StockException(){
+    public StockException() {
         super();
     }
 
-    public StockException(String message){
+    public StockException(String message) {
         super(message);
     }
 }

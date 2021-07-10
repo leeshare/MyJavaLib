@@ -13,7 +13,7 @@ import java.nio.channels.ReadableByteChannel;
  * Created by Administrator on 1/15/2020.
  */
 @InterfaceAudience.Private
-public interface Peer extends Closeable{
+public interface Peer extends Closeable {
 
     ReadableByteChannel getInputStreamChannel();
 

@@ -14,6 +14,7 @@ public abstract class MetricsSystem implements MetricsSystemMXBean {
 
     /**
      * 注册一个指标源
+     *
      * @param name
      * @param desc
      * @param source
@@ -24,6 +25,7 @@ public abstract class MetricsSystem implements MetricsSystemMXBean {
 
     /**
      * 注销一个指标源
+     *
      * @param name
      */
     public abstract void unregisterSource(String name);
@@ -74,12 +76,19 @@ public abstract class MetricsSystem implements MetricsSystemMXBean {
      */
     public static abstract class AbstractCallback implements Callback {
         @Override
-        public void preStart() {}
+        public void preStart() {
+        }
+
         @Override
-        public void postStart() {}
+        public void postStart() {
+        }
+
         @Override
-        public void preStop() {}
+        public void preStop() {
+        }
+
         @Override
-        public void postStop() {}
+        public void postStop() {
+        }
     }
 }

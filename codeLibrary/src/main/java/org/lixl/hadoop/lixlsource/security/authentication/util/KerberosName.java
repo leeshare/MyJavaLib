@@ -37,7 +37,7 @@ public class KerberosName {
     private static Pattern parameterPattern = Pattern.compile("([^$]*)(\\$(\\d*))?");
 
     private static final Pattern ruleParser =
-            Pattern.compile("\\s*((DEFAULT)|(RULE:\\[(\\d*):([^\\]]*)](\\(([^)]*)\\))?"+
+            Pattern.compile("\\s*((DEFAULT)|(RULE:\\[(\\d*):([^\\]]*)](\\(([^)]*)\\))?" +
                     "(s/([^/]*)/([^/]*)/(g)?)?))/?(L)?");
 
     private static final Pattern nonSimplePattern = Pattern.compile("[/@]]");
@@ -62,8 +62,8 @@ public class KerberosName {
 
     public KerberosName(String name) {
         Matcher match = nameParser.matcher(name);
-        if(!match.matches()){
-            if(name.contains("@")) {
+        if (!match.matches()) {
+            if (name.contains("@")) {
                 throw new IllegalArgumentException("Malformed kerberos name: " + name);
             } else {
                 serviceName = name;
@@ -79,10 +79,10 @@ public class KerberosName {
     }
 
     public static synchronized String getDefaultRealm() {
-        if(defaultRealm == null){
+        if (defaultRealm == null) {
             try {
                 defaultRealm = KerberosUtil.getDefaultRealm();
-            } catch (Exception ke){
+            } catch (Exception ke) {
                 //LOG.debug("Kerberos krb5 configuration not found, setting default realm to empty");
                 defaultRealm = "";
             }
@@ -94,11 +94,11 @@ public class KerberosName {
     public String toString() {
         StringBuilder result = new StringBuilder();
         result.append(serviceName);
-        if(hostName != null){
+        if (hostName != null) {
             result.append('/');
             result.append(hostName);
         }
-        if(realm != null){
+        if (realm != null) {
             result.append('@');
             result.append(realm);
         }
@@ -137,6 +137,7 @@ public class KerberosName {
             repeat = false;
             toLowerCase = false;
         }
+
         Rule(int numOfComponents, String format, String match, String fromPattern, String toPattern, boolean repeat, boolean toLowerCase) {
             isDefault = false;
             this.numOfComponents = numOfComponents;
@@ -147,10 +148,11 @@ public class KerberosName {
             this.repeat = repeat;
             this.toLowerCase = toLowerCase;
         }
+
         @Override
         public String toString() {
             StringBuilder buf = new StringBuilder();
-            if(isDefault) {
+            if (isDefault) {
                 buf.append("DEFAULT");
             } else {
                 buf.append("RULE:[");
@@ -158,22 +160,22 @@ public class KerberosName {
                 buf.append(':');
                 buf.append(format);
                 buf.append(']');
-                if(match != null){
+                if (match != null) {
                     buf.append('(');
                     buf.append(match);
                     buf.append(')');
                 }
-                if(fromPattern != null) {
+                if (fromPattern != null) {
                     buf.append("s/");
                     buf.append(fromPattern);
                     buf.append('/');
                     buf.append(toPattern);
                     buf.append('/');
-                    if(repeat) {
+                    if (repeat) {
                         buf.append('g');
                     }
                 }
-                if(toLowerCase) {
+                if (toLowerCase) {
                     buf.append("/L");
                 }
             }
@@ -187,10 +189,10 @@ public class KerberosName {
             while (start < format.length() && match.find(start)) {
                 result.append(match.group(1));
                 String paramNum = match.group(3);
-                if(paramNum != null){
+                if (paramNum != null) {
                     try {
                         int num = Integer.parseInt(paramNum);
-                        if(num < 0 || num > params.length) {
+                        if (num < 0 || num > params.length) {
                             throw new BadFormatString("index " + num + " from " + format + " is outside of the valid range 0 to " + (params.length - 1));
                         }
                         result.append(params[num]);
@@ -205,7 +207,7 @@ public class KerberosName {
 
         static String replaceSubstitution(String base, Pattern from, String to, boolean repeat) {
             Matcher match = from.matcher(base);
-            if(repeat) {
+            if (repeat) {
                 return match.replaceAll(to);
             } else {
                 return match.replaceFirst(to);
@@ -214,25 +216,25 @@ public class KerberosName {
 
         String apply(String[] params, String ruleMechanism) throws IOException {
             String result = null;
-            if(isDefault) {
-                if(getDefaultRealm().equals(params[0])) {
+            if (isDefault) {
+                if (getDefaultRealm().equals(params[0])) {
                     result = params[1];
                 }
-            } else if(params.length - 1 == numOfComponents) {
+            } else if (params.length - 1 == numOfComponents) {
                 String base = replaceParameters(format, params);
-                if(match == null || match.matcher(base).matches()) {
-                    if(fromPattern == null){
+                if (match == null || match.matcher(base).matches()) {
+                    if (fromPattern == null) {
                         result = base;
                     } else {
                         result = replaceSubstitution(base, fromPattern, toPattern, repeat);
                     }
                 }
             }
-            if(result != null && nonSimplePattern.matcher(result).find()
+            if (result != null && nonSimplePattern.matcher(result).find()
                     && ruleMechanism.equalsIgnoreCase(MECHANISM_HADOOP)) {
                 throw new NoMatchingRule("Non-simple name " + result + " after auth_to_local rule " + this);
             }
-            if(toLowerCase && result != null) {
+            if (toLowerCase && result != null) {
                 result = result.toLowerCase(Locale.ENGLISH);
             }
             return result;
@@ -243,12 +245,12 @@ public class KerberosName {
     static List<Rule> parseRules(String rules) {
         List<Rule> result = new ArrayList<>();
         String remaining = rules.trim();
-        while(remaining.length() > 0) {
+        while (remaining.length() > 0) {
             Matcher matcher = ruleParser.matcher(remaining);
-            if(!matcher.lookingAt()) {
+            if (!matcher.lookingAt()) {
                 throw new IllegalArgumentException("Invalid rule: " + remaining);
             }
-            if(matcher.group(2) != null) {
+            if (matcher.group(2) != null) {
                 result.add(new Rule());
             } else {
                 result.add(new Rule(Integer.parseInt(matcher.group(4)), matcher.group(5),
@@ -264,6 +266,7 @@ public class KerberosName {
         BadFormatString(String msg) {
             super(msg);
         }
+
         BadFormatString(String msg, Throwable err) {
             super(msg, err);
         }
@@ -277,8 +280,8 @@ public class KerberosName {
 
     public String getShortName() throws IOException {
         String[] params;
-        if(hostName == null) {
-            if(realm == null){
+        if (hostName == null) {
+            if (realm == null) {
                 return serviceName;
             }
             params = new String[]{realm, serviceName};
@@ -286,17 +289,17 @@ public class KerberosName {
             params = new String[]{realm, serviceName, hostName};
         }
         String ruleMechanism = this.ruleMechanism;
-        if(ruleMechanism == null && rules != null) {
+        if (ruleMechanism == null && rules != null) {
             //LOG.warn("auth_to_local rule mechanism not set. Using default of " + DEFAULT_MECHANISM);
             ruleMechanism = DEFAULT_MECHANISM;
         }
-        for(Rule r : rules) {
+        for (Rule r : rules) {
             String result = r.apply(params, ruleMechanism);
-            if(result != null) {
+            if (result != null) {
                 return result;
             }
         }
-        if(ruleMechanism.equalsIgnoreCase(MECHANISM_HADOOP)) {
+        if (ruleMechanism.equalsIgnoreCase(MECHANISM_HADOOP)) {
             throw new NoMatchingRule("No rules applied to " + toString());
         }
         return toString();
@@ -304,9 +307,9 @@ public class KerberosName {
 
     public static String getRules() {
         String ruleString = null;
-        if(rules != null) {
+        if (rules != null) {
             StringBuilder sb = new StringBuilder();
-            for(Rule rule : rules) {
+            for (Rule rule : rules) {
                 sb.append(rule.toString()).append("\n");
             }
             ruleString = sb.toString().trim();
@@ -327,7 +330,7 @@ public class KerberosName {
     }
 
     public static void setRuleMechanism(String ruleMech) {
-        if(ruleMech != null && (!ruleMech.equalsIgnoreCase(MECHANISM_HADOOP) && !ruleMech.equalsIgnoreCase(MECHANISM_MIT))) {
+        if (ruleMech != null && (!ruleMech.equalsIgnoreCase(MECHANISM_HADOOP) && !ruleMech.equalsIgnoreCase(MECHANISM_MIT))) {
             throw new IllegalArgumentException("Invalid rule mechanism: " + ruleMech);
         }
         ruleMechanism = ruleMech;
@@ -339,7 +342,7 @@ public class KerberosName {
 
     static void printRules() throws IOException {
         int i = 0;
-        for(Rule r : rules) {
+        for (Rule r : rules) {
             System.out.println(++i + " " + r);
         }
     }

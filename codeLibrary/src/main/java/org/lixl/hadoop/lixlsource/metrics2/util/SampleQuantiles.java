@@ -42,20 +42,21 @@ public class SampleQuantiles implements QuantileEstimator {
 
     /**
      * 制定允许误差范围,依赖成为目标的分位数
+     *
      * @param rank
      * @return
      */
     private double allowableError(int rank) {
         int size = samples.size();
         double minError = size + 1;
-        for(Quantile q : quantiles) {
+        for (Quantile q : quantiles) {
             double error;
-            if(rank <= q.quantile * size) {
+            if (rank <= q.quantile * size) {
                 error = (2.0 * q.error * (size - rank)) / (1.0 - q.quantile);
             } else {
                 error = (2.0 * q.error * rank) / q.quantile;
             }
-            if(error < minError) {
+            if (error < minError) {
                 minError = error;
             }
         }
@@ -64,6 +65,7 @@ public class SampleQuantiles implements QuantileEstimator {
 
     /**
      * 从流中添加一个新值
+     *
      * @param v
      */
     synchronized public void insert(long v) {
@@ -72,7 +74,7 @@ public class SampleQuantiles implements QuantileEstimator {
 
         count++;
 
-        if(bufferCount == buffer.length) {
+        if (bufferCount == buffer.length) {
             insertBatch();
             compress();
         }
@@ -83,14 +85,14 @@ public class SampleQuantiles implements QuantileEstimator {
      * 这更高效的比每次插入一个
      */
     private void insertBatch() {
-        if(bufferCount == 0) {
+        if (bufferCount == 0) {
             return;
         }
 
         Arrays.sort(buffer, 0, bufferCount);
 
         int start = 0;
-        if(samples.size() == 0) {
+        if (samples.size() == 0) {
             SampleItem newItem = new SampleItem(buffer[0], 1, 0);
             samples.add(newItem);
             start++;
@@ -98,18 +100,18 @@ public class SampleQuantiles implements QuantileEstimator {
 
         ListIterator<SampleItem> it = samples.listIterator();
         SampleItem item = it.next();
-        for(int i = start; i < bufferCount; i++) {
+        for (int i = start; i < bufferCount; i++) {
             long v = buffer[i];
-            while(it.nextIndex() < samples.size() && item.value < v) {
+            while (it.nextIndex() < samples.size() && item.value < v) {
                 item = it.next();
             }
             //如果我们找到更大的项, 备份这样在它之前我们插入自己
-            if(item.value > v) {
+            if (item.value > v) {
                 it.previous();
             }
             //
             int delta;
-            if(it.previousIndex() == 0 || it.nextIndex() == samples.size()) {
+            if (it.previousIndex() == 0 || it.nextIndex() == samples.size()) {
                 delta = 0;
             } else {
                 delta = ((int) Math.floor(allowableError(it.nextIndex()))) - 1;
@@ -127,7 +129,7 @@ public class SampleQuantiles implements QuantileEstimator {
      * 并且用临近项合并它
      */
     private void compress() {
-        if(samples.size() < 2) {
+        if (samples.size() < 2) {
             return;
         }
 
@@ -135,10 +137,10 @@ public class SampleQuantiles implements QuantileEstimator {
         SampleItem prev = null;
         SampleItem next = it.next();
 
-        while(it.hasNext()) {
+        while (it.hasNext()) {
             prev = next;
             next = it.next();
-            if(prev.g + next.g + next.delta <= allowableError(it.previousIndex())) {
+            if (prev.g + next.g + next.delta <= allowableError(it.previousIndex())) {
                 next.g += prev.g;
                 // Remove prev.
                 it.previous();
@@ -152,6 +154,7 @@ public class SampleQuantiles implements QuantileEstimator {
 
     /**
      * 在指定分位数 获取估算值
+     *
      * @param quantile 比如 0.50 或 0.99
      * @return
      */
@@ -164,13 +167,13 @@ public class SampleQuantiles implements QuantileEstimator {
         ListIterator<SampleItem> it = samples.listIterator();
         SampleItem prev = null;
         SampleItem cur = it.next();
-        for(int i = 1; i < samples.size(); i++) {
+        for (int i = 1; i < samples.size(); i++) {
             prev = cur;
             cur = it.next();
 
             rankMin += prev.g;
 
-            if(rankMin + cur.g + cur.delta > desired + (allowableError(i) / 2)) {
+            if (rankMin + cur.g + cur.delta > desired + (allowableError(i) / 2)) {
                 return prev.value;
             }
         }
@@ -182,12 +185,12 @@ public class SampleQuantiles implements QuantileEstimator {
         //为了最好的结果首先刷新缓存
         insertBatch();
 
-        if(samples.isEmpty()) {
+        if (samples.isEmpty()) {
             return null;
         }
 
         Map<Quantile, Long> values = new TreeMap<>();
-        for(int i = 0; i < quantiles.length; i++) {
+        for (int i = 0; i < quantiles.length; i++) {
             values.put(quantiles[i], query(quantiles[i].quantile));
         }
         return values;
@@ -211,7 +214,7 @@ public class SampleQuantiles implements QuantileEstimator {
     @Override
     synchronized public String toString() {
         Map<Quantile, Long> data = snapshot();
-        if(data == null) {
+        if (data == null) {
             return "[无样例]";
         } else {
             return Joiner.on("\n").withKeyValueSeparator(": ").join(data);

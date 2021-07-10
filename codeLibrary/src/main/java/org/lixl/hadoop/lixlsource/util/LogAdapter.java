@@ -6,7 +6,7 @@ class LogAdapter {
     private Log LOG;
     //private Logger LOGGER;
 
-    private LogAdapter(Log LOG){
+    private LogAdapter(Log LOG) {
         this.LOG = LOG;
     }
     //private LogAdapter(Logger LOGGER) {

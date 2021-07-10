@@ -11,7 +11,7 @@ public class AllOnesGA {
         //评估种群
         ga.evalPopulation(population);
 
-        for (Individual individual: population.getIndividuals()) {
+        for (Individual individual : population.getIndividuals()) {
             //System.out.println(individual.toString());
         }
         //设置当前代的追踪
@@ -24,7 +24,7 @@ public class AllOnesGA {
          * 在此例中，我们知道最完美的解决方案是什么（在其他案例中，我们通常并不知道），
          * 所以我们的 isTerminationConditionMet 方法非常简单：是否存在一个个体其染色体都是1，我们就完成了。
          */
-        while(ga.isTerminationConditionMet(population) == false) {
+        while (ga.isTerminationConditionMet(population) == false) {
             //打印种群中的最适合个体
             System.out.println("第" + generation + "代最佳解决方案：" + population.getFittest(0).toString());
             System.out.println("    种群适应度=" + population.getPopulationFitness());
@@ -41,7 +41,7 @@ public class AllOnesGA {
         System.out.println("找到解决方案在第 " + generation + " 代");
         System.out.println("最佳解决方案：" + population.getFittest(0).toString());
         System.out.println("    种群适应度=" + population.getPopulationFitness());
-        for (Individual individual: population.getIndividuals()) {
+        for (Individual individual : population.getIndividuals()) {
             //System.out.println(individual.toString());
         }
 

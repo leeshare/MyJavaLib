@@ -1,7 +1,6 @@
 package org.lixl.ai.ga.robot;
 
 /**
- *
  * Created by lxl on 19/12/1.
  */
 public class RobotController {
@@ -19,16 +18,16 @@ public class RobotController {
          *  3 = Route
          *  4 = Goal position
          */
-        Maze maze = new Maze(new int[][] {
-            {0, 0, 0, 0, 1, 0, 1, 3, 2},
-            {1, 0, 1, 1, 1, 0, 1, 3, 1},
-            {1, 0, 0, 1, 3, 3, 3, 3, 1},
-            {3, 3, 3, 1, 3, 1, 1, 0, 1},
-            {3, 1, 3, 3, 3, 1, 1, 0, 0},
-            {3, 3, 1, 1, 1, 1, 0, 1, 1},
-            {1, 3, 0, 1, 3, 3, 3, 3, 3},
-            {0, 3, 1, 1, 3, 1, 0, 1, 3},
-            {1, 3, 3, 3, 3, 1, 1, 1, 4}
+        Maze maze = new Maze(new int[][]{
+                {0, 0, 0, 0, 1, 0, 1, 3, 2},
+                {1, 0, 1, 1, 1, 0, 1, 3, 1},
+                {1, 0, 0, 1, 3, 3, 3, 3, 1},
+                {3, 3, 3, 1, 3, 1, 1, 0, 1},
+                {3, 1, 3, 3, 3, 1, 1, 0, 0},
+                {3, 3, 1, 1, 1, 1, 0, 1, 1},
+                {1, 3, 0, 1, 3, 3, 3, 3, 3},
+                {0, 3, 1, 1, 3, 1, 0, 1, 3},
+                {1, 3, 3, 3, 3, 1, 1, 1, 4}
         });
 
         //创建遗传算法
@@ -39,7 +38,7 @@ public class RobotController {
         //保持跟踪当前代
         int generation = 1;
         //开始进化循环 evolution
-        while(ga.isTerminationConditionMet(generation, maxGenerations) == false) {
+        while (ga.isTerminationConditionMet(generation, maxGenerations) == false) {
             //打印种群的适应度
             Individual fittest = population.getFittest(0);
             System.out.println("G" + generation + " 最佳解决（" + fittest.getFitness() + "）: " + fittest.toString());

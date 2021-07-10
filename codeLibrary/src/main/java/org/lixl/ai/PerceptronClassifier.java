@@ -5,7 +5,7 @@ import java.util.Arrays;
 
 /**
  * Created by Administrator on 3/9/2018.
- *
+ * <p>
  * 感知机算法——原始形式
  */
 public class PerceptronClassifier {
@@ -15,12 +15,13 @@ public class PerceptronClassifier {
     private double eta = 1;     // 步长/学习率  η
     ArrayList<PerceptronPoint> instanceList;
 
-    public PerceptronClassifier(ArrayList<PerceptronPoint> instanceList, double eta){
+    public PerceptronClassifier(ArrayList<PerceptronPoint> instanceList, double eta) {
         this.instanceList = instanceList;
         w = new double[instanceList.get(0).x.length];
         this.eta = eta;
     }
-    public PerceptronClassifier(ArrayList<PerceptronPoint> arrayList){
+
+    public PerceptronClassifier(ArrayList<PerceptronPoint> arrayList) {
         this.instanceList = arrayList;
         w = new double[arrayList.get(0).x.length];
         this.eta = 1;
@@ -28,17 +29,18 @@ public class PerceptronClassifier {
 
     /**
      * 进行分类计算
+     *
      * @return 是否分类成功
      */
-    public boolean Classify(){
+    public boolean Classify() {
         boolean flag = false;
-        while(!flag){
-            for(int i = 0; i < instanceList.size(); i++){  //所有训练集
-                if(LearnAnswer(instanceList.get(i)) <= 0){
+        while (!flag) {
+            for (int i = 0; i < instanceList.size(); i++) {  //所有训练集
+                if (LearnAnswer(instanceList.get(i)) <= 0) {
                     UpdateWAndB(instanceList.get(i));
                     break;
                 }
-                if(i == (instanceList.size() - 1)){
+                if (i == (instanceList.size() - 1)) {
                     flag = true;
                 }
             }
@@ -51,10 +53,11 @@ public class PerceptronClassifier {
 
     /**
      * 进行学习得到的结果
+     *
      * @param point 一个训练样本
      * @return
      */
-    private double LearnAnswer(PerceptronPoint point){
+    private double LearnAnswer(PerceptronPoint point) {
         System.out.println(Arrays.toString(w));
         System.out.println(b);
         //y * (w1 * x1 + w2 * x2 + b)
@@ -63,14 +66,15 @@ public class PerceptronClassifier {
 
     /**
      * 进行点乘
+     *
      * @param x1
      * @param x2
      * @return
      */
-    private double DotProduct(double[] x1, double[] x2){
+    private double DotProduct(double[] x1, double[] x2) {
         int len = x1.length;
         double sum = 0;
-        for(int i = 0; i < len; i++){
+        for (int i = 0; i < len; i++) {
             sum += x1[i] * x2[i];
         }
         return sum;
@@ -78,16 +82,17 @@ public class PerceptronClassifier {
 
     /**
      * 进行w和b的更新
+     *
      * @param point 需要根据样本来随机梯度下降 来进行w和b更新
      */
-    private void UpdateWAndB(PerceptronPoint point){
-        for(int i = 0; i < w.length; i++){
+    private void UpdateWAndB(PerceptronPoint point) {
+        for (int i = 0; i < w.length; i++) {
             w[i] += eta * point.y * point.x[i];
         }
         b += eta * point.y;
     }
 
-    private static void instance1(){
+    private static void instance1() {
         //最终结果是  y = sign(1* x1 + 1* x2 - 3)
         PerceptronPoint p1 = new PerceptronPoint(new double[]{3, 3}, 1);
         PerceptronPoint p2 = new PerceptronPoint(new double[]{4, 3}, 1);
@@ -99,7 +104,8 @@ public class PerceptronClassifier {
         PerceptronClassifier classifier = new PerceptronClassifier(list);
         classifier.Classify();
     }
-    private static void instance2(){
+
+    private static void instance2() {
         //最终结果是  y = sign(1* x1 + 1* x2 - 3)
         PerceptronPoint p1 = new PerceptronPoint(new double[]{0, 0, 0, 1}, -1);
         PerceptronPoint p2 = new PerceptronPoint(new double[]{1, 0, 0, 0}, 1);
@@ -115,7 +121,7 @@ public class PerceptronClassifier {
         classifier.Classify();
     }
 
-    public static void main(String[] args){
+    public static void main(String[] args) {
         instance1();
         //instance2();
     }

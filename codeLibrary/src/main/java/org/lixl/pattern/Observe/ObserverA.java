@@ -13,7 +13,7 @@ public class ObserverA implements Observer {
     private String observerState;
 
     @Override
-    public void update(String newState){
+    public void update(String newState) {
         observerState = newState;
         //log.info("接收到消息 {} , 我是A模块", newState);
     }

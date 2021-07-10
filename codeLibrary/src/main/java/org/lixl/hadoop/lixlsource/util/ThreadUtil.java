@@ -22,17 +22,18 @@ public class ThreadUtil {
 
     public static InputStream getResourceAsStream(String resourceName) throws IOException {
         ClassLoader cl = Thread.currentThread().getContextClassLoader();
-        if(cl == null) {
+        if (cl == null) {
             throw new IOException("无法读资源文件 '" + resourceName + "' 因为当前线程的类加载器为空");
         }
         return getResourceAsStream(cl, resourceName);
     }
+
     public static InputStream getResourceAsStream(ClassLoader cl, String resourceName) throws IOException {
-        if(cl == null) {
+        if (cl == null) {
             throw new IOException("无法读资源文件'" + resourceName + "' 因所给类加载器为空");
         }
         InputStream is = cl.getResourceAsStream(resourceName);
-        if(is == null) {
+        if (is == null) {
             throw new IOException("无法读资源文件'" + resourceName + "'");
         }
         return is;

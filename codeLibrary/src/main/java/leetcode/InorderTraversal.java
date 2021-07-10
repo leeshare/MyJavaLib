@@ -7,8 +7,8 @@ import java.util.List;
 
 /**
  * 中序遍历
- *  比如二叉树是 [1,null,2,3] -> [1,3,2]
- *              [10,5,null,null,15,6,2] -> [5,10,6,15,2]
+ * 比如二叉树是 [1,null,2,3] -> [1,3,2]
+ * [10,5,null,null,15,6,2] -> [5,10,6,15,2]
  */
 public class InorderTraversal {
     public static void main(String[] args) {
@@ -22,8 +22,9 @@ public class InorderTraversal {
     }
 
     public static List<Integer> middleTree = new ArrayList<>();
-    private static List<Integer> toInorderTraversal(TreeNode root){
-        if(root == null){
+
+    private static List<Integer> toInorderTraversal(TreeNode root) {
+        if (root == null) {
             return middleTree;
         }
         toInorderTraversal(root.left);
@@ -38,9 +39,15 @@ public class InorderTraversal {
         int val;
         TreeNode left;
         TreeNode right;
-        TreeNode(){}
-        TreeNode(int val){this.val = val;}
-        TreeNode(int val, TreeNode left, TreeNode right){
+
+        TreeNode() {
+        }
+
+        TreeNode(int val) {
+            this.val = val;
+        }
+
+        TreeNode(int val, TreeNode left, TreeNode right) {
             this.val = val;
             this.left = left;
             this.right = right;

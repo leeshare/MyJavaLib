@@ -47,7 +47,7 @@ public class SampleStat {
         numSamples += nSamples;
         total += x;
 
-        if(numSamples == 1) {
+        if (numSamples == 1) {
             a0 = a1 = x;
             s0 = 0.0;
         } else {
@@ -117,15 +117,16 @@ public class SampleStat {
         private double max = DEFAULT_MAX_VALUE;
 
         public void add(double value) {
-            if(value > max)
+            if (value > max)
                 max = value;
-            if(value < min)
+            if (value < min)
                 min = value;
         }
 
         public double min() {
             return min;
         }
+
         public double max() {
             return max;
         }

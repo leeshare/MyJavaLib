@@ -14,7 +14,8 @@ public class InterfaceAudience {
 
     @Documented
     @Retention(RetentionPolicy.RUNTIME)
-    public @interface Public {}
+    public @interface Public {
+    }
 
     @Documented
     @Retention(RetentionPolicy.RUNTIME)
@@ -24,7 +25,8 @@ public class InterfaceAudience {
 
     @Documented
     @Retention(RetentionPolicy.RUNTIME)
-    public @interface Private {}
+    public @interface Private {
+    }
 
     private InterfaceAudience() {
 

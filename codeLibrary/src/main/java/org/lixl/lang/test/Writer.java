@@ -10,22 +10,23 @@ public abstract class Writer implements Appendable {
 
     protected Object lock;
 
-    protected Writer(){
+    protected Writer() {
         this.lock = this;
     }
-    protected  Writer(Object lock){
-        if(lock == null){
+
+    protected Writer(Object lock) {
+        if (lock == null) {
             throw new NullPointerException();
         }
         this.lock = lock;
     }
 
     public void write(int c) throws IOException {
-        synchronized (lock){
-            if(writeBuffer == null){
+        synchronized (lock) {
+            if (writeBuffer == null) {
                 writeBuffer = new char[WRITE_BUFFER_SIZE];
             }
-            writeBuffer[0] = (char)c;
+            writeBuffer[0] = (char) c;
             write(writeBuffer, 0, 1);
         }
     }
@@ -37,12 +38,12 @@ public abstract class Writer implements Appendable {
     public void write(String str, int off, int len) throws IOException {
         synchronized (lock) {
             char cbuf[];
-            if(len <= WRITE_BUFFER_SIZE){
-                if(writeBuffer == null) {
+            if (len <= WRITE_BUFFER_SIZE) {
+                if (writeBuffer == null) {
                     writeBuffer = new char[WRITE_BUFFER_SIZE];
                 }
                 cbuf = writeBuffer;
-            }else {
+            } else {
                 cbuf = new char[len];
             }
             str.getChars(off, off + len, cbuf, 0);
@@ -50,15 +51,15 @@ public abstract class Writer implements Appendable {
         }
     }
 
-   public void write(String str) throws IOException {
-       write(str, 0, str.length());
-   }
+    public void write(String str) throws IOException {
+        write(str, 0, str.length());
+    }
 
-   abstract public void write(char cbuf[], int off, int len) throws IOException;
+    abstract public void write(char cbuf[], int off, int len) throws IOException;
 
 
     public Writer append(CharSequence csq) throws IOException {
-        if(csq == null)
+        if (csq == null)
             write("null");
         else
             write(csq.toString());

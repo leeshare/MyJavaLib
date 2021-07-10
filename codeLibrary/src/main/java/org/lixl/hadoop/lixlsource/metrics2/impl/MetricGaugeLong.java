@@ -14,7 +14,7 @@ class MetricGaugeLong extends AbstractMetric {
     }
 
     @Override
-    public Long value(){
+    public Long value() {
         return value;
     }
 

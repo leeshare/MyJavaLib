@@ -30,7 +30,7 @@ class MetricsInfoImpl implements MetricsInfo {
 
     @Override
     public boolean equals(Object obj) {
-        if(obj instanceof MetricsInfo) {
+        if (obj instanceof MetricsInfo) {
             MetricsInfo other = (MetricsInfo) obj;
             return Objects.equal(name, other.name()) &&
                     Objects.equal(description, other.description());
