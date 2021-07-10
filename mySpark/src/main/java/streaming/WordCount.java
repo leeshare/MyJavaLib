@@ -13,7 +13,7 @@ import scala.Tuple2;
 import java.util.Iterator;
 
 public class WordCount {
-    public static void main(String[] args) throws Exception{
+    public static void main(String[] args) throws Exception {
         SparkConf conf = new SparkConf();
         conf.setMaster("local[1]");
         conf.setAppName("WordCount");

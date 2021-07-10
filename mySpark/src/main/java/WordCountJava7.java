@@ -22,6 +22,7 @@ import java.util.Iterator;
  */
 public class WordCountJava7 {
     static String str = "file:///C://BigData/upload_data/str.data";
+
     public static void main(String[] args) throws Exception {
 
         //设置环境

@@ -11,7 +11,7 @@
         <module>flink-ad</module>
         <module>laboratory</module>
         <module>myFlink</module>
-        <module>sparkstreaming</module>
+        <module>mySpark</module>
         <module>codeLibrary</module>
     </modules>
     <packaging>pom</packaging>

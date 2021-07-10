@@ -14,7 +14,7 @@ public abstract class MyListener implements StreamingListener {
     private KafkaCluster kc;
     public scala.collection.immutable.Map<String, String> kafkaParams;
 
-    public MyListener(scala.collection.immutable.Map<String, String> kafkaParams){
+    public MyListener(scala.collection.immutable.Map<String, String> kafkaParams) {
         this.kafkaParams = kafkaParams;
         kc = new KafkaCluster(kafkaParams);
     }
@@ -24,8 +24,8 @@ public abstract class MyListener implements StreamingListener {
         //super.onBatchCompleted(batchCompleted);
         scala.collection.immutable.Map<Object, OutputOperationInfo> opsMap = batchCompleted.batchInfo().outputOperationInfos();
         Map<Object, OutputOperationInfo> javaOpsMap = JavaConversions.mapAsJavaMap(opsMap);
-        for(Map.Entry<Object, OutputOperationInfo> entry: javaOpsMap.entrySet()) {
-            if(!"None".equalsIgnoreCase(entry.getValue().failureReason().toString())) {
+        for (Map.Entry<Object, OutputOperationInfo> entry : javaOpsMap.entrySet()) {
+            if (!"None".equalsIgnoreCase(entry.getValue().failureReason().toString())) {
                 return;
             }
         }
