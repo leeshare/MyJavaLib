@@ -1,0 +1,32 @@
+package rules.rulesHello        //当前.drl文件所在的物理和逻辑路径
+import org.lixl.opensource.drools.pojo.Person;   //引入类或方法
+
+    //规则体
+    rule "test001"
+        when
+            eval(true);
+        then
+            System.out.println("hello world");
+        end
+    rule "test002"
+        when
+            $p:Person();
+        then
+            System.out.println("输出引用对象" + $p);
+        end
+    rule "test003"
+        when
+            $a:Person(name=="mike",age==30)
+        then
+            System.out.println(" 输出 mike 30");
+        end
+
+    rule "test006"
+        when
+            $p:Person(age/2==15);
+            then System.out.println("规则六执行成功"); end
+    rule "test007"
+        when
+            $p:Person((age%2)==0);
+            then System.out.println("规则七执行成功"); end
+

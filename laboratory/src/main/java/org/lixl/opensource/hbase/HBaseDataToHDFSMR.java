@@ -8,8 +8,8 @@ import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.client.Result;
 import org.apache.hadoop.hbase.client.Scan;
 import org.apache.hadoop.hbase.io.ImmutableBytesWritable;
-import org.apache.hadoop.hbase.mapreduce.TableMapReduceUtil;
-import org.apache.hadoop.hbase.mapreduce.TableMapper;
+//import org.apache.hadoop.hbase.mapreduce.TableMapReduceUtil;
+//import org.apache.hadoop.hbase.mapreduce.TableMapper;
 import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.io.Text;
@@ -38,7 +38,7 @@ public class HBaseDataToHDFSMR {
 
         // 输入数据来源于hbase的user_info表
         Scan scan = new Scan();
-        TableMapReduceUtil.initTableMapperJob("student", scan, HBaseDataToHDFSMRMapper.class, Text.class, NullWritable.class, job);
+        //TableMapReduceUtil.initTableMapperJob("student", scan, HBaseDataToHDFSMRMapper.class, Text.class, NullWritable.class, job);
 
         //	RecordReader  --- TableRecordReader
         //	InputFormat ----- TextInputFormat
@@ -55,11 +55,9 @@ public class HBaseDataToHDFSMR {
      * mapper的输入key-value类型是：ImmutableBytesWritable, Result
      * mapper的输出key-value类型就可以由用户自己制定
      */
-    public static class HBaseDataToHDFSMRMapper extends TableMapper<Text, NullWritable> {
-        /**
-         * keyType: LongWritable -- ImmutableBytesWritable:rowkey
-         * ValueType: Text --  Result:hbase表中某一个rowkey查询出来的所有的key-value对
-         */
+    /*public static class HBaseDataToHDFSMRMapper extends TableMapper<Text, NullWritable> {
+        // keyType: LongWritable -- ImmutableBytesWritable:rowkey
+        // ValueType: Text --  Result:hbase表中某一个rowkey查询出来的所有的key-value对
         @Override
         protected void map(ImmutableBytesWritable key, Result value, Context context) throws IOException, InterruptedException {
 
@@ -77,6 +75,6 @@ public class HBaseDataToHDFSMR {
                 context.write(text, NullWritable.get());
             }
         }
-    }
+    }*/
 }
 

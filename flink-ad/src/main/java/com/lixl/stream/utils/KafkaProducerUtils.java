@@ -30,11 +30,11 @@ public class KafkaProducerUtils {
         producer = new KafkaProducer<String, String>(props);
     }
 
-    private static Producer instance = null;
+    private static Object instance = new Object();
     public static Producer getProducer() {
         //单例模式  （在并发时是有问题的，通过 synchronized改成线程安全）
         if(producer == null){
-            synchronized (instance.getClass()) {
+            synchronized (instance) {
                 init();
             }
         }

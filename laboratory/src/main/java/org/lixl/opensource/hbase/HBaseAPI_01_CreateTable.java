@@ -7,6 +7,7 @@ import org.apache.hadoop.hbase.client.*;
 import org.apache.hadoop.hbase.io.encoding.DataBlockEncoding;
 import org.apache.hadoop.hbase.regionserver.BloomType;
 import org.apache.hadoop.hbase.util.Bytes;
+import org.rocksdb.ColumnFamilyDescriptor;
 
 import java.io.IOException;
 
@@ -33,6 +34,7 @@ public class HBaseAPI_01_CreateTable {
             System.out.println("student 表已经存在");
         } else {
 
+            /*
             // TODO_MA 注释：构造列簇
             ColumnFamilyDescriptor cf1 = ColumnFamilyDescriptorBuilder.newBuilder(Bytes.toBytes("cf1"))
                     .setDataBlockEncoding(DataBlockEncoding.PREFIX)
@@ -52,6 +54,7 @@ public class HBaseAPI_01_CreateTable {
             } else {
                 System.out.println("创建表失败");
             }
+            */
         }
     }
 }

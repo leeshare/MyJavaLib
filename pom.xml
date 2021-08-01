@@ -13,6 +13,7 @@
         <module>myFlink</module>
         <module>mySpark</module>
         <module>codeLibrary</module>
+        <module>scala_tutorial</module>
     </modules>
     <packaging>pom</packaging>
     <name>my java lib</name>

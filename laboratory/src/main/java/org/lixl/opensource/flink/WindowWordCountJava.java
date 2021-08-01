@@ -31,7 +31,7 @@ public class WindowWordCountJava {
         }
         //一 获取运行环境
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
-        String hostName = "192.168.123.152";
+        String hostName = "192.168.123.153";
         String delimiter="\n";
         //二、设置数据源
         DataStreamSource<String> textStream = env.socketTextStream(hostName, port, delimiter);

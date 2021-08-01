@@ -1,6 +1,8 @@
 package org.lixl.opensource.hbase;
 
+import org.apache.hadoop.hbase.HTableDescriptor;
 import org.apache.hadoop.hbase.client.*;
+import org.rocksdb.ColumnFamilyDescriptor;
 
 import java.util.List;
 
@@ -18,10 +20,10 @@ public interface HBaseDemoInterface {
     void createTable(String tableName, String[] family) throws Exception;
 
     // 创建表，传参:封装好的多个列簇
-    void createTable(TableDescriptor tds) throws Exception;
+    void createTable(HTableDescriptor tds) throws Exception;
 
     // 创建表，传参，表名和封装好的多个列簇
-    void createTable(String tableName, TableDescriptor tds) throws Exception;
+    void createTable(String tableName, HTableDescriptor tds) throws Exception;
 
     // 查看表的列簇属性
     void descTable(String tableName) throws Exception;

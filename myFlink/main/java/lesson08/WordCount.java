@@ -19,10 +19,10 @@ public class WordCount {
     public static void main(String[] args) throws Exception {
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         //设置并行度
-
-        String topic = "nxtest";
+        env.setParallelism(3);
+        String topic = "leetest";
         Properties consumerProperties = new Properties();
-        consumerProperties.setProperty("bootstrap.servers", "192.168.152.102:9092");
+        consumerProperties.setProperty("bootstrap.servers", "192.168.123.152:9092");
         consumerProperties.setProperty("group.id", "testConsumer");
 
 
@@ -30,7 +30,7 @@ public class WordCount {
                 new FlinkKafkaConsumer011<>(topic, new SimpleStringSchema(), consumerProperties);
 
         //source 3 task
-        DataStreamSource<String> data = env.addSource(myConsumer).setParallelism(3);
+        DataStreamSource<String> data = env.addSource(myConsumer);//.setParallelism(3);
 
         //flatMap 2 task
         SingleOutputStreamOperator<Tuple2<String, Integer>> wordOneStream = data.flatMap(new FlatMapFunction<String, Tuple2<String, Integer>>() {
@@ -41,7 +41,7 @@ public class WordCount {
                     out.collect(Tuple2.of(word, 1));
                 }
             }
-        }).setParallelism(2);
+        });//.setParallelism(2);
         //data.flatMap((String r, Collector<Tuple2<String, Integer>> out) -> Arrays.stream(r.split("\\,")).forEach(x -> out.collect(Tuple2.of(x, 1))) );
 
 
@@ -50,7 +50,7 @@ public class WordCount {
 
         //map  2 task
         result.map(tuple -> tuple.toString()).setParallelism(2)
-                .print().setParallelism(1); //sink 1 task
+                .print();//.setParallelism(1); //sink 1 task
 
         env.execute("WordCount2");
 

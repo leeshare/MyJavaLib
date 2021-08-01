@@ -1,0 +1,22 @@
+package rules.constraint;
+dialect  "mvel"
+import org.lixl.opensource.drools.pojo.Person;
+import org.lixl.opensource.drools.pojo.School;
+
+rule containsTest
+    when
+        $s:School();
+        $p:Person(className contains $s.className);
+        $p1:Person(className contains $s.getClassName());
+        $p2:Person(className contains "一班");
+    then
+        System.out.println("congraduations, you use contains");
+end
+rule containsTest002
+    when
+        $s:School();
+        $p2:Person(className not contains "二班");
+    then
+        System.out.println("congraduations, you use not contains");
+end
+

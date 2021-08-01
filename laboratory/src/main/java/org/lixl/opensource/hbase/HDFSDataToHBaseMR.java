@@ -5,8 +5,8 @@ import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.client.Put;
-import org.apache.hadoop.hbase.mapreduce.TableMapReduceUtil;
-import org.apache.hadoop.hbase.mapreduce.TableReducer;
+//import org.apache.hadoop.hbase.mapreduce.TableMapReduceUtil;
+//import org.apache.hadoop.hbase.mapreduce.TableReducer;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.io.Text;
@@ -57,7 +57,7 @@ public class HDFSDataToHBaseMR extends Configured implements Tool {
         job.setMapOutputValueClass(NullWritable.class);
 
         // 设置数据的输出组件
-        TableMapReduceUtil.initTableReducerJob(TABLE_NAME, HBaseMR_Reducer.class, job);
+//        TableMapReduceUtil.initTableReducerJob(TABLE_NAME, HBaseMR_Reducer.class, job);
 
         job.setOutputKeyClass(NullWritable.class);
         job.setOutputValueClass(Put.class);
@@ -76,7 +76,7 @@ public class HDFSDataToHBaseMR extends Configured implements Tool {
         }
     }
 
-    public static class HBaseMR_Reducer extends TableReducer<Text, NullWritable, NullWritable> {
+    /*public static class HBaseMR_Reducer extends TableReducer<Text, NullWritable, NullWritable> {
 
         @Override
         protected void reduce(Text key, Iterable<NullWritable> values, Context context) throws IOException, InterruptedException {
@@ -90,5 +90,5 @@ public class HDFSDataToHBaseMR extends Configured implements Tool {
 
             context.write(NullWritable.get(), put);
         }
-    }
+    }*/
 }

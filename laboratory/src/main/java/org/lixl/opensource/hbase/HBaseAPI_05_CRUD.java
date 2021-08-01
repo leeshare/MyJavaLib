@@ -52,7 +52,7 @@ public class HBaseAPI_05_CRUD {
         String[] family = {CF_BASE, CF_EXTRA};
 
         // TODO_MA 注释：创建表
-        creatTable(TABLE_NAME, family);
+//        creatTable(TABLE_NAME, family);
 
 
         // TODO_MA 注释：添加数据
@@ -94,7 +94,7 @@ public class HBaseAPI_05_CRUD {
         deleteTable(TABLE_NAME);
     }
 
-    public static void creatTable(String tableName, String[] familys) throws Exception {
+    /*public static void creatTable(String tableName, String[] familys) throws Exception {
 
         // TODO_MA 注释：表名
         TableName tableNameObj = TableName.valueOf(tableName);
@@ -117,7 +117,7 @@ public class HBaseAPI_05_CRUD {
             admin.createTable(tableDescriptor);
             System.out.println("Table Created {表名: " + tableName + ", 列簇: [" + StringUtils.join(",", familys) + "]");
         }
-    }
+    }*/
 
     /**
      * 为表添加数据（适合知道有多少列簇的固定表）

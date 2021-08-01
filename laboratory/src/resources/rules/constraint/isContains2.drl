@@ -1,0 +1,17 @@
+package rules.constraint;
+dialect  "mvel"
+import org.lixl.opensource.drools.pojo.Person;
+import org.lixl.opensource.drools.pojo.RuleKey;
+
+rule containsTest2
+    when
+        $k:RuleKey();
+        $p:Person(personInfo memberOf $k.keyValue);
+    then
+        System.out.println("congraduations, you use contains" + $k.keyValue);
+end
+
+//city memberOf"北京，上海，成都"
+//"北京，上海，成都" contains city
+
+

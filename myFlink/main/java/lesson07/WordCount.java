@@ -12,10 +12,11 @@ import org.apache.flink.util.Collector;
 public class WordCount {
     public static void main(String[] args) throws Exception {
         //步骤一，获取执行环境
-        StreamExecutionEnvironment env = StreamExecutionEnvironment.createLocalEnvironmentWithWebUI(new Configuration());
+        //StreamExecutionEnvironment env = StreamExecutionEnvironment.createLocalEnvironmentWithWebUI(new Configuration());
+        StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         env.setParallelism(3);
         //步骤二，获取数据源
-        DataStreamSource<String> data = env.socketTextStream("192.168.152.102", 9999);
+        DataStreamSource<String> data = env.socketTextStream("192.168.123.153", 9999);
         //source 1 task
         //步骤三：数据处理
         //flatMap 3 task
@@ -31,7 +32,7 @@ public class WordCount {
                 .keyBy(0)
                 .sum(1); //keyby sum print 3 task
         //步骤四：数据输出
-        result.print();//
+        result.print().setParallelism(1);
         //步骤五：启动任务
         env.execute("word count");
         /**

@@ -27,6 +27,7 @@ public class HBaseAPI_04_ListTableDescriptor {
         // TODO_MA 注释：获取 Admin 对象
         Admin admin = connection.getAdmin();
 
+        /*
         // TODO_MA 注释：显示所有的表名
         List<TableDescriptor> tableDescriptors = admin.listTableDescriptors();
         for (TableDescriptor td : tableDescriptors) {
@@ -47,5 +48,6 @@ public class HBaseAPI_04_ListTableDescriptor {
         // TODO_MA 注释： 关闭
         admin.close();
         connection.close();
+        */
     }
 }

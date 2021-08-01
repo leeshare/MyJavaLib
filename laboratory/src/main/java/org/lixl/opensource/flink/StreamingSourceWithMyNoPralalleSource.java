@@ -1,6 +1,6 @@
 package org.lixl.opensource.flink;
 
-import com.google.inject.internal.cglib.proxy.$FixedValue;
+//import com.google.inject.internal.cglib.proxy.$FixedValue;
 import org.apache.flink.api.common.functions.FilterFunction;
 import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.streaming.api.datastream.DataStreamSource;
